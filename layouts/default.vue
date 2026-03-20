@@ -25,8 +25,8 @@
       <!-- User Info & Logout -->
       <div class="p-4 border-t border-gray-800" v-if="auth.isLoggedIn">
         <div class="mb-4">
-          <div class="text-xs text-gray-500 mb-1">Balance</div>
-          <div class="font-medium text-green-400">{{ auth.user?.balance?.toFixed(4) }} GNK</div>
+          <div class="text-xs text-gray-500 mb-1">Address</div>
+          <div class="font-medium text-green-400 break-all text-sm" :title="auth.user?.address">{{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : 'Connected' }}</div>
         </div>
         <button @click="logout" class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
           Logout
@@ -133,7 +133,7 @@ async function connectMetaMask() {
     
     if (accounts && accounts.length > 0) {
       const account = accounts[0]
-      await auth.login(account)
+      await auth.login(account, provider)
     } else {
       throw new Error('No accounts returned from wallet.')
     }

@@ -7,8 +7,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt'
   ],
   runtimeConfig: {
-    newApiToken: process.env.NEW_API_TOKEN || 'sk-OnkUYV0JCHqlveAlkTs88qm3ur0WoXExylBAHJu13cacjwlJ',
-    newApiUrl: process.env.NEW_API_URL || 'http://36.189.234.197:18011/v1' // Update this to the actual base URL
+    public: {
+      apiBase: process.env.API_BASE || 'http://36.189.234.197:18013'
+    }
   },
   vite: {
     server: {

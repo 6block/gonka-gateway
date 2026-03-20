@@ -2,15 +2,6 @@
   <div class="h-full flex flex-col p-8 max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-bold">Chat</h1>
-      <div class="text-sm bg-gray-900 border border-gray-800 px-3 py-1 rounded text-gray-400 flex items-center space-x-2">
-        <span>Model:</span>
-        <select v-model="selectedModel" class="bg-black border border-gray-700 text-white rounded px-2 py-1 focus:outline-none focus:border-blue-500">
-          <option v-for="model in availableModels" :key="model.id" :value="model.id">
-            {{ model.id }}
-          </option>
-          <option v-if="availableModels.length === 0" :value="selectedModel">{{ selectedModel }}</option>
-        </select>
-      </div>
     </div>
 
     <!-- Chat Messages -->
@@ -56,31 +47,15 @@
 <script setup>
 import { LucideSend, LucideMessageSquare } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
+import { ref, nextTick } from 'vue'
+import { useRuntimeConfig } from '#app'
 
 const auth = useAuthStore()
 const messages = ref([])
 const input = ref('')
 const isLoading = ref(false)
-const selectedModel = ref('Qwen/Qwen3-235B-A22B-Instruct-2507-FP8') // default model
-const availableModels = ref([])
 const chatContainer = ref(null)
-
-onMounted(async () => {
-  try {
-    const res = await fetch('/v1/models')
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.data) {
-        availableModels.value = data.data
-        if (availableModels.value.length > 0 && !availableModels.value.find(m => m.id === selectedModel.value)) {
-          selectedModel.value = availableModels.value[0].id
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch models', error)
-  }
-})
+const config = useRuntimeConfig()
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -99,10 +74,10 @@ const scrollToBottom = () => {
     isLoading.value = true
     scrollToBottom()
 
-    // Find a valid API key
-    const apiKey = auth.apiKeys[0]?.key
-    if (!apiKey) {
-      messages.value.push({ role: 'assistant', content: 'Error: No API key found. Please generate one in the API Keys tab.' })
+    // Find a valid API key -> Now using JWT token
+    const token = auth.token
+    if (!token) {
+      messages.value.push({ role: 'assistant', content: 'Error: No auth token found. Please login again.' })
       isLoading.value = false
       return
     }
@@ -122,14 +97,15 @@ const scrollToBottom = () => {
     }
 
     try {
-      const res = await fetch('/v1/chat/completions', {
+      const config = useRuntimeConfig()
+      const res = await fetch(`${config.public.apiBase}/api/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          model: selectedModel.value,
+          model: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
           messages: chatMessages,
           stream: true
         })

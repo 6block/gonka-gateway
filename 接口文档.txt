@@ -1,0 +1,161 @@
+1.1 获取登录 Nonce
+用于 SIWE（Sign-In with Ethereum）登录流程：前端先获取 nonce，再让用户用钱包签名包含该 nonce 的消息，最后调用登录接口。
+项目
+说明
+方法
+GET
+路径
+/auth/nonce
+认证
+不需要
+限流
+建议按 IP 或 address 限流，防止滥用
+Query 参数
+参数
+类型
+必填
+说明
+address
+string
+是
+钱包地址（如 0x...）
+响应示例（200）
+{
+  "nonce": "a1b2c3d4e5f6...",
+  "expires_in": 300
+}
+
+	•	
+nonce：一次性随机串，用于构造 SIWE 消息并签名。
+	•	
+	•	
+expires_in：有效期（秒），超时需重新获取。
+	•	
+
+
+1.2 钱包登录
+使用钱包对 SIWE 消息的签名完成登录，返回 JWT，用于后续需登录接口。
+项目
+说明
+方法
+POST
+路径
+/auth/login
+认证
+不需要
+Content-Type
+application/json
+请求体
+字段
+类型
+必填
+说明
+address
+string
+是
+钱包地址
+channel
+string
+是
+项目名称 (qtum/gonka)
+message
+string
+是
+SIWE 格式的待签名消息（含 nonce、域名、时间等）
+signature
+string
+是
+用户用钱包对 message 的签名（十六进制）
+响应示例（200）
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 604800,
+  "user": {
+    "channel": "qtum",
+    "address": "0x1234...abcd"
+  }
+}
+
+	•	
+token：JWT，后续请求放在 Authorization: Bearer <token>。
+	•	
+	•	
+expires_in：token 有效期（秒）。
+	•	
+	•	
+user：当前用户简要信息（字段以实现为准）。
+	•	
+错误
+	•	
+400：参数缺失或格式错误。
+	•	
+	•	
+401：签名校验失败或 nonce 无效/过期。
+	•	
+
+
+
+Chat 对话（gonka）
+以下接口转发至https://docs.newapi.pro/en/docs   new-api Chat 相关路径（如 /v1/chat/completions），网关负责 JWT 校验与Chat 用量限额，通过后再转发。流式响应由网关透传 new-api 的 SSE。
+4.1 对话补全（Completions）
+单次对话请求，支持流式（SSE）与非流式；每次成功请求计 1 次 Chat 用量（并可按 new-api 返回的 usage 累加 token）。
+项目
+说明
+方法
+POST
+路径
+/api/chat/completions
+认证
+需要 JWT
+Content-Type
+application/json
+请求体（与 new-api OpenAI 兼容格式对齐）
+字段
+类型
+必填
+说明
+model
+string
+是
+模型名（如 gonka），以 new-api 配置为准
+messages
+array
+是
+消息列表，每项 `{ "role": "user"
+stream
+boolean
+否
+是否流式输出，默认 false
+其他
+-
+否
+temperature、max_tokens 等（与 new-api 一致）
+非流式响应示例（200）
+{
+  "id": "chatcmpl-xxx",
+  "object": "chat.completion",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "你好，有什么可以帮你的？"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 20,
+    "total_tokens": 30
+  }
+}
+流式响应（200） 
+	•	
+Content-Type: text/event-stream，SSE 事件流，格式与 new-api 一致（如 data: {"choices":[...]}\n\n），由网关透传。
+	•	
+错误
+	•	
+403：Chat 当日次数或 token 已达上限。
+	•	
+

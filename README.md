@@ -1,13 +1,13 @@
-# Gonka AI Gateway Clone
+# Gonka AI Gateway (Frontend)
 
-This is a full-stack Nuxt 3 application that mimics the Gonka AI Gateway functionality.
+This is a pure Nuxt 3 frontend application that serves as the user interface for the Gonka AI Gateway. It features a MetaMask-based SIWE (Sign-In with Ethereum) login flow and a real-time chat interface connected to an external AI API backend.
 
 ## Features
-- **String-based Login**: Simplified login/registration by just entering an ID/string.
-- **Token Billing**: Users are given an initial balance of 100 GNK.
-- **OpenAI-compatible Gateway**: Proxies requests to an upstream New API gateway, billing users per token.
-- **Chat UI**: Built-in chat interface with streaming responses.
-- **Dashboard**: Track token usage, API keys, and transaction history.
+
+- **MetaMask SIWE Login**: Secure, passwordless authentication using Ethereum wallets and the SIWE standard.
+- **Pure Frontend Architecture**: Fully decoupled frontend that interacts directly with the external backend API (`http://36.189.234.197:18013`).
+- **Chat UI**: Built-in chat interface with SSE streaming support for seamless AI conversations.
+- **Dashboard**: Displays user network status, connected wallet address, and provides API documentation and usage examples.
 
 ## Setup & Run
 
@@ -16,27 +16,25 @@ This is a full-stack Nuxt 3 application that mimics the Gonka AI Gateway functio
    npm install
    ```
 
-2. **Initialize Database**:
-   ```bash
-   npx prisma db push
-   npx prisma generate
-   ```
-
-3. **Environment Variables**:
-   In `nuxt.config.ts` or via `.env`, configure the upstream New API token:
+2. **Environment Variables**:
+   In `nuxt.config.ts` or via `.env`, configure the upstream API Base URL (if different from the default):
    ```env
-   NEW_API_TOKEN=sk-OnkUYV0JCHqlveAlkTs88qm3ur0WoXExylBAHJu13cacjwlJ
-   NEW_API_URL=http://36.189.234.197:18011/v1
+   API_BASE=http://36.189.234.197:18013
    ```
-   *(Note: The URL should point to your actual New API endpoint. Change `http://36.189.234.197:18011/v1` to your endpoint if different).*
 
-4. **Run Dev Server**:
+3. **Run Dev Server**:
    ```bash
    npm run dev
    ```
 
-5. **Usage**:
+4. **Usage**:
    - Open `http://localhost:3000`
-   - Enter any username to login.
-   - Go to API Keys, generate a key.
-   - Use the Chat tab to start chatting (it uses the generated key and deducts balance).
+   - Click "Connect MetaMask" and sign the SIWE message to log in.
+   - Use the Dashboard to view your connection status and API access examples.
+   - Go to the Chat tab to start a conversation with the AI model.
+
+## Tech Stack
+- [Nuxt 3](https://nuxt.com/) (Vue 3)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Pinia](https://pinia.vuejs.org/) for state management
+- [SIWE](https://login.xyz/) & [Ethers.js](https://docs.ethers.org/) for Web3 authentication
