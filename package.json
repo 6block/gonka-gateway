@@ -1,5 +1,5 @@
 {
-  "name": "gonka-gateway-clone",
+  "name": "gonka-gateway",
   "private": true,
   "type": "module",
   "scripts": {
