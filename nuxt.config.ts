@@ -15,12 +15,15 @@ export default defineNuxtConfig({
       apiBase: process.env.API_BASE || 'http://36.189.234.197:18013'
     }
   },
+  devServer: {
+    port: 3001
+  },
   vite: {
     server: {
       hmr: {
         protocol: 'ws',
         host: 'localhost',
-        clientPort: 3000
+        clientPort: 3001
       }
     }
   }

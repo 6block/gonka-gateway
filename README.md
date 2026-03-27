@@ -28,7 +28,7 @@ This is a pure Nuxt 3 frontend application that serves as the user interface for
    ```
 
 4. **Usage**:
-   - Open `http://localhost:3000`
+   - Open `http://localhost:3001`
    - Click "Connect MetaMask" and sign the SIWE message to log in.
    - Use the Dashboard to view your connection status and API access examples.
    - Go to the Chat tab to start a conversation with the AI model.
