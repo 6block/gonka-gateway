@@ -48,7 +48,6 @@
 import { LucideSend, LucideMessageSquare } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, nextTick } from 'vue'
-import { useRuntimeConfig } from '#app'
 
 const auth = useAuthStore()
 const messages = ref([])
@@ -97,7 +96,6 @@ const scrollToBottom = () => {
     }
 
     try {
-      const config = useRuntimeConfig()
       const res = await fetch(`${config.public.apiBase}/api/chat/completions`, {
         method: 'POST',
         headers: {

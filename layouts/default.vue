@@ -145,14 +145,6 @@ onMounted(async () => {
   }
 })
 
-// 在服务端/客户端预取用户信息，如果 token 存在的话
-await useAsyncData('user-auth', async () => {
-  if (auth.token && !auth.user) {
-    await auth.fetchUserInfo()
-  }
-  return true
-})
-
 async function connectMetaMask() {
   if (typeof window === 'undefined') return
 

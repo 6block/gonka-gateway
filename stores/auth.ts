@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useCookie, useRuntimeConfig } from '#app'
 import { SiweMessage } from 'siwe'
 import { getAddress } from 'ethers'
 
 export const useAuthStore = defineStore('auth', () => {
+  const config = useRuntimeConfig()
+  
   const token = useCookie<string | null>('auth_token', {
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/'
@@ -18,7 +19,6 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
   
   async function login(address: string, provider: any) {
-    const config = useRuntimeConfig()
     const apiBase = config.public.apiBase
 
     try {

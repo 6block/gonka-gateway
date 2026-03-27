@@ -63,7 +63,6 @@
 
 <script setup>
 import { useAuthStore } from '~/stores/auth'
-import { useRuntimeConfig } from '#app'
 
 const config = useRuntimeConfig()
 const auth = useAuthStore()
