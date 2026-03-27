@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'nuxt-app',
+      name: 'gonka-gateway',
       script: './.output/server/index.mjs',
       instances: 'max',        // 或 '1'，根据服务器 CPU 决定
       exec_mode: 'cluster',    // 集群模式，提升性能
