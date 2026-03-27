@@ -1,7 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  ssr: false,
+  ssr: true,
+  experimental: {
+    asyncContext: true             // ← 加上这行，解决大部分 async 导致的上下文丢失
+  },
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
