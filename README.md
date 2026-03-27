@@ -1,6 +1,6 @@
-# Gonka AI Gateway (Frontend)
+# GonkaRouter (Frontend)
 
-This is a pure Nuxt 3 frontend application that serves as the user interface for the Gonka AI Gateway. It features a MetaMask-based SIWE (Sign-In with Ethereum) login flow and a real-time chat interface connected to an external AI API backend.
+This is a pure Nuxt 3 frontend application that serves as the user interface for GonkaRouter. It features a MetaMask-based SIWE (Sign-In with Ethereum) login flow and a real-time chat interface connected to an external AI API backend.
 
 ## Features
 

@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
       const message = new SiweMessage({
         domain: window.location.host,
         address: checksumAddress,
-        statement: 'Sign in to Gonka AI Gateway.',
+        statement: 'Sign in to GonkaRouter.',
         uri: window.location.origin,
         version: '1',
         chainId,

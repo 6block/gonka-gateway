@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0a0a] flex flex-col transition-colors duration-300">
       <div class="p-6">
-        <h1 class="text-xl font-bold">Gonka AI Gateway</h1>
+        <h1 class="text-xl font-bold">GonkaRouter</h1>
         <p class="text-xs text-gray-500 mt-1">OpenAI-compatible LLM inference</p>
       </div>
 
@@ -53,7 +53,7 @@
     <!-- Login Modal -->
     <div v-if="!auth.isLoggedIn" class="fixed inset-0 bg-black/60 dark:bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm">
       <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-8 rounded-2xl w-full max-w-md shadow-2xl transition-colors duration-300">
-        <h2 class="text-2xl font-bold mb-2">Welcome to Gonka</h2>
+        <h2 class="text-2xl font-bold mb-2">Welcome to GonkaRouter</h2>
         <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Connect your MetaMask wallet to login. New users get free quota.</p>
 
         <button @click="connectMetaMask" :disabled="!!isConnecting" class="w-full bg-[#F6851B] hover:bg-[#e27618] disabled:opacity-60 text-white font-semibold py-3 rounded-lg transition-colors flex justify-center items-center space-x-2">

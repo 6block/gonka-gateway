@@ -1,5 +1,5 @@
 {
-  "name": "gonka-gateway",
+  "name": "gonkarouter",
   "private": true,
   "type": "module",
   "scripts": {
