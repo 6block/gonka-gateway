@@ -2,10 +2,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { SiweMessage } from 'siwe'
 import { getAddress } from 'ethers'
+import { useCookie, useNuxtApp } from '#app'
 
 export const useAuthStore = defineStore('auth', () => {
-  const config = useRuntimeConfig()
-  
   const token = useCookie<string | null>('auth_token', {
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/'
@@ -19,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
   
   async function login(address: string, provider: any) {
+    const config = useNuxtApp().$config
     const apiBase = config.public.apiBase
 
     try {

@@ -74,7 +74,6 @@
 import { LucideLayoutDashboard, LucideMessageSquare, LucideHistory, LucideLoader2, LucideSun, LucideMoon } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, onMounted } from 'vue'
-import { useColorMode } from '#imports'
 
 const colorMode = useColorMode()
 const auth = useAuthStore()
