@@ -1,36 +1,47 @@
 <template>
-  <div class="flex h-screen bg-[#0a0a0a] text-white">
+  <div class="flex h-screen bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors duration-300">
     <!-- Sidebar -->
-    <aside class="w-64 border-r border-gray-800 flex flex-col">
+    <aside class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0a0a] flex flex-col transition-colors duration-300">
       <div class="p-6">
         <h1 class="text-xl font-bold">Gonka AI Gateway</h1>
         <p class="text-xs text-gray-500 mt-1">OpenAI-compatible LLM inference</p>
       </div>
 
       <nav class="flex-1 px-4 space-y-2">
-        <NuxtLink to="/" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-800" active-class="bg-gray-800 text-white" exact-active-class="bg-gray-800 text-white">
+        <NuxtLink to="/" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800" active-class="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-white font-medium" exact-active-class="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-white font-medium">
           <LucideLayoutDashboard class="w-5 h-5" />
           <span>Dashboard</span>
         </NuxtLink>
-        <NuxtLink to="/chat" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-800" active-class="bg-gray-800 text-white">
+        <NuxtLink to="/chat" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800" active-class="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-white font-medium">
           <LucideMessageSquare class="w-5 h-5" />
           <span>Chat</span>
         </NuxtLink>
-        <NuxtLink to="/transactions" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-800" active-class="bg-gray-800 text-white">
+        <NuxtLink to="/transactions" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800" active-class="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-white font-medium">
           <LucideHistory class="w-5 h-5" />
           <span>Transactions</span>
         </NuxtLink>
       </nav>
 
-      <!-- User Info & Logout -->
-      <div class="p-4 border-t border-gray-800" v-if="auth.isLoggedIn">
-        <div class="mb-4">
-          <div class="text-xs text-gray-500 mb-1">Address</div>
-          <div class="font-medium text-green-400 break-all text-sm" :title="auth.user?.address">{{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : 'Connected' }}</div>
-        </div>
-        <button @click="logout" class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
-          Logout
+      <!-- User Info & Action -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+        <!-- Theme Toggle -->
+        <button @click="toggleColorMode" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
+          <span class="flex items-center space-x-2">
+            <LucideSun v-if="colorMode.value === 'light'" class="w-4 h-4" />
+            <LucideMoon v-else class="w-4 h-4" />
+            <span>{{ colorMode.value === 'light' ? 'Light Mode' : 'Dark Mode' }}</span>
+          </span>
         </button>
+
+        <template v-if="auth.isLoggedIn">
+          <div class="px-3">
+            <div class="text-xs text-gray-500 mb-1">Address</div>
+            <div class="font-medium text-green-600 dark:text-green-400 break-all text-sm" :title="auth.user?.address">{{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : 'Connected' }}</div>
+          </div>
+          <button @click="logout" class="w-full py-2 px-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">
+            Logout
+          </button>
+        </template>
       </div>
     </aside>
 
@@ -40,10 +51,10 @@
     </main>
 
     <!-- Login Modal -->
-    <div v-if="!auth.isLoggedIn" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div class="bg-[#111] border border-gray-800 p-8 rounded-2xl w-full max-w-md">
+    <div v-if="!auth.isLoggedIn" class="fixed inset-0 bg-black/60 dark:bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-8 rounded-2xl w-full max-w-md shadow-2xl transition-colors duration-300">
         <h2 class="text-2xl font-bold mb-2">Welcome to Gonka</h2>
-        <p class="text-gray-400 text-sm mb-6">Connect your MetaMask wallet to login. New users get free quota.</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Connect your MetaMask wallet to login. New users get free quota.</p>
 
         <button @click="connectMetaMask" :disabled="!!isConnecting" class="w-full bg-[#F6851B] hover:bg-[#e27618] disabled:opacity-60 text-white font-semibold py-3 rounded-lg transition-colors flex justify-center items-center space-x-2">
           <LucideLoader2 v-if="isConnecting" class="w-5 h-5 animate-spin" />
@@ -60,14 +71,20 @@
 </template>
 
 <script setup>
-import { LucideLayoutDashboard, LucideMessageSquare, LucideHistory, LucideLoader2 } from 'lucide-vue-next'
+import { LucideLayoutDashboard, LucideMessageSquare, LucideHistory, LucideLoader2, LucideSun, LucideMoon } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, onMounted } from 'vue'
+import { useColorMode } from '#imports'
 
+const colorMode = useColorMode()
 const auth = useAuthStore()
 const isConnecting = ref(false)
 const hasMetaMask = ref(false)
 const cachedMetaMaskProvider = ref(null)
+
+const toggleColorMode = () => {
+  colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
+}
 
 /**
  * EIP-6963：通过唯一 RDNS 标识发现指定钱包的 provider。

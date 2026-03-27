@@ -1,28 +1,28 @@
 <template>
   <div class="h-full flex flex-col p-8 max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold">Chat</h1>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Chat</h1>
     </div>
 
     <!-- Chat Messages -->
-    <div class="flex-1 bg-[#111] border border-gray-800 rounded-xl p-4 overflow-y-auto mb-4 flex flex-col space-y-4" ref="chatContainer">
-      <div v-if="messages.length === 0" class="flex-1 flex items-center justify-center text-gray-500 flex-col">
+    <div class="flex-1 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl p-4 overflow-y-auto mb-4 flex flex-col space-y-4 shadow-sm transition-colors" ref="chatContainer">
+      <div v-if="messages.length === 0" class="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500 flex-col">
         <LucideMessageSquare class="w-12 h-12 mb-4 opacity-50" />
         <p>Start a conversation</p>
       </div>
 
       <div v-for="(msg, i) in messages" :key="i" class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
         <div class="max-w-[80%] rounded-2xl px-4 py-3 text-sm" 
-             :class="msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-200'">
+             :class="msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'">
           <div class="whitespace-pre-wrap">{{ msg.content }}</div>
         </div>
       </div>
       
       <div v-if="isLoading" class="flex justify-start">
-        <div class="bg-gray-800 text-gray-400 rounded-2xl px-4 py-3 text-sm flex items-center space-x-2">
-          <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
-          <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-          <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+        <div class="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-2xl px-4 py-3 text-sm flex items-center space-x-2">
+          <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></span>
+          <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+          <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
         v-model="input" 
         @keydown.enter.prevent="sendMessage"
         placeholder="Type a message..." 
-        class="w-full bg-[#111] border border-gray-800 rounded-xl pl-4 pr-12 py-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+        class="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl pl-4 pr-12 py-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none shadow-sm transition-colors"
         rows="1"
         style="min-height: 56px;"
       ></textarea>
