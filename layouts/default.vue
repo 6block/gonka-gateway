@@ -24,6 +24,12 @@
 
       <!-- User Info & Action -->
       <div class="p-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+        <!-- Payment Button -->
+        <button v-if="auth.isLoggedIn" @click="showPaymentModal = true" class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 bg-[#22C55E] hover:bg-[#16a34a] text-white rounded-lg text-sm font-bold transition-colors shadow-sm">
+          <LucideCreditCard class="w-4 h-4" />
+          <span>Payment</span>
+        </button>
+
         <!-- Theme Toggle -->
         <button @click="toggleColorMode" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
           <span class="flex items-center space-x-2">
@@ -67,19 +73,24 @@
         </button>
       </div>
     </div>
+
+    <!-- Payment Modal -->
+    <PaymentModal :is-open="showPaymentModal" @close="showPaymentModal = false" />
   </div>
 </template>
 
 <script setup>
-import { LucideLayoutDashboard, LucideMessageSquare, LucideHistory, LucideLoader2, LucideSun, LucideMoon } from 'lucide-vue-next'
+import { LucideLayoutDashboard, LucideMessageSquare, LucideCreditCard, LucideHistory, LucideLoader2, LucideSun, LucideMoon } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, onMounted } from 'vue'
+import PaymentModal from '~/components/PaymentModal.vue'
 
 const colorMode = useColorMode()
 const auth = useAuthStore()
 const isConnecting = ref(false)
 const hasMetaMask = ref(false)
 const cachedMetaMaskProvider = ref(null)
+const showPaymentModal = ref(false)
 
 const toggleColorMode = () => {
   colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
