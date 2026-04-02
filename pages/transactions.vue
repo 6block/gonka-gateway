@@ -24,7 +24,7 @@
           @click="clearDateFilter"
           class="text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 px-2 py-1 rounded transition-colors"
         >
-          清除
+          Clear
         </button>
       </div>
 
@@ -46,7 +46,7 @@
               <td colspan="5" class="px-6 py-16 text-center text-gray-500">
                 <div class="flex items-center justify-center gap-2">
                   <LucideLoader2 class="w-4 h-4 animate-spin" />
-                  <span>加载中...</span>
+                  <span>Loading...</span>
                 </div>
               </td>
             </tr>
@@ -61,7 +61,7 @@
             <!-- Empty -->
             <tr v-else-if="filteredItems.length === 0">
               <td colspan="5" class="px-6 py-16 text-center text-gray-500">
-                暂无充值记录
+                No transactions found
               </td>
             </tr>
 
@@ -202,7 +202,7 @@ async function fetchDeposits(page = 1) {
     total.value = data.total || 0
     currentPage.value = data.page || page
   } catch (e) {
-    error.value = e?.data?.message || e?.message || '获取记录失败，请稍后重试。'
+    error.value = e?.data?.message || e?.message || 'Failed to fetch transactions, please try again later.'
   } finally {
     loading.value = false
   }

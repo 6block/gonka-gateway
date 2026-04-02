@@ -157,7 +157,7 @@ async function fetchBalance() {
       }
     }
   } catch (e) {
-    error.value = e?.data?.message || e?.message || '获取余额信息失败'
+    error.value = e?.data?.message || e?.message || 'Failed to fetch balance information'
     console.error('Fetch balance error:', e)
   } finally {
     loading.value = false
