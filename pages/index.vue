@@ -18,9 +18,9 @@
       </div>
 
       <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm transition-colors">
-        <h3 class="text-sm text-gray-500 font-medium mb-2">Status</h3>
+        <h3 class="text-sm text-gray-500 font-medium mb-2">Balance</h3>
         <div class="text-3xl font-bold text-blue-500 dark:text-blue-400">
-          Active
+          ${{ balance }}
         </div>
       </div>
     </div>
@@ -63,7 +63,30 @@
 
 <script setup>
 import { useAuthStore } from '~/stores/auth'
+import { ref, onMounted } from 'vue'
 
+const balance = ref(0)
+const loading = ref(false)
+const error = ref(null)
 const config = useRuntimeConfig()
 const auth = useAuthStore()
+
+async function fetchBalance() {
+  if (!auth.token) return
+  loading.value = true
+  try {
+    const data = await $fetch(`${config.public.apiBase}/api/billing/balance`, {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    })
+    balance.value = data.amount || 0
+  } catch (error) {
+    console.error('Failed to fetch balance:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchBalance()
+})
 </script>
