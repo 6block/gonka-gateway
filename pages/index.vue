@@ -72,6 +72,30 @@
 
     <!-- API Documentation -->
     <div class="space-y-12 pb-12 pt-4">
+
+      <!-- API Key Section -->
+      <section>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">API Key</h2>
+        <div class="border-t-2 border-blue-500 pt-4">
+          <p class="text-gray-600 dark:text-gray-400 mb-4 transition-colors">Use this key to authenticate your API requests. Keep it secure.</p>
+          <div class="flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-4 transition-colors">
+            <code class="text-sm text-gray-700 dark:text-gray-300 font-mono transition-colors break-all">
+              <span v-if="isKeyLoading" class="text-gray-400 flex items-center gap-2">
+                <LucideLoader2 class="w-4 h-4 animate-spin" /> Loading API Key...
+              </span>
+              <span v-else>{{ apiKey || 'No API Key found. Please check your setup.' }}</span>
+            </code>
+            <button 
+              v-if="apiKey"
+              @click="copyApiKey" 
+              class="ml-4 flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+              :class="copied ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 dark:bg-[#222] dark:text-gray-300 dark:border-gray-700 dark:hover:bg-[#2a2a2a]'"
+            >
+              {{ copied ? 'Copied!' : 'Copy' }}
+            </button>
+          </div>
+        </div>
+      </section>
       
       <!-- Base URL Section -->
       <section>
@@ -79,7 +103,7 @@
         <div class="border-t-2 border-blue-500 pt-4">
           <p class="text-gray-600 dark:text-gray-400 mb-4 transition-colors">The gateway is served over <strong class="font-semibold text-gray-900 dark:text-gray-200">HTTPS</strong>. All API requests should be made to:</p>
           <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-4 transition-colors">
-            <code class="text-sm text-gray-700 dark:text-gray-300 font-mono transition-colors">{{ config.public.apiBase }}/api</code>
+            <code class="text-sm text-gray-700 dark:text-gray-300 font-mono transition-colors">{{ config.public.apiBase }}/v1</code>
           </div>
         </div>
       </section>
@@ -107,7 +131,7 @@
                   <div class="text-gray-600 dark:text-gray-400 transition-colors">
                     <div class="mb-1"><span class="text-blue-600 dark:text-blue-400">POST</span> /chat/completions</div>
                     <div class="mb-1">Content-Type: application/json</div>
-                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ auth.token ? auth.token.slice(0, 15) + '...' : 'sk-your-api-key' }}</span></div>
+                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ apiKey || 'sk-your-api-key' }}</span></div>
                   </div>
                   
                   <div class="text-gray-800 dark:text-gray-300 transition-colors">
@@ -183,7 +207,7 @@
                 <div class="font-mono text-sm space-y-4">
                   <div class="text-gray-600 dark:text-gray-400 transition-colors">
                     <div class="mb-1"><span class="text-green-600 dark:text-green-400">GET</span> /models</div>
-                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ auth.token ? auth.token.slice(0, 15) + '...' : 'sk-your-api-key' }}</span></div>
+                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ apiKey || 'sk-your-api-key' }}</span></div>
                   </div>
                 </div>
               </div>
@@ -215,6 +239,7 @@
 </template>
 
 <script setup>
+import { LucideLoader2 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, onMounted } from 'vue'
 
@@ -223,6 +248,10 @@ const auth = useAuthStore()
 
 const loading = ref(false)
 const error = ref(null)
+
+const apiKey = ref('')
+const isKeyLoading = ref(false)
+const copied = ref(false)
 
 const metrics = ref({
   balance: 0,
@@ -242,6 +271,33 @@ function formatInt(val) {
   const n = parseInt(val, 10)
   if (isNaN(n)) return '0'
   return n.toLocaleString('en-US')
+}
+
+function copyApiKey() {
+  if (!apiKey.value) return
+  navigator.clipboard.writeText(apiKey.value)
+  copied.value = true
+  setTimeout(() => {
+    copied.value = false
+  }, 2000)
+}
+
+async function fetchApiKey() {
+  if (!auth.token) return
+  isKeyLoading.value = true
+  try {
+    const data = await $fetch(`${config.public.apiBase}/api/keys`, {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    })
+    console.log('fetchApiKey', data)
+    const key = data?.items[0]?.key
+    apiKey.value = key || ''
+    console.log('apiKey', apiKey.value)
+  } catch (e) {
+    console.error('Fetch API key error:', e)
+  } finally {
+    isKeyLoading.value = false
+  }
 }
 
 async function fetchBalance() {
@@ -274,5 +330,6 @@ async function fetchBalance() {
 
 onMounted(() => {
   fetchBalance()
+  fetchApiKey()
 })
 </script>
