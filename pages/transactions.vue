@@ -1,67 +1,81 @@
 <template>
-  <div class="p-8 max-w-6xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Transaction History</h1>
+  <div class="p-8 lg:p-12 max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">Transactions</h1>
+        <p class="text-gray-500 dark:text-gray-400">View your deposit history and status.</p>
+      </div>
+    </div>
 
-    <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none transition-colors duration-300">
+    <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
       <!-- Toolbar -->
-      <div class="flex items-center justify-end gap-4 px-6 py-4">
-        <div class="flex items-center gap-2 bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-transparent rounded-lg px-4 py-2 text-sm text-gray-600 dark:text-gray-400 transition-colors">
-          <input
-            v-model="startDate"
-            type="date"
-            class="bg-transparent outline-none w-auto text-gray-800 dark:text-gray-300 cursor-pointer appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
-          />
-          <span class="text-gray-400 dark:text-gray-600">—</span>
-          <input
-            v-model="endDate"
-            type="date"
-            class="bg-transparent outline-none w-auto text-gray-800 dark:text-gray-300 cursor-pointer appearance-none [&::-webkit-calendar-picker-indicator]:hidden"
-          />
-          <LucideCalendar class="w-4 h-4 ml-2 text-gray-500" />
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-b border-gray-100 dark:border-white/5">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 shadow-inner focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
+            <LucideCalendar class="w-4 h-4 text-gray-400" />
+            <input
+              v-model="startDate"
+              type="date"
+              class="bg-transparent border-none outline-none text-sm text-gray-800 dark:text-gray-200 cursor-pointer w-32 appearance-none"
+            />
+            <span class="text-gray-300 dark:text-gray-600">—</span>
+            <input
+              v-model="endDate"
+              type="date"
+              class="bg-transparent border-none outline-none text-sm text-gray-800 dark:text-gray-200 cursor-pointer w-32 appearance-none"
+            />
+          </div>
+          <button
+            v-if="startDate || endDate"
+            @click="clearDateFilter"
+            class="text-xs font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+          >
+            Clear Filters
+          </button>
         </div>
-        <button
-          v-if="startDate || endDate"
-          @click="clearDateFilter"
-          class="text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 px-2 py-1 rounded transition-colors"
-        >
-          Clear
-        </button>
       </div>
 
       <!-- Table -->
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="bg-gray-50 dark:bg-[#1a1a1a] border-y border-gray-200 dark:border-transparent text-gray-600 dark:text-gray-400 text-left transition-colors">
-              <th class="px-6 py-4 font-medium font-sans">Hash</th>
-              <th class="px-6 py-4 font-medium font-sans">Time</th>
-              <th class="px-6 py-4 font-medium font-sans">Network</th>
-              <th class="px-6 py-4 font-medium font-sans">Amount</th>
-              <th class="px-6 py-4 font-medium font-sans">Status</th>
+        <table class="w-full text-sm text-left whitespace-nowrap">
+          <thead class="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50/50 dark:bg-black/20 border-b border-gray-100 dark:border-white/5">
+            <tr>
+              <th scope="col" class="px-6 py-4 font-semibold">Transaction Hash</th>
+              <th scope="col" class="px-6 py-4 font-semibold">Date & Time</th>
+              <th scope="col" class="px-6 py-4 font-semibold">Network</th>
+              <th scope="col" class="px-6 py-4 font-semibold">Amount</th>
+              <th scope="col" class="px-6 py-4 font-semibold">Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-gray-100 dark:divide-white/5">
             <!-- Loading -->
             <tr v-if="loading">
               <td colspan="5" class="px-6 py-16 text-center text-gray-500">
-                <div class="flex items-center justify-center gap-2">
-                  <LucideLoader2 class="w-4 h-4 animate-spin" />
-                  <span>Loading...</span>
+                <div class="flex items-center justify-center gap-3">
+                  <LucideLoader2 class="w-5 h-5 animate-spin text-blue-500" />
+                  <span class="font-medium">Loading transactions...</span>
                 </div>
               </td>
             </tr>
 
             <!-- Error -->
             <tr v-else-if="error">
-              <td colspan="5" class="px-6 py-16 text-center text-red-500 dark:text-red-400">
-                {{ error }}
+              <td colspan="5" class="px-6 py-16 text-center">
+                <div class="inline-flex items-center gap-2 text-red-500 bg-red-50 dark:bg-red-500/10 px-4 py-2 rounded-xl text-sm font-medium">
+                  <LucideAlertCircle class="w-4 h-4" />
+                  {{ error }}
+                </div>
               </td>
             </tr>
 
             <!-- Empty -->
             <tr v-else-if="filteredItems.length === 0">
-              <td colspan="5" class="px-6 py-16 text-center text-gray-500">
-                No transactions found
+              <td colspan="5" class="px-6 py-24 text-center">
+                <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                  <LucideInbox class="w-12 h-12 mb-4 opacity-50" />
+                  <p class="font-medium text-base text-gray-600 dark:text-gray-400">No transactions found</p>
+                  <p class="text-sm mt-1">There are no deposits matching your criteria.</p>
+                </div>
               </td>
             </tr>
 
@@ -70,29 +84,38 @@
               v-else
               v-for="item in filteredItems"
               :key="item.tx_hash"
-              class="border-b border-gray-100 dark:border-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+              class="hover:bg-gray-50/80 dark:hover:bg-white/[0.02] transition-colors group"
             >
-              <!-- Hash -->
-              <td class="px-6 py-5 text-gray-800 dark:text-gray-300">
-                <span :title="item.tx_hash" class="cursor-default block max-w-[200px] truncate">
-                  {{ item.tx_hash ? item.tx_hash.slice(0, 8).toUpperCase() + '...' + item.tx_hash.slice(-8).toUpperCase() : '-' }}
-                </span>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-500 shrink-0">
+                    <LucideHash class="w-4 h-4" />
+                  </div>
+                  <span :title="item.tx_hash" class="font-mono text-gray-900 dark:text-gray-200">
+                    {{ item.tx_hash ? item.tx_hash.slice(0, 6) + '...' + item.tx_hash.slice(-6) : '-' }}
+                  </span>
+                </div>
               </td>
-              <!-- Time -->
-              <td class="px-6 py-5 text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                {{ formatTime(item.created_at) }}
+              <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
+                <div class="flex flex-col">
+                  <span class="font-medium text-gray-900 dark:text-gray-200">{{ formatDate(item.created_at) }}</span>
+                  <span class="text-xs">{{ formatTimeOnly(item.created_at) }}</span>
+                </div>
               </td>
-              <!-- Network -->
-              <td class="px-6 py-5">
-                <span class="text-gray-800 dark:text-gray-300">{{ formatChain(item.chain) }}</span>
+              <td class="px-6 py-4">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 text-xs font-medium border border-gray-200/50 dark:border-white/5">
+                  {{ formatChain(item.chain) }}
+                </div>
               </td>
-              <!-- Amount -->
-              <td class="px-6 py-5 text-gray-900 dark:text-gray-200 whitespace-nowrap">
-                $ {{ formatAmount(item.amount) }}
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 dark:text-white">${{ formatAmount(item.amount) }}</span>
               </td>
-              <!-- Status -->
-              <td class="px-6 py-5">
-                <span :class="statusClass(item.status)">
+              <td class="px-6 py-4">
+                <span 
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border"
+                  :class="statusClasses(item.status)"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full" :class="statusDotClasses(item.status)"></span>
                   {{ statusLabel(item.status) }}
                 </span>
               </td>
@@ -102,38 +125,43 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="!loading && !error && total > 0" class="flex items-center justify-end gap-1 px-6 py-6 border-t border-gray-100 dark:border-transparent transition-colors">
-        <button
-          @click="goToPage(currentPage - 1)"
-          :disabled="currentPage <= 1"
-          class="w-8 h-8 flex items-center justify-center rounded text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white disabled:opacity-30 disabled:hover:text-gray-500 dark:disabled:hover:text-gray-400 disabled:cursor-not-allowed transition-colors"
-        >
-          <LucideChevronLeft class="w-4 h-4" />
-        </button>
+      <div v-if="!loading && !error && total > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-black/10">
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          Showing page <span class="font-medium text-gray-900 dark:text-white">{{ currentPage }}</span> of <span class="font-medium text-gray-900 dark:text-white">{{ totalPages }}</span>
+        </span>
+        <div class="flex items-center gap-1">
+          <button
+            @click="goToPage(currentPage - 1)"
+            :disabled="currentPage <= 1"
+            class="p-2 rounded-lg text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+          >
+            <LucideChevronLeft class="w-5 h-5" />
+          </button>
 
-        <button
-          v-for="p in pageNumbers"
-          :key="p"
-          @click="p !== '…' && goToPage(p)"
-          :class="[
-            'w-8 h-8 flex items-center justify-center rounded text-sm transition-colors',
-            p === currentPage
-              ? 'text-blue-600 dark:text-blue-500 font-medium'
-              : p === '…'
-                ? 'text-gray-400 dark:text-gray-600 cursor-default'
-                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-          ]"
-        >
-          {{ p }}
-        </button>
+          <button
+            v-for="p in pageNumbers"
+            :key="p"
+            @click="p !== '…' && goToPage(p)"
+            :class="[
+              'w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors',
+              p === currentPage
+                ? 'bg-gray-900 text-white dark:bg-white dark:text-black shadow-sm'
+                : p === '…'
+                  ? 'text-gray-400 cursor-default'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
+            ]"
+          >
+            {{ p }}
+          </button>
 
-        <button
-          @click="goToPage(currentPage + 1)"
-          :disabled="currentPage >= totalPages"
-          class="w-8 h-8 flex items-center justify-center rounded text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white disabled:opacity-30 disabled:hover:text-gray-500 dark:disabled:hover:text-gray-400 disabled:cursor-not-allowed transition-colors"
-        >
-          <LucideChevronRight class="w-4 h-4" />
-        </button>
+          <button
+            @click="goToPage(currentPage + 1)"
+            :disabled="currentPage >= totalPages"
+            class="p-2 rounded-lg text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+          >
+            <LucideChevronRight class="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
     </div>
@@ -141,8 +169,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
-import { LucideCalendar, LucideLoader2, LucideChevronLeft, LucideChevronRight } from 'lucide-vue-next'
+import { ref, computed, onMounted } from 'vue'
+import { 
+  LucideCalendar, LucideLoader2, LucideChevronLeft, 
+  LucideChevronRight, LucideAlertCircle, LucideInbox,
+  LucideHash
+} from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 
 const auth = useAuthStore()
@@ -161,7 +193,6 @@ const endDate = ref('')
 
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
 
-// 日期过滤（客户端对当前页结果过滤）
 const filteredItems = computed(() => {
   if (!startDate.value && !endDate.value) return items.value
   return items.value.filter(item => {
@@ -172,7 +203,6 @@ const filteredItems = computed(() => {
   })
 })
 
-// 分页按钮列表（最多显示 7 个，超出用省略号）
 const pageNumbers = computed(() => {
   const tp = totalPages.value
   const cp = currentPage.value
@@ -202,7 +232,7 @@ async function fetchDeposits(page = 1) {
     total.value = data.total || 0
     currentPage.value = data.page || page
   } catch (e) {
-    error.value = e?.data?.message || e?.message || 'Failed to fetch transactions, please try again later.'
+    error.value = e?.data?.message || e?.message || 'Failed to fetch transactions. Please try again.'
   } finally {
     loading.value = false
   }
@@ -218,12 +248,16 @@ function clearDateFilter() {
   endDate.value = ''
 }
 
-// 格式化工具
-function formatTime(iso) {
+function formatDate(iso) {
   if (!iso) return '-'
   const d = new Date(iso)
-  const pad = n => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function formatTimeOnly(iso) {
+  if (!iso) return ''
+  const d = new Date(iso)
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
 }
 
 function formatChain(chain) {
@@ -233,23 +267,41 @@ function formatChain(chain) {
 
 function formatAmount(amount) {
   const n = parseFloat(amount)
-  return isNaN(n) ? amount : n.toFixed(2)
+  return isNaN(n) ? amount : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
 }
 
 function statusLabel(status) {
   const map = { credited: 'Success', pending: 'Pending', failed: 'Failed', confirming: 'Confirming' }
-  return map[status?.toLowerCase()] || status || '-'
+  return map[status?.toLowerCase()] || status || 'Unknown'
 }
 
-function statusClass(status) {
+function statusClasses(status) {
   const s = status?.toLowerCase()
-  if (s === 'credited') return 'text-gray-900 dark:text-gray-300'
-  if (s === 'pending' || s === 'confirming') return 'text-yellow-600 dark:text-yellow-400'
-  if (s === 'failed') return 'text-red-600 dark:text-red-400'
-  return 'text-gray-500'
+  if (s === 'credited') return 'bg-green-50 text-green-700 border-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20'
+  if (s === 'pending' || s === 'confirming') return 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20'
+  if (s === 'failed') return 'bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20'
+  return 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-500/10 dark:text-gray-400 dark:border-gray-500/20'
+}
+
+function statusDotClasses(status) {
+  const s = status?.toLowerCase()
+  if (s === 'credited') return 'bg-green-500'
+  if (s === 'pending' || s === 'confirming') return 'bg-yellow-500 animate-pulse'
+  if (s === 'failed') return 'bg-red-500'
+  return 'bg-gray-500'
 }
 
 onMounted(() => {
   fetchDeposits(1)
 })
 </script>
+
+<style scoped>
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+</style>

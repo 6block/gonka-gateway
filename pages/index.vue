@@ -1,250 +1,273 @@
 <template>
-  <div class="p-8 max-w-6xl mx-auto space-y-8">
-    <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Dashboard</h1>
-      
-      <!-- Connected Address (Moved to top right for a cleaner dashboard) -->
-      <div v-if="auth.isLoggedIn" class="bg-white dark:bg-[rgb(17,17,17)] border border-gray-200 dark:border-gray-800 px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-2">
-        <div class="w-2 h-2 rounded-full bg-green-500"></div>
-        <span class="text-sm font-mono text-gray-700 dark:text-gray-300" :title="auth.user?.address">
-          {{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : 'Not Connected' }}
-        </span>
+  <div class="p-8 lg:p-12 max-w-7xl mx-auto space-y-12 animate-fade-in">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">Dashboard</h1>
+        <p class="text-gray-500 dark:text-gray-400">Overview of your usage and API settings.</p>
       </div>
     </div>
 
     <!-- Metrics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Balance -->
-      <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm transition-colors relative overflow-hidden group">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <h3 class="text-sm text-gray-500 font-medium mb-2">Available Balance</h3>
-        <div class="flex items-baseline gap-1">
-          <span class="text-3xl font-bold text-green-500">
-            {{ loading ? '-' : metrics.balance}}
+      <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">Available Balance</h3>
+          <div class="p-2 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-lg">
+            <LucideWallet class="w-4 h-4" />
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1.5 relative z-10">
+          <span class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            {{ loading ? '...' : metrics.balance}}
           </span>
-          <span class="text-sm text-gray-500 font-medium">{{ metrics.currency }}</span>
+          <span class="text-sm font-medium text-gray-500">{{ metrics.currency }}</span>
         </div>
       </div>
       
       <!-- Monthly Cost -->
-      <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm transition-colors relative overflow-hidden group">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <h3 class="text-sm text-gray-500 font-medium mb-2">Monthly Cost</h3>
-        <div class="flex items-baseline gap-1">
-          <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-            {{ loading ? '-' : formatNumber(metrics.monthly_cost, 5) }}
+      <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">Monthly Cost</h3>
+          <div class="p-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">
+            <LucideTrendingDown class="w-4 h-4" />
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1.5 relative z-10">
+          <span class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            {{ loading ? '...' : formatNumber(metrics.monthly_cost, 5) }}
           </span>
-          <span class="text-sm text-gray-500 font-medium">{{ metrics.currency }}</span>
+          <span class="text-sm font-medium text-gray-500">{{ metrics.currency }}</span>
         </div>
       </div>
 
       <!-- Monthly Requests -->
-      <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm transition-colors relative overflow-hidden group">
-        <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <h3 class="text-sm text-gray-500 font-medium mb-2">Monthly Requests</h3>
-        <div class="flex items-baseline gap-1">
-          <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-            {{ loading ? '-' : formatInt(metrics.monthly_requests) }}
+      <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">Monthly Requests</h3>
+          <div class="p-2 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-lg">
+            <LucideActivity class="w-4 h-4" />
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1.5 relative z-10">
+          <span class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            {{ loading ? '...' : formatInt(metrics.monthly_requests) }}
           </span>
-          <span class="text-sm text-gray-500 font-medium">reqs</span>
+          <span class="text-sm font-medium text-gray-500">reqs</span>
         </div>
       </div>
 
       <!-- Monthly Tokens -->
-      <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm transition-colors relative overflow-hidden group">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <h3 class="text-sm text-gray-500 font-medium mb-2">Monthly Tokens</h3>
-        <div class="flex items-baseline gap-1">
-          <span class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-            {{ loading ? '-' : formatInt(metrics.monthly_token_used) }}
+      <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400">Monthly Tokens</h3>
+          <div class="p-2 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg">
+            <LucideZap class="w-4 h-4" />
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1.5 relative z-10">
+          <span class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            {{ loading ? '...' : formatInt(metrics.monthly_token_used) }}
           </span>
-          <span class="text-sm text-gray-500 font-medium">tokens</span>
+          <span class="text-sm font-medium text-gray-500">tokens</span>
         </div>
       </div>
-
     </div>
 
     <!-- Error State -->
-    <div v-if="error" class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm transition-colors">
+    <div v-if="error" class="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm flex items-center gap-3 animate-fade-in">
+      <LucideAlertCircle class="w-5 h-5 shrink-0" />
       {{ error }}
     </div>
 
-    <!-- API Documentation -->
-    <div class="space-y-12 pb-12 pt-4">
-
-      <!-- API Key Section -->
-      <section>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">API Key</h2>
-        <div class="border-t-2 border-blue-500 pt-4">
-          <p class="text-gray-600 dark:text-gray-400 mb-4 transition-colors">Use this key to authenticate your API requests. Keep it secure.</p>
-          <div class="flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-4 transition-colors">
-            <code class="text-sm text-gray-700 dark:text-gray-300 font-mono transition-colors break-all">
-              <span v-if="isKeyLoading" class="text-gray-400 flex items-center gap-2">
-                <LucideLoader2 class="w-4 h-4 animate-spin" /> Loading API Key...
-              </span>
-              <span v-else>{{ apiKey || 'No API Key found. Please check your setup.' }}</span>
-            </code>
-            <button 
-              v-if="apiKey"
-              @click="copyApiKey" 
-              class="ml-4 flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
-              :class="copied ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 dark:bg-[#222] dark:text-gray-300 dark:border-gray-700 dark:hover:bg-[#2a2a2a]'"
-            >
-              {{ copied ? 'Copied!' : 'Copy' }}
-            </button>
-          </div>
-        </div>
-      </section>
-      
-      <!-- Base URL Section -->
-      <section>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">Base URL</h2>
-        <div class="border-t-2 border-blue-500 pt-4">
-          <p class="text-gray-600 dark:text-gray-400 mb-4 transition-colors">The gateway is served over <strong class="font-semibold text-gray-900 dark:text-gray-200">HTTPS</strong>. All API requests should be made to:</p>
-          <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-4 transition-colors">
-            <code class="text-sm text-gray-700 dark:text-gray-300 font-mono transition-colors">{{ config.public.apiBase }}/v1</code>
-          </div>
-        </div>
-      </section>
-
-      <!-- API Endpoints Section -->
-      <section>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">API Endpoints</h2>
-        <div class="border-t-2 border-blue-500 pt-4 space-y-8">
-          
-          <!-- Endpoint 1: Chat Completions -->
-          <div>
-            <div class="bg-blue-50 dark:bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6 transition-colors">
-              <div class="flex items-center gap-3 mb-2">
-                <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">POST</span>
-                <span class="font-bold text-gray-900 dark:text-gray-200 font-mono transition-colors">/chat/completions</span>
-              </div>
-              <p class="text-gray-700 dark:text-gray-300 text-sm transition-colors">Create a chat completion (OpenAI-compatible)</p>
+    <!-- Configurations & API -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 pb-12">
+      <!-- Left Column: Keys & Config -->
+      <div class="xl:col-span-1 space-y-8">
+        
+        <!-- API Key Card -->
+        <section class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-gray-100 dark:border-white/5">
+            <div class="flex items-center gap-3 mb-1">
+              <LucideKey class="w-5 h-5 text-gray-400" />
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">API Key</h2>
             </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Authenticate your API requests.</p>
+          </div>
+          <div class="p-6 bg-gray-50/50 dark:bg-black/20">
+            <div class="flex items-center justify-between bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl p-1 shadow-inner overflow-hidden transition-all focus-within:ring-2 focus-within:ring-blue-500/20">
+              <div class="px-3 py-2 flex-1 overflow-hidden relative">
+                <span v-if="isKeyLoading" class="text-gray-400 text-sm flex items-center gap-2">
+                  <LucideLoader2 class="w-4 h-4 animate-spin" /> Loading...
+                </span>
+                <span v-else-if="!apiKey" class="text-gray-400 text-sm">No key found.</span>
+                <span v-else class="text-gray-800 dark:text-gray-200 text-sm font-mono truncate block" :class="{'blur-sm select-none': !showKey}">
+                  {{ apiKey }}
+                </span>
+              </div>
+              <div class="flex items-center gap-1 px-1">
+                <button 
+                  v-if="apiKey"
+                  @click="showKey = !showKey" 
+                  class="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors"
+                  :title="showKey ? 'Hide key' : 'Show key'"
+                >
+                  <LucideEyeOff v-if="showKey" class="w-4 h-4" />
+                  <LucideEye v-else class="w-4 h-4" />
+                </button>
+                <button 
+                  v-if="apiKey"
+                  @click="copyApiKey" 
+                  class="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors relative"
+                  title="Copy key"
+                >
+                  <LucideCheck v-if="copied" class="w-4 h-4 text-green-500" />
+                  <LucideCopy v-else class="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- Request Block -->
-            <div class="mb-4">
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 transition-colors">Request</h3>
-              <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-5 transition-colors overflow-x-auto">
-                <div class="font-mono text-sm space-y-4">
-                  <div class="text-gray-600 dark:text-gray-400 transition-colors">
-                    <div class="mb-1"><span class="text-blue-600 dark:text-blue-400">POST</span> /chat/completions</div>
-                    <div class="mb-1">Content-Type: application/json</div>
-                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ apiKey || 'sk-your-api-key' }}</span></div>
+        <!-- Base URL Card -->
+        <section class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-gray-100 dark:border-white/5">
+            <div class="flex items-center gap-3 mb-1">
+              <LucideGlobe class="w-5 h-5 text-gray-400" />
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Base URL</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">The gateway endpoint for all requests.</p>
+          </div>
+          <div class="p-6 bg-gray-50/50 dark:bg-black/20">
+            <div class="bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl p-3 shadow-inner flex items-center justify-between">
+              <code class="text-sm text-gray-800 dark:text-gray-300 font-mono">{{ config.public.apiBase }}/v1</code>
+              <button @click="copyBaseUrl" class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                <LucideCopy class="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: API Docs -->
+      <div class="xl:col-span-2 space-y-6">
+        <h2 class="text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2 mb-2">
+          <LucideBookOpen class="w-5 h-5" /> API Reference
+        </h2>
+        
+        <!-- Endpoint: Chat Completions -->
+        <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-gray-100 dark:border-white/5 flex items-center gap-4">
+            <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold px-2.5 py-1 rounded-md">POST</span>
+            <span class="font-mono text-sm font-semibold text-gray-900 dark:text-gray-100">/chat/completions</span>
+          </div>
+          <div class="p-6 space-y-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create a chat completion (OpenAI-compatible endpoint).</p>
+            
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Request</h3>
+              <div class="relative bg-[#fafafa] dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden group">
+                <div class="flex items-center px-4 py-2 bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
+                  <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-red-400/80"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400/80"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400/80"></div>
                   </div>
-                  
-                  <div class="text-gray-800 dark:text-gray-300 transition-colors">
-<pre><code>{
-  "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
-  "messages": [
-    {"role": "user", "content": "Hello!"}
-  ],
-  "stream": false
-}</code></pre>
-                  </div>
+                  <div class="mx-auto text-xs text-gray-400 font-mono">cURL</div>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm font-mono leading-relaxed">
+                  <div class="text-pink-600 dark:text-pink-400">curl <span class="text-gray-800 dark:text-gray-300">-X POST {{ config.public.apiBase }}/v1/chat/completions \</span></div>
+                  <div class="text-gray-800 dark:text-gray-300">  -H <span class="text-green-600 dark:text-green-400">"Content-Type: application/json"</span> \</div>
+                  <div class="text-gray-800 dark:text-gray-300">  -H <span class="text-green-600 dark:text-green-400">"Authorization: Bearer <span class="opacity-60">{{ apiKey || '$API_KEY' }}</span>"</span> \</div>
+                  <div class="text-gray-800 dark:text-gray-300">  -d <span class="text-yellow-600 dark:text-yellow-400">'{</span></div>
+                  <div class="text-gray-800 dark:text-gray-300"><span class="text-yellow-600 dark:text-yellow-400">    "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",</span></div>
+                  <div class="text-gray-800 dark:text-gray-300"><span class="text-yellow-600 dark:text-yellow-400">    "messages": [{"role": "user", "content": "Hello!"}]</span></div>
+                  <div class="text-gray-800 dark:text-gray-300"><span class="text-yellow-600 dark:text-yellow-400">  }'</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- Response Block -->
-            <div class="mb-6">
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 transition-colors">Response</h3>
-              <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-5 transition-colors overflow-x-auto">
-                <pre class="font-mono text-sm text-gray-800 dark:text-gray-300 transition-colors"><code>{
-  "id": "chatcmpl-123",
-  "object": "chat.completion",
-  "created": 1677652288,
-  "choices": [{
-    "index": 0,
-    "message": {
-      "role": "assistant",
-      "content": "Hello! How can I help you?"
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Response</h3>
+              <div class="relative bg-[#fafafa] dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden">
+                <div class="p-4 overflow-x-auto text-sm font-mono leading-relaxed text-gray-800 dark:text-gray-300">
+<pre><code>{
+  <span class="text-blue-600 dark:text-blue-400">"id"</span>: <span class="text-green-600 dark:text-green-400">"chatcmpl-123"</span>,
+  <span class="text-blue-600 dark:text-blue-400">"object"</span>: <span class="text-green-600 dark:text-green-400">"chat.completion"</span>,
+  <span class="text-blue-600 dark:text-blue-400">"created"</span>: <span class="text-orange-600 dark:text-orange-400">1677652288</span>,
+  <span class="text-blue-600 dark:text-blue-400">"choices"</span>: [{
+    <span class="text-blue-600 dark:text-blue-400">"index"</span>: <span class="text-orange-600 dark:text-orange-400">0</span>,
+    <span class="text-blue-600 dark:text-blue-400">"message"</span>: {
+      <span class="text-blue-600 dark:text-blue-400">"role"</span>: <span class="text-green-600 dark:text-green-400">"assistant"</span>,
+      <span class="text-blue-600 dark:text-blue-400">"content"</span>: <span class="text-green-600 dark:text-green-400">"Hello! How can I help you?"</span>
     },
-    "finish_reason": "stop"
+    <span class="text-blue-600 dark:text-blue-400">"finish_reason"</span>: <span class="text-green-600 dark:text-green-400">"stop"</span>
   }],
-  "usage": {
-    "prompt_tokens": 9,
-    "completion_tokens": 12,
-    "total_tokens": 21
+  <span class="text-blue-600 dark:text-blue-400">"usage"</span>: {
+    <span class="text-blue-600 dark:text-blue-400">"prompt_tokens"</span>: <span class="text-orange-600 dark:text-orange-400">9</span>,
+    <span class="text-blue-600 dark:text-blue-400">"completion_tokens"</span>: <span class="text-orange-600 dark:text-orange-400">12</span>,
+    <span class="text-blue-600 dark:text-blue-400">"total_tokens"</span>: <span class="text-orange-600 dark:text-orange-400">21</span>
   }
 }</code></pre>
-              </div>
-            </div>
-
-            <!-- Streaming Block -->
-            <div>
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 transition-colors">Streaming</h3>
-              <p class="text-gray-700 dark:text-gray-300 text-sm mb-3 transition-colors">To enable streaming, set <code class="bg-gray-100 dark:bg-[#222] px-1.5 py-0.5 rounded text-gray-800 dark:text-gray-300 transition-colors">"stream": true</code> in the request:</p>
-              <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-5 transition-colors overflow-x-auto">
-                <pre class="font-mono text-sm text-gray-800 dark:text-gray-300 transition-colors"><code>{
-  "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
-  "messages": [
-    {"role": "user", "content": "Tell me a story"}
-  ],
-  "stream": true
-}</code></pre>
-              </div>
-            </div>
-          </div>
-
-          <hr class="border-gray-200 dark:border-gray-800 transition-colors" />
-
-          <!-- Endpoint 2: List Models -->
-          <div>
-            <div class="bg-blue-50 dark:bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6 transition-colors">
-              <div class="flex items-center gap-3 mb-2">
-                <span class="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">GET</span>
-                <span class="font-bold text-gray-900 dark:text-gray-200 font-mono transition-colors">/models</span>
-              </div>
-              <p class="text-gray-700 dark:text-gray-300 text-sm transition-colors">List available models</p>
-            </div>
-
-            <!-- Request Block -->
-            <div class="mb-4">
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 transition-colors">Request</h3>
-              <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-5 transition-colors overflow-x-auto">
-                <div class="font-mono text-sm space-y-4">
-                  <div class="text-gray-600 dark:text-gray-400 transition-colors">
-                    <div class="mb-1"><span class="text-green-600 dark:text-green-400">GET</span> /models</div>
-                    <div>Authorization: Bearer <span class="text-gray-900 dark:text-gray-300">{{ apiKey || 'sk-your-api-key' }}</span></div>
-                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Response Block -->
-            <div>
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 transition-colors">Response</h3>
-              <div class="bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg p-5 transition-colors overflow-x-auto">
-                <pre class="font-mono text-sm text-gray-800 dark:text-gray-300 transition-colors"><code>{
-  "object": "list",
-  "data": [
+        <!-- Endpoint: List Models -->
+        <div class="bg-white/60 dark:bg-[#111111]/80 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+          <div class="p-6 border-b border-gray-100 dark:border-white/5 flex items-center gap-4">
+            <span class="bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-bold px-2.5 py-1 rounded-md">GET</span>
+            <span class="font-mono text-sm font-semibold text-gray-900 dark:text-gray-100">/models</span>
+          </div>
+          <div class="p-6 space-y-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400">List available models.</p>
+            
+            <div class="space-y-3">
+              <div class="relative bg-[#fafafa] dark:bg-[#0a0a0a] border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden">
+                <div class="p-4 overflow-x-auto text-sm font-mono leading-relaxed text-gray-800 dark:text-gray-300">
+<pre><code>{
+  <span class="text-blue-600 dark:text-blue-400">"object"</span>: <span class="text-green-600 dark:text-green-400">"list"</span>,
+  <span class="text-blue-600 dark:text-blue-400">"data"</span>: [
     {
-      "id": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
-      "object": "model",
-      "created": 1677610602,
-      "owned_by": "gonka"
+      <span class="text-blue-600 dark:text-blue-400">"id"</span>: <span class="text-green-600 dark:text-green-400">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
+      <span class="text-blue-600 dark:text-blue-400">"object"</span>: <span class="text-green-600 dark:text-green-400">"model"</span>,
+      <span class="text-blue-600 dark:text-blue-400">"created"</span>: <span class="text-orange-600 dark:text-orange-400">1677610602</span>,
+      <span class="text-blue-600 dark:text-blue-400">"owned_by"</span>: <span class="text-green-600 dark:text-green-400">"gonka"</span>
     }
   ]
 }</code></pre>
+                </div>
               </div>
             </div>
           </div>
-          
         </div>
-      </section>
+
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { LucideLoader2 } from 'lucide-vue-next'
+import { 
+  LucideLoader2, LucideWallet, LucideTrendingDown, LucideActivity, 
+  LucideZap, LucideAlertCircle, LucideKey, LucideCopy, LucideCheck,
+  LucideEye, LucideEyeOff, LucideGlobe, LucideBookOpen
+} from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
+import { useToast } from '~/composables/useToast'
 import { ref, onMounted } from 'vue'
 
 const config = useRuntimeConfig()
 const auth = useAuthStore()
+const toast = useToast()
 
 const loading = ref(false)
 const error = ref(null)
@@ -252,6 +275,7 @@ const error = ref(null)
 const apiKey = ref('')
 const isKeyLoading = ref(false)
 const copied = ref(false)
+const showKey = ref(false)
 
 const metrics = ref({
   balance: 0,
@@ -273,13 +297,28 @@ function formatInt(val) {
   return n.toLocaleString('en-US')
 }
 
-function copyApiKey() {
+async function copyApiKey() {
   if (!apiKey.value) return
-  navigator.clipboard.writeText(apiKey.value)
-  copied.value = true
-  setTimeout(() => {
-    copied.value = false
-  }, 2000)
+  try {
+    await navigator.clipboard.writeText(apiKey.value)
+    copied.value = true
+    toast.success('API Key copied to clipboard')
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch (err) {
+    toast.error('Failed to copy API key')
+  }
+}
+
+async function copyBaseUrl() {
+  const url = `${config.public.apiBase}/v1`
+  try {
+    await navigator.clipboard.writeText(url)
+    toast.success('Base URL copied to clipboard')
+  } catch (err) {
+    toast.error('Failed to copy Base URL')
+  }
 }
 
 async function fetchApiKey() {
@@ -289,10 +328,8 @@ async function fetchApiKey() {
     const data = await $fetch(`${config.public.apiBase}/api/keys`, {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
-    console.log('fetchApiKey', data)
     const key = data?.items[0]?.key
     apiKey.value = key || ''
-    console.log('apiKey', apiKey.value)
   } catch (e) {
     console.error('Fetch API key error:', e)
   } finally {

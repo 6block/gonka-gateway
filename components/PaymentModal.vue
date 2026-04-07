@@ -1,86 +1,89 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 bg-black/60 dark:bg-black/80 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
-    <div class="bg-gray-50 dark:bg-[#0a0a0a] p-8 rounded-3xl w-full max-w-lg shadow-2xl transition-colors duration-300 relative border border-gray-200 dark:border-gray-800">
+  <div v-if="isOpen" class="fixed inset-0 bg-black/40 dark:bg-black/60 flex items-center justify-center z-[100] backdrop-blur-md p-4 transition-opacity">
+    <div class="bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl p-8 rounded-3xl w-full max-w-[480px] shadow-2xl animate-scale-in relative border border-gray-200/50 dark:border-white/10">
       <!-- Close button -->
-      <button @click="close" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
-        <LucideX class="w-6 h-6" />
+      <button @click="close" class="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+        <LucideX class="w-5 h-5" />
       </button>
 
-      <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white">Payment</h2>
-
-      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16">
-        <LucideLoader2 class="w-10 h-10 animate-spin text-[#22C55E] mb-4" />
-        <p class="text-gray-500 font-medium">Generating deposit address...</p>
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 flex items-center justify-center">
+          <LucideCreditCard class="w-5 h-5 text-green-600 dark:text-green-400" />
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Add Funds</h2>
       </div>
 
-      <div v-else-if="depositAddress">
-        <div class="border border-gray-200 dark:border-gray-800 rounded-[24px] p-8 bg-white dark:bg-[#111] mb-8 shadow-sm flex flex-col items-center">
-          <div class="flex items-baseline space-x-2 mb-4">
-            <span class="text-[44px] font-extrabold text-[#22C55E] leading-none tracking-tight">100,000</span>
-            <span class="text-xl font-bold text-[#22C55E] opacity-90 tracking-tight">Tokens/USDT</span>
-          </div>
-          
-          <div class="bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 px-4 py-1.5 rounded-full text-xs font-bold flex items-center mb-8 shadow-sm">
-            <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-2"></span>
-            Only USDT accepted on this address
+      <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
+        <LucideLoader2 class="w-8 h-8 animate-spin text-green-500 mb-4" />
+        <p class="text-sm text-gray-500 font-medium">Generating secure address...</p>
+      </div>
+
+      <div v-else-if="depositAddress" class="animate-fade-in">
+        <div class="border border-gray-200/60 dark:border-white/10 rounded-[20px] p-8 bg-[#fafafa] dark:bg-black/40 mb-6 shadow-inner flex flex-col items-center">
+          <div class="flex items-baseline space-x-1.5 mb-6">
+            <span class="text-4xl font-extrabold text-green-600 dark:text-green-400 leading-none tracking-tight">100,000</span>
+            <span class="text-sm font-semibold text-green-600/80 dark:text-green-400/80">Tokens / USDT</span>
           </div>
 
-          <div class="flex items-center gap-8 w-full justify-center">
-            <div class="p-3 border-2 border-[#22C55E] rounded-xl bg-white shadow-sm">
-              <qrcode-vue :value="depositAddress" :size="130" level="H" foreground="#111111" background="#ffffff" />
-            </div>
+          <div class="p-3.5 border border-gray-200 dark:border-white/10 rounded-2xl bg-white shadow-sm mb-6">
+            <qrcode-vue :value="depositAddress" :size="160" level="H" foreground="#000000" background="#ffffff" />
+          </div>
             
-            <div class="space-y-3">
-              <div class="flex items-center text-gray-900 dark:text-white font-bold text-[15px]">
-                <LucideQrCode class="w-4 h-4 mr-2 text-gray-700 dark:text-gray-300" />
-                Scan to Pay
-              </div>
-              <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm font-medium">
-                <LucideShieldCheck class="w-4 h-4 mr-2" />
-                Secured Transaction
-              </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex items-center text-gray-900 dark:text-white font-bold text-sm">
+              <LucideQrCode class="w-4 h-4 mr-2 text-gray-500" />
+              Scan to Pay
+            </div>
+            <div class="bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider flex items-center">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5 animate-pulse"></span>
+              Only send USDT
             </div>
           </div>
         </div>
 
-        <div class="space-y-6">
-          <div class="space-y-2.5">
-            <div class="text-xs font-bold text-gray-500 dark:text-gray-400">Deposit Address</div>
-            <div class="flex bg-white dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700 rounded-xl p-1.5 items-center shadow-sm">
-              <LucideCreditCard class="w-5 h-5 text-gray-400 mx-3 flex-shrink-0" />
-              <div class="flex-1 font-mono text-sm text-gray-700 dark:text-gray-300 break-all truncate mr-2">{{ depositAddress.slice(0, 14) + '...' + depositAddress.slice(-14) }}</div>
-              <button @click="copyAddress" class="px-5 py-2 bg-[#22C55E] hover:bg-[#16a34a] text-white rounded-lg text-sm font-bold transition-colors flex items-center flex-shrink-0 shadow-sm">
-                <LucideCheck v-if="copied" class="w-4 h-4 mr-1.5" />
-                <LucideCopy v-else class="w-4 h-4 mr-1.5" />
+        <div class="space-y-5">
+          <div class="space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 ml-1">Deposit Address</div>
+            <div class="flex bg-[#fafafa] dark:bg-black/40 border border-gray-200/60 dark:border-white/10 rounded-xl p-1.5 items-center shadow-inner group transition-colors hover:border-green-500/30">
+              <div class="flex-1 font-mono text-[13px] text-gray-800 dark:text-gray-200 truncate pl-3 pr-2 select-all">
+                {{ depositAddress }}
+              </div>
+              <button @click="copyAddress" class="px-4 py-2 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-100 text-white dark:text-black rounded-lg text-sm font-bold transition-all flex items-center flex-shrink-0 shadow-sm active:scale-95">
+                <LucideCheck v-if="copied" class="w-4 h-4 mr-1.5 text-green-400 dark:text-green-600" />
+                <LucideCopy v-else class="w-4 h-4 mr-1.5 opacity-70" />
                 <span>{{ copied ? 'Copied' : 'Copy' }}</span>
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800/20 shadow-sm">
-              <div class="text-xs font-medium text-gray-400 mb-2">Network</div>
-              <div class="font-bold text-gray-900 dark:text-white flex items-center">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#22C55E] mr-2"></span>
-                BEP-20
+          <div class="grid grid-cols-2 gap-3">
+            <div class="border border-gray-200/60 dark:border-white/10 rounded-xl p-4 bg-[#fafafa] dark:bg-black/20">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Network</div>
+              <div class="font-bold text-gray-900 dark:text-white flex items-center text-sm">
+                <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                BEP-20 (BSC)
               </div>
             </div>
-            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800/20 shadow-sm">
-              <div class="text-xs font-medium text-gray-400 mb-1">Deposit Received</div>
-              <div class="font-bold text-gray-900 dark:text-white text-base">1–5 mins</div>
-              <div class="text-xs font-medium text-gray-400 mt-0.5">after confirmation</div>
+            <div class="border border-gray-200/60 dark:border-white/10 rounded-xl p-4 bg-[#fafafa] dark:bg-black/20">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Arrival Time</div>
+              <div class="font-bold text-gray-900 dark:text-white text-sm">1–5 mins</div>
+              <div class="text-[10px] text-gray-400 mt-0.5">after block confirmation</div>
             </div>
           </div>
         </div>
         
-        <div class="mt-8 text-center text-xs font-medium text-gray-400 flex items-center justify-center space-x-1.5">
-          <LucideLock class="w-3.5 h-3.5 opacity-70" />
-          <span>End-to-end encrypted · Powered by Gonka</span>
+        <div class="mt-8 text-center text-[11px] font-medium text-gray-400 dark:text-gray-500 flex items-center justify-center space-x-1.5">
+          <LucideShieldCheck class="w-3.5 h-3.5" />
+          <span>Secured by GonkaRouter</span>
         </div>
       </div>
       
-      <div v-else class="text-center py-12 text-red-500 font-medium">
-        Failed to fetch deposit address. Please try again.
+      <div v-else class="text-center py-16">
+        <LucideAlertCircle class="w-10 h-10 text-red-500 mx-auto mb-3" />
+        <p class="text-red-500 font-medium text-sm">Failed to fetch deposit address.</p>
+        <button @click="fetchDepositAddress" class="mt-4 px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 rounded-lg text-sm font-medium transition-colors">
+          Try Again
+        </button>
       </div>
     </div>
   </div>
@@ -88,9 +91,13 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { LucideX, LucideLoader2, LucideQrCode, LucideShieldCheck, LucideCreditCard, LucideCopy, LucideCheck, LucideLock } from 'lucide-vue-next'
+import { 
+  LucideX, LucideLoader2, LucideQrCode, LucideShieldCheck, 
+  LucideCreditCard, LucideCopy, LucideCheck, LucideAlertCircle 
+} from 'lucide-vue-next'
 import QrcodeVue from 'qrcode.vue'
 import { useAuthStore } from '~/stores/auth'
+import { useToast } from '~/composables/useToast'
 import { useNuxtApp } from '#app'
 
 const props = defineProps({
@@ -101,6 +108,7 @@ const emit = defineEmits(['close'])
 
 const auth = useAuthStore()
 const config = useNuxtApp().$config
+const toast = useToast()
 
 const isLoading = ref(false)
 const depositAddress = ref('')
@@ -142,11 +150,12 @@ const copyAddress = async () => {
   try {
     await navigator.clipboard.writeText(depositAddress.value)
     copied.value = true
+    toast.success('Deposit address copied to clipboard')
     setTimeout(() => {
       copied.value = false
     }, 2000)
   } catch (err) {
-    console.error('Failed to copy text: ', err)
+    toast.error('Failed to copy address')
   }
 }
 </script>
