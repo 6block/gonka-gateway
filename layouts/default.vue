@@ -1,51 +1,94 @@
 <template>
-  <div class="flex h-screen bg-[#fafafa] dark:bg-[#000000] text-gray-900 dark:text-gray-200 transition-colors duration-300 font-sans">
+  <div class="flex h-screen bg-[#fafafa] dark:bg-[#050510] text-gray-900 dark:text-gray-200 transition-colors duration-500 font-sans">
     <!-- Sidebar -->
-    <aside class="w-[260px] border-r border-gray-200/60 dark:border-white/[0.05] bg-white/50 dark:bg-black flex flex-col transition-colors duration-300 backdrop-blur-md z-20">
+    <aside class="w-[260px] border-r border-gray-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-[#0a0a1a]/80 flex flex-col transition-all duration-500 backdrop-blur-2xl z-20 relative">
+      <!-- Sidebar glow line -->
+      <div class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-primary-500/20 to-transparent dark:via-primary-500/30"></div>
+
+      <!-- Logo -->
       <div class="p-6 pb-2">
-        <h1 class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-white dark:to-gray-400">GonkaRouter</h1>
-        <p class="text-[13px] text-gray-500 dark:text-gray-400 mt-1 font-medium">OpenAI-compatible inference</p>
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-accent-cyan flex items-center justify-center shadow-glow">
+            <LucideZap class="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h1 class="text-lg font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-accent-cyan to-primary-500 dark:from-primary-300 dark:via-accent-cyan dark:to-primary-400">GonkaRouter</h1>
+          </div>
+        </div>
+        <p class="text-[12px] text-gray-500 dark:text-gray-500 mt-2 font-medium pl-[42px]">AI Inference Gateway</p>
       </div>
 
+      <!-- Navigation -->
       <nav class="flex-1 px-3 mt-6 space-y-1">
-        <NuxtLink to="/" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.04]" active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white" exact-active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white shadow-sm dark:shadow-none">
+        <NuxtLink
+          to="/"
+          class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-white/[0.04] relative group"
+          active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+          exact-active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+        >
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-gradient-to-b from-primary-400 to-accent-cyan rounded-full transition-all duration-300 opacity-0 group-[.router-link-exact-active]:h-5 group-[.router-link-exact-active]:opacity-100"></div>
           <LucideLayoutDashboard class="w-4 h-4" />
           <span>Dashboard</span>
         </NuxtLink>
-        <NuxtLink to="/chat" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.04]" active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white" exact-active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white shadow-sm dark:shadow-none">
+        <NuxtLink
+          to="/chat"
+          class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-white/[0.04] relative group"
+          active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+          exact-active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+        >
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-gradient-to-b from-primary-400 to-accent-cyan rounded-full transition-all duration-300 opacity-0 group-[.router-link-exact-active]:h-5 group-[.router-link-exact-active]:opacity-100"></div>
           <LucideMessageSquare class="w-4 h-4" />
           <span>Chat</span>
         </NuxtLink>
-        <NuxtLink to="/transactions" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.04]" active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white" exact-active-class="bg-gray-100/80 dark:bg-white/[0.06] text-gray-900 dark:text-white shadow-sm dark:shadow-none">
+        <NuxtLink
+          to="/transactions"
+          class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-white/[0.04] relative group"
+          active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+          exact-active-class="!bg-primary-500/10 dark:!bg-primary-500/[0.08] !text-primary-600 dark:!text-primary-300"
+        >
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 bg-gradient-to-b from-primary-400 to-accent-cyan rounded-full transition-all duration-300 opacity-0 group-[.router-link-exact-active]:h-5 group-[.router-link-exact-active]:opacity-100"></div>
           <LucideHistory class="w-4 h-4" />
           <span>Transactions</span>
         </NuxtLink>
       </nav>
 
-      <!-- User Info & Action -->
+      <!-- Bottom Section -->
       <div class="p-4 space-y-4">
-        <!-- Payment Button -->
-        <button v-if="auth.isLoggedIn" @click="showPaymentModal = true" class="group relative w-full flex items-center justify-center space-x-2 px-3 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg text-[14px] font-semibold transition-all duration-200 hover:scale-[1.02] shadow-md hover:shadow-xl dark:shadow-white/10">
-          <LucideCreditCard class="w-4 h-4" />
-          <span>Deposit</span>
+        <!-- Deposit Button -->
+        <button
+          v-if="auth.isLoggedIn"
+          @click="showPaymentModal = true"
+          class="group relative w-full flex items-center justify-center space-x-2 px-3 py-3 rounded-xl text-[14px] font-semibold transition-all duration-300 overflow-hidden"
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-accent-cyan opacity-90 group-hover:opacity-100 transition-opacity"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-accent-cyan opacity-0 group-hover:opacity-100 blur-xl transition-opacity"></div>
+          <LucideCreditCard class="w-4 h-4 text-white relative z-10" />
+          <span class="text-white relative z-10">Deposit</span>
         </button>
 
-        <div class="h-px w-full bg-gray-200/60 dark:bg-white/[0.05]"></div>
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-200 dark:via-white/[0.06] to-transparent"></div>
 
-        <div class="flex items-center justify-between px-2">
+        <div class="flex items-center justify-between px-1">
           <!-- Theme Toggle -->
-          <button @click="toggleColorMode" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors" title="Toggle Theme">
+          <button
+            @click="toggleColorMode"
+            class="p-2.5 rounded-xl text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-primary-500/10 dark:hover:bg-primary-500/10 transition-all duration-200"
+            title="Toggle Theme"
+          >
             <LucideSun v-if="colorMode.value === 'light'" class="w-4 h-4" />
             <LucideMoon v-else class="w-4 h-4" />
           </button>
 
           <template v-if="auth.isLoggedIn">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2.5">
               <div class="text-right">
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-0.5">Connected</div>
-                <div class="font-mono text-[12px] text-gray-900 dark:text-white" :title="auth.user?.address">{{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : '...' }}</div>
+                <div class="text-[10px] text-primary-400 uppercase tracking-wider font-bold mb-0.5 flex items-center justify-end gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent-emerald animate-pulse"></span>
+                  Connected
+                </div>
+                <div class="font-mono text-[11px] text-gray-700 dark:text-gray-300" :title="auth.user?.address">{{ auth.user?.address ? auth.user.address.slice(0, 6) + '...' + auth.user.address.slice(-4) : '...' }}</div>
               </div>
-              <button @click="logout" class="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500/10 dark:hover:text-red-400 transition-colors" title="Disconnect">
+              <button @click="logout" class="p-2 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200" title="Disconnect">
                 <LucideLogOut class="w-4 h-4" />
               </button>
             </div>
@@ -60,42 +103,52 @@
     </main>
 
     <!-- Login Modal -->
-    <div v-if="!auth.isLoggedIn" class="fixed inset-0 bg-black/40 dark:bg-black/60 flex items-center justify-center z-50 backdrop-blur-md transition-opacity">
-      <div class="bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border border-gray-200/50 dark:border-white/10 p-8 rounded-2xl w-full max-w-[400px] shadow-2xl animate-scale-in">
-        <div class="flex justify-center mb-6">
-          <div class="w-16 h-16 bg-gradient-to-tr from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 rounded-2xl shadow-lg flex items-center justify-center">
-            <LucideWallet class="w-8 h-8 text-white dark:text-black" />
-          </div>
-        </div>
-        <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">Welcome back</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-[14px] text-center mb-8">Connect your MetaMask wallet to continue to your dashboard.</p>
+    <div v-if="!auth.isLoggedIn" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 backdrop-blur-xl transition-opacity">
+      <div class="bg-white/95 dark:bg-[#0c0c1d]/95 backdrop-blur-2xl border border-gray-200/50 dark:border-primary-500/20 p-8 rounded-3xl w-full max-w-[420px] shadow-2xl dark:shadow-glow-lg animate-scale-in relative overflow-hidden">
+        <!-- Decorative gradient -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-accent-cyan to-primary-500"></div>
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-accent-cyan/10 rounded-full blur-3xl"></div>
 
-        <button @click="connectMetaMask" :disabled="!!isConnecting" class="relative w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black font-semibold py-3.5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex justify-center items-center space-x-2 shadow-lg">
-          <div class="absolute inset-0 bg-white/20 dark:bg-black/10 translate-y-full hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-          <LucideLoader2 v-if="isConnecting" class="w-5 h-5 animate-spin relative z-10" />
-          <template v-else>
-            <svg class="w-5 h-5 flex-shrink-0 relative z-10 text-[#F6851B]" viewBox="0 0 35 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M32.88 1.05001C32.48 0.420006 31.73 0 30.93 0H3.97C3.17 0 2.42 0.420006 2.02 1.05001C1.61 1.68 1.66 2.5 2.15 3.08001L14.7 18.06V31.33C14.7 32.25 15.45 33 16.37 33C17.3 33 18.04 32.25 18.04 31.33V18.06L30.6 3.08001C31.09 2.5 31.28 1.68 32.88 1.05001Z" fill="currentColor"/>
-            </svg>
-            <span class="relative z-10">{{ hasMetaMask ? 'Connect MetaMask' : 'Install MetaMask' }}</span>
-          </template>
-        </button>
+        <div class="relative z-10">
+          <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-cyan rounded-2xl shadow-glow flex items-center justify-center animate-float">
+              <LucideWallet class="w-8 h-8 text-white" />
+            </div>
+          </div>
+          <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">Welcome back</h2>
+          <p class="text-gray-500 dark:text-gray-400 text-[14px] text-center mb-8">Connect your MetaMask wallet to access the inference gateway.</p>
+
+          <button
+            @click="connectMetaMask"
+            :disabled="!!isConnecting"
+            class="relative w-full overflow-hidden bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-500 dark:to-accent-cyan text-white font-semibold py-3.5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex justify-center items-center space-x-2 shadow-glow"
+          >
+            <LucideLoader2 v-if="isConnecting" class="w-5 h-5 animate-spin relative z-10" />
+            <template v-else>
+              <svg class="w-5 h-5 flex-shrink-0 relative z-10 text-orange-300" viewBox="0 0 35 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32.88 1.05001C32.48 0.420006 31.73 0 30.93 0H3.97C3.17 0 2.42 0.420006 2.02 1.05001C1.61 1.68 1.66 2.5 2.15 3.08001L14.7 18.06V31.33C14.7 32.25 15.45 33 16.37 33C17.3 33 18.04 32.25 18.04 31.33V18.06L30.6 3.08001C31.09 2.5 31.28 1.68 32.88 1.05001Z" fill="currentColor"/>
+              </svg>
+              <span class="relative z-10">{{ hasMetaMask ? 'Connect MetaMask' : 'Install MetaMask' }}</span>
+            </template>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Payment Modal -->
     <PaymentModal :is-open="showPaymentModal" @close="showPaymentModal = false" />
-    
+
     <!-- Global Toasts -->
     <Toast />
   </div>
 </template>
 
 <script setup>
-import { 
-  LucideLayoutDashboard, LucideMessageSquare, LucideCreditCard, 
-  LucideHistory, LucideLoader2, LucideSun, LucideMoon, 
-  LucideLogOut, LucideWallet
+import {
+  LucideLayoutDashboard, LucideMessageSquare, LucideCreditCard,
+  LucideHistory, LucideLoader2, LucideSun, LucideMoon,
+  LucideLogOut, LucideWallet, LucideZap
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { ref, onMounted } from 'vue'
