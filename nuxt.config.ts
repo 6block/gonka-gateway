@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'https://36.189.234.197:18013'
+      apiBase: process.env.API_BASE || 'http://36.189.234.197:18013'
     }
   },
   devServer: {
