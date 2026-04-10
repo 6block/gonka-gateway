@@ -235,6 +235,7 @@ async function fetchDeposits(page = 1) {
     total.value = data.total || 0
     currentPage.value = data.page || page
   } catch (e) {
+    if (e?.response?.status === 401) auth.logout()
     error.value = e?.data?.message || e?.message || 'Failed to fetch transactions. Please try again.'
   } finally {
     loading.value = false

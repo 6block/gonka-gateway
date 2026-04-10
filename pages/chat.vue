@@ -199,6 +199,9 @@ async function sendMessage() {
     })
 
     if (!res.ok) {
+      if (res.status === 401) {
+        auth.logout()
+      }
       const errText = await res.text()
       throw new Error(`HTTP_ERROR:|||${res.status}|||${errText}`)
     }

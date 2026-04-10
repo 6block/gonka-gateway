@@ -342,6 +342,7 @@ async function fetchApiKey() {
     const key = data?.items[0]?.key
     apiKey.value = key || ''
   } catch (e) {
+    if (e?.response?.status === 401) auth.logout()
     console.error('Fetch API key error:', e)
   } finally {
     isKeyLoading.value = false
@@ -369,6 +370,7 @@ async function fetchBalance() {
       }
     }
   } catch (e) {
+    if (e?.response?.status === 401) auth.logout()
     error.value = e?.data?.message || e?.message || 'Failed to fetch balance information'
     console.error('Fetch balance error:', e)
   } finally {

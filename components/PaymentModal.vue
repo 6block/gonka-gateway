@@ -135,6 +135,7 @@ const fetchDepositAddress = async () => {
       depositAddress.value = res.address
     }
   } catch (error) {
+    if (error?.response?.status === 401) auth.logout()
     console.error('Failed to fetch deposit address:', error)
   } finally {
     isLoading.value = false
