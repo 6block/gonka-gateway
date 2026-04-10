@@ -43,7 +43,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'https://api.gonkascan.com'
+      apiBase: process.env.API_BASE || 'http://36.189.234.197:18013' // 测试环境
+      // apiBase: process.env.API_BASE || 'https://api.gonkascan.com' // 生产环境
     }
   },
   devServer: {
