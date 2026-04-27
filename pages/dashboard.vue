@@ -449,13 +449,23 @@ async function fetchBalance() {
     const data = await $fetch(`${config.public.apiBase}/api/me`, {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
-    if (data && data.balance) {
+    if (data) {
+      // Response shape: { balance: { USDT: "10" }, usage: { chat: { ... } } }
+      // Prefer USDT; fall back to whichever currency key the server returns first.
+      const balanceMap = (data.balance && typeof data.balance === 'object') ? data.balance : {}
+      const currency = balanceMap.USDT !== undefined
+        ? 'USDT'
+        : Object.keys(balanceMap)[0] || 'USDT'
+      const balance = balanceMap[currency] ?? 0
+
+      const chat = data.usage?.chat || {}
+
       metrics.value = {
-        balance: data.balance.amount || 0,
-        currency: data.balance.currency || 'USDT',
-        monthly_cost: data.balance.monthly_cost || 0,
-        monthly_requests: data.balance.monthly_requests || 0,
-        monthly_token_used: data.balance.monthly_token_used || 0
+        balance,
+        currency,
+        monthly_cost: chat.monthly_cost ?? 0,
+        monthly_requests: chat.monthly_requests ?? 0,
+        monthly_token_used: chat.monthly_token_used ?? 0
       }
     }
   } catch (e) {
