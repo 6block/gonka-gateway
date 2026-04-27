@@ -208,7 +208,7 @@
               <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
                 <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X POST {{ config.public.apiBase }}/v1/chat/completions \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
-  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey || '$API_KEY' }}"</span> \
+  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span> \
   -d <span class="text-tertiary">'{
     "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
     "messages": [{"role": "user", "content": "Hello!"}]
