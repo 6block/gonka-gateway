@@ -183,31 +183,80 @@
             Create a chat completion using the optimized pipeline.
           </p>
 
-          <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
-            <div
-              class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-white/5"
-            >
-              <span
-                class="text-[9px] font-black text-text-muted tracking-widest uppercase"
+          <!-- Request -->
+          <div class="space-y-2">
+            <p class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase px-1">
+              Request
+            </p>
+            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
+              <div
+                class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-white/5"
               >
-                cURL
-              </span>
-              <button
-                @click="copyCurl"
-                class="p-1 hover:text-primary-container transition-colors"
-                title="Copy"
-              >
-                <LucideCopy class="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
-              <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X POST {{ config.public.apiBase }}/v1/chat/completions \
+                <span
+                  class="text-[9px] font-black text-text-muted tracking-widest uppercase"
+                >
+                  cURL
+                </span>
+                <button
+                  @click="copyCurl"
+                  class="p-1 hover:text-primary-container transition-colors"
+                  title="Copy"
+                >
+                  <LucideCopy class="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+                <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X POST {{ config.public.apiBase }}/v1/chat/completions \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey || '$API_KEY' }}"</span> \
   -d <span class="text-tertiary">'{
     "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'</span></code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Response -->
+          <div class="space-y-2">
+            <p class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase px-1">
+              Response
+            </p>
+            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
+              <div
+                class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-white/5"
+              >
+                <span
+                  class="text-[9px] font-black text-text-muted tracking-widest uppercase"
+                >
+                  JSON
+                </span>
+                <span
+                  class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary-container/10 text-primary-container text-[9px] font-black tracking-widest border border-primary-container/20"
+                >
+                  200 OK
+                </span>
+              </div>
+              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+                <pre class="text-secondary"><code>{
+  <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"chatcmpl-123"</span>,
+  <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"chat.completion"</span>,
+  <span class="text-primary-dim">"created"</span>: <span class="text-tertiary">1677652288</span>,
+  <span class="text-primary-dim">"choices"</span>: [{
+    <span class="text-primary-dim">"index"</span>: <span class="text-tertiary">0</span>,
+    <span class="text-primary-dim">"message"</span>: {
+      <span class="text-primary-dim">"role"</span>: <span class="text-tertiary">"assistant"</span>,
+      <span class="text-primary-dim">"content"</span>: <span class="text-tertiary">"Hello! How can I help you?"</span>
+    },
+    <span class="text-primary-dim">"finish_reason"</span>: <span class="text-tertiary">"stop"</span>
+  }],
+  <span class="text-primary-dim">"usage"</span>: {
+    <span class="text-primary-dim">"prompt_tokens"</span>: <span class="text-tertiary">9</span>,
+    <span class="text-primary-dim">"completion_tokens"</span>: <span class="text-tertiary">12</span>,
+    <span class="text-primary-dim">"total_tokens"</span>: <span class="text-tertiary">21</span>
+  }
+}</code></pre>
+              </div>
             </div>
           </div>
         </div>

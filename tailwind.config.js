@@ -21,23 +21,27 @@ export default {
         mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono]
       },
       colors: {
-        // Surface tokens (dark default, light overrides applied via CSS vars on :root/.light)
-        surface: 'var(--surface)',
-        'surface-container-low': 'var(--surface-container-low)',
-        'surface-container-high': 'var(--surface-container-high)',
-        'surface-container-highest': 'var(--surface-container-highest)',
-        'surface-container-lowest': 'var(--surface-container-lowest)',
-        'outline-variant': 'var(--outline-variant)',
-        'text-main': 'var(--text-main)',
+        // Surface tokens — channel-format vars so opacity modifiers like /10 apply.
+        surface: 'rgb(var(--surface-rgb) / <alpha-value>)',
+        'surface-container-low': 'rgb(var(--surface-container-low-rgb) / <alpha-value>)',
+        'surface-container-high': 'rgb(var(--surface-container-high-rgb) / <alpha-value>)',
+        'surface-container-highest':
+          'rgb(var(--surface-container-highest-rgb) / <alpha-value>)',
+        'surface-container-lowest':
+          'rgb(var(--surface-container-lowest-rgb) / <alpha-value>)',
+        'outline-variant': 'rgb(var(--outline-variant-rgb) / <alpha-value>)',
+        'text-main': 'rgb(var(--text-main-rgb) / <alpha-value>)',
+        // Keep the alpha-baked rgba so `text-text-muted` defaults to its 60%
+        // intent. Opacity modifiers on this token are intentionally not used.
         'text-muted': 'var(--text-muted)',
         primary: {
-          DEFAULT: 'var(--primary)',
-          dim: 'var(--primary-dim)',
-          container: 'var(--primary-container)',
-          on: 'var(--on-primary-container)'
+          DEFAULT: 'rgb(var(--primary-rgb) / <alpha-value>)',
+          dim: 'rgb(var(--primary-dim-rgb) / <alpha-value>)',
+          container: 'rgb(var(--primary-container-rgb) / <alpha-value>)',
+          on: 'rgb(var(--on-primary-container-rgb) / <alpha-value>)'
         },
-        secondary: 'var(--secondary)',
-        tertiary: '#72dcff',
+        secondary: 'rgb(var(--secondary-rgb) / <alpha-value>)',
+        tertiary: 'rgb(var(--tertiary-rgb) / <alpha-value>)',
         // Legacy fallbacks (kept to avoid blowing up stray utility classes)
         gray: {
           50: '#fafafa',

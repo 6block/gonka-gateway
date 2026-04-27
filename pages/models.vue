@@ -27,11 +27,7 @@
         <div
           class="bg-surface-container-high p-8 rounded-3xl border border-white/5 flex flex-col md:flex-row gap-8 items-center"
         >
-          <div
-            class="w-20 h-20 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container"
-          >
-            <LucideCpu class="w-12 h-12" />
-          </div>
+          <img src="@/assets/img/modleIcon.png" alt="Qwen3-235b" class="w-14 h-14">
           <div class="flex-1 text-center md:text-left space-y-2">
             <h3 class="text-3xl font-black font-headline tracking-tight">
               {{ modelData.name }}
@@ -122,11 +118,7 @@
         <div class="p-6 md:p-8 space-y-8">
           <div class="flex items-start justify-between">
             <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 bg-primary-container/10 rounded-xl flex items-center justify-center text-primary-container"
-              >
-                <LucideCpu class="w-7 h-7" />
-              </div>
+              <img src="@/assets/img/modleIcon.png" alt="Qwen3-235b" class="w-12 h-12">
               <div>
                 <div class="flex items-center gap-2">
                   <h3 class="text-xl font-black font-headline tracking-tight">

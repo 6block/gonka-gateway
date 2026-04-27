@@ -67,7 +67,7 @@
         </div>
 
         <!-- Live stats ticker -->
-        <div
+        <!-- <div
           class="mt-16 flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-50 hover:opacity-100 transition-opacity duration-500"
         >
           <div v-for="stat in stats" :key="stat.label" class="text-left">
@@ -85,7 +85,7 @@
               <span class="text-xs font-black text-primary-container">{{ stat.suffix }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
 

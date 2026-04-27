@@ -80,7 +80,7 @@
         <div class="flex flex-col items-center md:items-end gap-5">
           <div class="flex items-center gap-6">
             <a
-              href="https://x.com"
+              href="https://x.com/gonka_cn?s=21"
               target="_blank"
               rel="noreferrer"
               class="text-text-muted hover:text-primary-container transition-all hover:scale-110"
@@ -92,7 +92,7 @@
               </svg>
             </a>
             <a
-              href="https://t.me/gonkarouter"
+              href="https://t.me/gonka_cn"
               target="_blank"
               rel="noreferrer"
               class="text-text-muted hover:text-primary-container transition-all hover:scale-110"
