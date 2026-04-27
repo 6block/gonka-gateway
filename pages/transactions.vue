@@ -1,125 +1,189 @@
 <template>
-  <div class="p-8 lg:p-12 max-w-7xl mx-auto space-y-8 animate-fade-in">
+  <div class="p-8 lg:p-12 max-w-6xl mx-auto space-y-8 animate-fade-in">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <h1 class="text-3xl font-extrabold tracking-tight mb-2">
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">Transactions</span>
+        <h1 class="text-2xl font-black font-headline tracking-tight leading-none">
+          Transactions
         </h1>
-        <p class="text-gray-500 dark:text-gray-500 text-sm">View your deposit history and status.</p>
+        <p class="text-text-muted mt-2 font-body text-sm">
+          Immutable ledger of your gateway credits.
+        </p>
+      </div>
+      <div
+        v-if="!auth.isLoggedIn"
+        class="inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2"
+      >
+        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
+        <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
+          Guest Mode
+        </span>
+        <button
+          @click="openLogin"
+          class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+        >
+          Connect →
+        </button>
       </div>
     </div>
 
-    <div class="bg-white/70 dark:bg-[#0c0c1d]/60 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.06] rounded-2xl overflow-hidden transition-all">
+    <div
+      class="bg-surface-container-high rounded-2xl overflow-hidden border border-white/5"
+    >
       <!-- Toolbar -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-b border-gray-100 dark:border-white/[0.04]">
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-white dark:bg-[#0a0a18] border border-gray-200 dark:border-white/[0.06] rounded-xl px-3 py-2 transition-all focus-within:ring-2 focus-within:ring-primary-500/20 focus-within:border-primary-500/30">
-            <LucideCalendar class="w-4 h-4 text-gray-400 dark:text-gray-500" />
-            <input
-              v-model="startDate"
-              type="date"
-              class="bg-transparent border-none outline-none text-sm text-gray-800 dark:text-gray-200 cursor-pointer w-32 appearance-none"
-            />
-            <span class="text-gray-300 dark:text-gray-600">—</span>
-            <input
-              v-model="endDate"
-              type="date"
-              class="bg-transparent border-none outline-none text-sm text-gray-800 dark:text-gray-200 cursor-pointer w-32 appearance-none"
-            />
-          </div>
-          <button
-            v-if="startDate || endDate"
-            @click="clearDateFilter"
-            class="text-xs font-medium text-gray-500 hover:text-primary-500 px-3 py-2 rounded-xl bg-gray-100 dark:bg-white/[0.04] hover:bg-primary-500/10 dark:hover:bg-primary-500/10 transition-all"
-          >
-            Clear Filters
-          </button>
+      <div
+        class="p-6 border-b border-white/5 flex flex-wrap items-center gap-4"
+      >
+        <div
+          class="flex items-center gap-3 bg-surface-container-lowest px-4 py-2 rounded-xl border border-white/5 group transition-all hover:border-primary-container/30"
+        >
+          <LucideCalendar
+            class="w-4 h-4 text-text-muted group-hover:text-primary-container transition-colors"
+          />
+          <input
+            v-model="startDate"
+            type="date"
+            class="bg-transparent text-[10px] font-bold tracking-widest uppercase focus:outline-none text-text-main cursor-pointer date-field"
+          />
+          <span class="text-text-muted/60">—</span>
+          <input
+            v-model="endDate"
+            type="date"
+            class="bg-transparent text-[10px] font-bold tracking-widest uppercase focus:outline-none text-text-main cursor-pointer date-field"
+          />
         </div>
+        <button
+          v-if="startDate || endDate"
+          @click="clearDateFilter"
+          class="text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary-container px-3 py-2 rounded-xl bg-surface-container-lowest border border-white/5 hover:border-primary-container/30 transition-all"
+        >
+          Clear Filters
+        </button>
       </div>
 
       <!-- Table -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left whitespace-nowrap">
-          <thead class="text-[11px] text-gray-400 dark:text-gray-500 uppercase tracking-wider bg-gray-50/50 dark:bg-black/20 border-b border-gray-100 dark:border-white/[0.04]">
-            <tr>
-              <th scope="col" class="px-6 py-4 font-bold">Transaction Hash</th>
-              <th scope="col" class="px-6 py-4 font-bold">Date & Time</th>
-              <th scope="col" class="px-6 py-4 font-bold">Network</th>
-              <th scope="col" class="px-6 py-4 font-bold">Amount</th>
-              <th scope="col" class="px-6 py-4 font-bold">Status</th>
+      <div class="w-full overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase border-b border-white/5"
+            >
+              <th class="px-8 py-5 whitespace-nowrap">Transaction Hash</th>
+              <th class="px-8 py-5 whitespace-nowrap">Date &amp; Time</th>
+              <th class="px-8 py-5 whitespace-nowrap">Network</th>
+              <th class="px-8 py-5 whitespace-nowrap">Amount</th>
+              <th class="px-8 py-5 whitespace-nowrap">Status</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 dark:divide-white/[0.03]">
-            <!-- Loading -->
-            <tr v-if="loading">
-              <td colspan="5" class="px-6 py-20 text-center text-gray-500">
-                <div class="flex flex-col items-center justify-center gap-3">
-                  <LucideLoader2 class="w-6 h-6 animate-spin text-primary-400" />
-                  <span class="font-medium text-sm text-gray-400">Loading transactions...</span>
+          <tbody class="divide-y divide-white/5">
+            <tr v-if="!auth.isLoggedIn">
+              <td colspan="5" class="px-8 py-24 text-center">
+                <div
+                  class="flex flex-col items-center justify-center gap-4 text-text-muted"
+                >
+                  <div
+                    class="w-14 h-14 rounded-2xl bg-surface-container-highest border border-white/5 flex items-center justify-center"
+                  >
+                    <LucideWallet class="w-6 h-6 text-primary-container" />
+                  </div>
+                  <div class="space-y-1 max-w-sm">
+                    <p class="font-headline font-bold text-base tracking-tight text-text-main">
+                      Connect to view transactions
+                    </p>
+                    <p class="text-sm">
+                      Your deposit history is private. Connect your wallet to load it.
+                    </p>
+                  </div>
+                  <button
+                    @click="openLogin"
+                    class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-5 py-2 rounded-full font-black text-[11px] tracking-widest uppercase hover:shadow-glow-emerald transition-all active:scale-95"
+                  >
+                    <LucideWallet class="w-3.5 h-3.5" />
+                    Connect Wallet
+                  </button>
                 </div>
               </td>
             </tr>
 
-            <!-- Error -->
+            <tr v-else-if="loading">
+              <td colspan="5" class="px-8 py-20 text-center text-text-muted">
+                <div class="flex flex-col items-center justify-center gap-3">
+                  <LucideLoader2 class="w-6 h-6 animate-spin text-primary-container" />
+                  <span class="font-medium text-sm">Loading transactions...</span>
+                </div>
+              </td>
+            </tr>
+
             <tr v-else-if="error">
-              <td colspan="5" class="px-6 py-20 text-center">
-                <div class="inline-flex items-center gap-2 text-red-500 bg-red-50 dark:bg-red-500/10 px-4 py-2 rounded-xl text-sm font-medium">
+              <td colspan="5" class="px-8 py-20 text-center">
+                <div
+                  class="inline-flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-medium"
+                >
                   <LucideAlertCircle class="w-4 h-4" />
                   {{ error }}
                 </div>
               </td>
             </tr>
 
-            <!-- Empty -->
             <tr v-else-if="filteredItems.length === 0">
-              <td colspan="5" class="px-6 py-24 text-center">
-                <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
-                  <div class="w-16 h-16 bg-gray-100 dark:bg-white/[0.04] rounded-2xl flex items-center justify-center mb-4">
-                    <LucideInbox class="w-8 h-8 opacity-40" />
-                  </div>
-                  <p class="font-semibold text-base text-gray-500 dark:text-gray-400">No transactions found</p>
-                  <p class="text-sm mt-1 text-gray-400 dark:text-gray-500">There are no deposits matching your criteria.</p>
+              <td colspan="5" class="px-8 py-24 text-center">
+                <div
+                  class="flex flex-col items-center justify-center text-text-muted gap-4 opacity-60"
+                >
+                  <LucideHistory class="w-10 h-10" />
+                  <p class="font-headline font-bold text-lg tracking-tight text-text-main">
+                    No transactions found
+                  </p>
+                  <p class="text-sm text-text-muted">
+                    There are no deposits matching your criteria.
+                  </p>
                 </div>
               </td>
             </tr>
 
-            <!-- Data rows -->
             <tr
               v-else
               v-for="item in filteredItems"
               :key="item.tx_hash"
-              class="hover:bg-primary-500/[0.02] dark:hover:bg-primary-500/[0.03] transition-colors duration-200 group"
+              class="hover:bg-white/5 transition-colors group"
             >
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-xl bg-gray-100 dark:bg-white/[0.04] flex items-center justify-center text-gray-400 dark:text-gray-500 shrink-0 group-hover:bg-primary-500/10 group-hover:text-primary-400 transition-all">
-                    <LucideHash class="w-4 h-4" />
-                  </div>
-                  <span :title="item.tx_hash" class="font-mono text-gray-800 dark:text-gray-300 text-[13px]">
-                    {{ item.tx_hash ? item.tx_hash.slice(0, 6) + '...' + item.tx_hash.slice(-6) : '-' }}
+              <td class="px-8 py-5 font-mono text-xs text-primary-dim">
+                <span :title="item.tx_hash">
+                  {{
+                    item.tx_hash
+                      ? item.tx_hash.slice(0, 6) + '...' + item.tx_hash.slice(-6)
+                      : '-'
+                  }}
+                </span>
+              </td>
+              <td class="px-8 py-5 text-xs text-text-muted">
+                <div class="flex flex-col">
+                  <span class="font-medium text-text-main text-[13px]">
+                    {{ formatDate(item.created_at) }}
+                  </span>
+                  <span class="text-[11px] text-text-muted">
+                    {{ formatTimeOnly(item.created_at) }}
                   </span>
                 </div>
               </td>
-              <td class="px-6 py-4 text-gray-500 dark:text-gray-400">
-                <div class="flex flex-col">
-                  <span class="font-medium text-gray-800 dark:text-gray-300 text-[13px]">{{ formatDate(item.created_at) }}</span>
-                  <span class="text-[11px] text-gray-400 dark:text-gray-500">{{ formatTimeOnly(item.created_at) }}</span>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-white/[0.04] text-gray-600 dark:text-gray-400 text-[12px] font-semibold border border-gray-200/50 dark:border-white/[0.04]">
+              <td class="px-8 py-5 text-xs font-bold">
+                <div
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-text-muted border border-white/5"
+                >
                   {{ formatChain(item.chain) }}
                 </div>
               </td>
-              <td class="px-6 py-4">
-                <span class="font-bold text-gray-900 dark:text-white">${{ formatAmount(item.amount) }}</span>
+              <td class="px-8 py-5 text-xs font-black text-text-main">
+                ${{ formatAmount(item.amount) }}
               </td>
-              <td class="px-6 py-4">
+              <td class="px-8 py-5">
                 <span
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border"
+                  class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black tracking-widest border"
                   :class="statusClasses(item.status)"
                 >
-                  <span class="w-1.5 h-1.5 rounded-full" :class="statusDotClasses(item.status)"></span>
+                  <span
+                    class="w-1.5 h-1.5 rounded-full"
+                    :class="statusDotClasses(item.status)"
+                  ></span>
                   {{ statusLabel(item.status) }}
                 </span>
               </td>
@@ -129,15 +193,21 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="!loading && !error && total > 0" class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-gray-100 dark:border-white/[0.04] bg-gray-50/30 dark:bg-black/10">
-        <span class="text-sm text-gray-400 dark:text-gray-500">
-          Page <span class="font-semibold text-gray-700 dark:text-gray-300">{{ currentPage }}</span> of <span class="font-semibold text-gray-700 dark:text-gray-300">{{ totalPages }}</span>
+      <div
+        v-if="auth.isLoggedIn && !loading && !error && total > 0"
+        class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5"
+      >
+        <span class="text-xs text-text-muted">
+          Page
+          <span class="font-bold text-text-main">{{ currentPage }}</span>
+          of
+          <span class="font-bold text-text-main">{{ totalPages }}</span>
         </span>
         <div class="flex items-center gap-1">
           <button
             @click="goToPage(currentPage - 1)"
             :disabled="currentPage <= 1"
-            class="p-2 rounded-xl text-gray-400 hover:bg-primary-500/10 hover:text-primary-500 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            class="p-2 rounded-xl text-text-muted hover:bg-primary-container/10 hover:text-primary-container disabled:opacity-30 disabled:hover:bg-transparent transition-all"
           >
             <LucideChevronLeft class="w-5 h-5" />
           </button>
@@ -146,13 +216,13 @@
             v-for="p in pageNumbers"
             :key="p"
             @click="p !== '…' && goToPage(p)"
+            class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-bold transition-all"
             :class="[
-              'w-9 h-9 flex items-center justify-center rounded-xl text-sm font-semibold transition-all',
               p === currentPage
-                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-glow'
+                ? 'bg-primary-container text-primary-on shadow-lg shadow-primary-container/20'
                 : p === '…'
-                  ? 'text-gray-400 cursor-default'
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-primary-500/10 hover:text-primary-500'
+                ? 'text-text-muted cursor-default'
+                : 'text-text-muted hover:bg-primary-container/10 hover:text-primary-container'
             ]"
           >
             {{ p }}
@@ -161,7 +231,7 @@
           <button
             @click="goToPage(currentPage + 1)"
             :disabled="currentPage >= totalPages"
-            class="p-2 rounded-xl text-gray-400 hover:bg-primary-500/10 hover:text-primary-500 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            class="p-2 rounded-xl text-text-muted hover:bg-primary-container/10 hover:text-primary-container disabled:opacity-30 disabled:hover:bg-transparent transition-all"
           >
             <LucideChevronRight class="w-5 h-5" />
           </button>
@@ -172,17 +242,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import {
-  LucideCalendar, LucideLoader2, LucideChevronLeft,
-  LucideChevronRight, LucideAlertCircle, LucideInbox,
-  LucideHash
+  LucideCalendar,
+  LucideLoader2,
+  LucideChevronLeft,
+  LucideChevronRight,
+  LucideAlertCircle,
+  LucideHistory,
+  LucideWallet
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
+import { useLoginModal } from '~/composables/useLoginModal'
 
 const auth = useAuthStore()
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
+const { open: openLogin } = useLoginModal()
 
 const PAGE_SIZE = 20
 
@@ -198,7 +274,7 @@ const totalPages = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)
 
 const filteredItems = computed(() => {
   if (!startDate.value && !endDate.value) return items.value
-  return items.value.filter(item => {
+  return items.value.filter((item) => {
     const d = new Date(item.created_at)
     if (startDate.value && d < new Date(startDate.value)) return false
     if (endDate.value && d > new Date(endDate.value + 'T23:59:59')) return false
@@ -210,7 +286,7 @@ const pageNumbers = computed(() => {
   const tp = totalPages.value
   const cp = currentPage.value
   if (tp <= 7) return Array.from({ length: tp }, (_, i) => i + 1)
-  const pages = new Set([1, tp, cp, cp - 1, cp + 1].filter(p => p >= 1 && p <= tp))
+  const pages = new Set([1, tp, cp, cp - 1, cp + 1].filter((p) => p >= 1 && p <= tp))
   const sorted = [...pages].sort((a, b) => a - b)
   const result = []
   let prev = 0
@@ -265,47 +341,74 @@ function formatTimeOnly(iso) {
 }
 
 function formatChain(chain) {
-  const map = { bsc: 'BSC', eth: 'Ethereum', base: 'Base', polygon: 'Polygon', arbitrum: 'Arbitrum', optimism: 'Optimism' }
+  const map = {
+    bsc: 'BSC',
+    eth: 'Ethereum',
+    base: 'Base',
+    polygon: 'Polygon',
+    arbitrum: 'Arbitrum',
+    optimism: 'Optimism'
+  }
   return map[chain?.toLowerCase()] || (chain ? chain.toUpperCase() : '-')
 }
 
 function formatAmount(amount) {
   const n = parseFloat(amount)
-  return isNaN(n) ? amount : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
+  return isNaN(n)
+    ? amount
+    : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
 }
 
 function statusLabel(status) {
-  const map = { credited: 'Success', pending: 'Pending', failed: 'Failed', confirming: 'Confirming' }
+  const map = {
+    credited: 'Success',
+    pending: 'Pending',
+    failed: 'Failed',
+    confirming: 'Confirming'
+  }
   return map[status?.toLowerCase()] || status || 'Unknown'
 }
 
 function statusClasses(status) {
   const s = status?.toLowerCase()
-  if (s === 'credited') return 'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20'
-  if (s === 'pending' || s === 'confirming') return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
-  if (s === 'failed') return 'bg-red-500/10 text-red-500 border-red-500/20'
-  return 'bg-gray-500/10 text-gray-500 border-gray-500/20'
+  if (s === 'credited')
+    return 'bg-primary-container/10 text-primary-container border-primary-container/20'
+  if (s === 'pending' || s === 'confirming')
+    return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+  if (s === 'failed') return 'bg-red-500/10 text-red-400 border-red-500/20'
+  return 'bg-white/5 text-text-muted border-white/5'
 }
 
 function statusDotClasses(status) {
   const s = status?.toLowerCase()
-  if (s === 'credited') return 'bg-accent-emerald'
-  if (s === 'pending' || s === 'confirming') return 'bg-yellow-500 animate-pulse'
-  if (s === 'failed') return 'bg-red-500'
-  return 'bg-gray-500'
+  if (s === 'credited') return 'bg-primary-container'
+  if (s === 'pending' || s === 'confirming') return 'bg-yellow-400 animate-pulse'
+  if (s === 'failed') return 'bg-red-400'
+  return 'bg-text-muted'
 }
 
 onMounted(() => {
-  fetchDeposits(1)
+  if (auth.isLoggedIn) fetchDeposits(1)
 })
+
+watch(
+  () => auth.isLoggedIn,
+  (loggedIn) => {
+    if (loggedIn) {
+      fetchDeposits(1)
+    } else {
+      items.value = []
+      total.value = 0
+      currentPage.value = 1
+      error.value = null
+    }
+  }
+)
 </script>
 
 <style scoped>
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.5);
+.date-field::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
   cursor: pointer;
-}
-.dark input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
 }
 </style>

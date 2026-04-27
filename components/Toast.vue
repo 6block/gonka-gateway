@@ -1,23 +1,28 @@
 <template>
-  <div class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2.5 pointer-events-none">
-    <TransitionGroup
-      name="toast"
-      tag="div"
-      class="flex flex-col gap-2.5"
-    >
+  <div
+    class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2.5 pointer-events-none"
+  >
+    <TransitionGroup name="toast" tag="div" class="flex flex-col gap-2.5">
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-2xl border text-sm font-medium animate-slide-up"
+        class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-card backdrop-blur-2xl border text-sm font-bold font-body"
         :class="{
-          'bg-white/90 dark:bg-[#0c0c1d]/90 border-gray-200/50 dark:border-white/[0.06] text-gray-900 dark:text-white': toast.type === 'info',
-          'bg-accent-emerald/10 dark:bg-accent-emerald/10 border-accent-emerald/20 text-accent-emerald': toast.type === 'success',
-          'bg-red-500/10 dark:bg-red-500/10 border-red-500/20 text-red-500': toast.type === 'error'
+          'bg-surface-container-high border-white/5 text-text-main': toast.type === 'info',
+          'bg-primary-container/10 border-primary-container/25 text-primary-container':
+            toast.type === 'success',
+          'bg-red-500/10 border-red-500/25 text-red-400': toast.type === 'error'
         }"
       >
-        <LucideCheckCircle2 v-if="toast.type === 'success'" class="w-4 h-4 text-accent-emerald" />
-        <LucideXCircle v-else-if="toast.type === 'error'" class="w-4 h-4 text-red-500" />
-        <LucideInfo v-else class="w-4 h-4 text-primary-400" />
+        <LucideCheckCircle2
+          v-if="toast.type === 'success'"
+          class="w-4 h-4 text-primary-container"
+        />
+        <LucideXCircle
+          v-else-if="toast.type === 'error'"
+          class="w-4 h-4 text-red-400"
+        />
+        <LucideInfo v-else class="w-4 h-4 text-primary-container" />
 
         <span>{{ toast.message }}</span>
 

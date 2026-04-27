@@ -8,12 +8,15 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/color-mode'
   ],
+  css: ['~/assets/css/tokens.css'],
   colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
     classSuffix: ''
   },
   app: {
     head: {
-      title: 'GonkaRouter - Dashboard',
+      title: 'GonkaRouter - AI Model Router on the Gonka Network',
       link: [
         {
           rel: 'icon',
@@ -31,20 +34,19 @@ export default defineNuxtConfig({
         },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap'
+          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap'
         }
       ],
       meta: [
-        { name: 'theme-color', content: '#000000', media: '(prefers-color-scheme: dark)' },
-        { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' }
+        { name: 'theme-color', content: '#0e0e0e' }
       ]
     },
     pageTransition: { name: 'page', mode: 'out-in' }
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://36.189.234.197:18013' // 测试环境
-      // apiBase: process.env.API_BASE || 'https://api.gonkascan.com' // 生产环境
+      // apiBase: process.env.API_BASE || 'http://36.189.234.197:18013' // 测试环境
+      apiBase: process.env.API_BASE || 'https://api.gonkascan.com' // 生产环境
     }
   },
   devServer: {

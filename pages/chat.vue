@@ -1,100 +1,250 @@
 <template>
-  <div class="h-full flex flex-col p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in relative w-full">
-    <div class="flex justify-between items-center mb-6">
+  <div class="h-full flex flex-col p-4 lg:p-8 max-w-5xl mx-auto animate-fade-in relative w-full">
+    <div class="flex justify-between items-center mb-6 gap-4">
       <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">Chat</span>
-        </h1>
-        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1.5 font-medium">Interact with Qwen3-235B</p>
+        <h2 class="text-2xl font-black font-headline tracking-tight leading-none">Chat</h2>
+        <p class="text-text-muted mt-2 font-body text-sm">
+          Interact with Qwen3-235B
+        </p>
+      </div>
+      <div
+        v-if="!auth.isLoggedIn"
+        class="inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2 shrink-0"
+      >
+        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
+        <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
+          Guest Mode
+        </span>
+        <button
+          @click="openLogin"
+          class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+        >
+          Connect →
+        </button>
       </div>
     </div>
 
-    <!-- Chat Messages -->
-    <div class="flex-1 bg-white/60 dark:bg-[#0c0c1d]/50 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.06] rounded-2xl p-5 overflow-y-auto mb-5 flex flex-col space-y-5 group" ref="chatContainer">
-      <div v-if="messages.length === 0" class="flex-1 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 min-h-[300px]">
-        <div class="w-20 h-20 bg-gradient-to-br from-primary-500/10 to-accent-cyan/10 dark:from-primary-500/[0.08] dark:to-accent-cyan/[0.08] rounded-3xl flex items-center justify-center mb-5 animate-float">
-          <LucideMessageSquare class="w-9 h-9 text-primary-400/60 dark:text-primary-400/40" />
+    <!-- Messages -->
+    <div
+      class="flex-1 bg-surface-container-high rounded-3xl p-5 md:p-6 overflow-y-auto mb-5 flex flex-col space-y-5 border border-white/5 custom-scrollbar"
+      ref="chatContainer"
+    >
+      <div
+        v-if="messages.length === 0"
+        class="flex-1 flex flex-col items-center justify-center text-center min-h-[300px] space-y-6"
+      >
+        <div
+          class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center shadow-lg border border-white/5 animate-float"
+        >
+          <LucideMessageCircle class="w-8 h-8 text-primary-container" />
         </div>
-        <p class="font-semibold text-gray-600 dark:text-gray-400 text-base">Start a conversation</p>
-        <p class="text-sm mt-1.5 max-w-xs text-center text-gray-400 dark:text-gray-500">Ask any question to test the API performance and response quality.</p>
+        <div class="max-w-sm space-y-2">
+          <h3 class="text-lg font-headline font-bold tracking-tight text-text-main">
+            {{ auth.isLoggedIn ? 'Start a conversation' : 'Preview mode' }}
+          </h3>
+          <p class="text-text-muted text-sm font-body font-light leading-relaxed">
+            <template v-if="auth.isLoggedIn">
+              Initiate a session to evaluate reasoning depth and network latency.
+            </template>
+            <template v-else>
+              Connect your wallet to send messages. You can still browse the interface
+              as a guest.
+            </template>
+          </p>
+        </div>
+        <button
+          v-if="!auth.isLoggedIn"
+          @click="openLogin"
+          class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-2.5 rounded-full font-black text-xs tracking-tight hover:shadow-glow-emerald transition-all active:scale-95"
+        >
+          <LucideWallet class="w-4 h-4" />
+          Connect Wallet
+        </button>
       </div>
 
-      <div v-for="(msg, i) in messages" :key="i" class="flex w-full animate-slide-up" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
-        <div class="flex items-start max-w-[85%] md:max-w-[75%] gap-3" :class="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'">
+      <div
+        v-for="(msg, i) in messages"
+        :key="i"
+        class="flex w-full animate-slide-up"
+        :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
+      >
+        <div
+          class="flex items-start max-w-[85%] md:max-w-[75%] gap-3"
+          :class="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
+        >
           <!-- Avatar -->
-          <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
-               :class="msg.role === 'user' ? 'bg-gradient-to-br from-gray-800 to-gray-600 dark:from-primary-500 dark:to-primary-700' : 'bg-gradient-to-br from-accent-cyan to-primary-500'">
-            <LucideUser v-if="msg.role === 'user'" class="w-4 h-4 text-white" />
-            <LucideBot v-else class="w-4 h-4 text-white" />
+          <div
+            class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+            :class="
+              msg.role === 'user'
+                ? 'bg-primary-container text-primary-on'
+                : 'bg-surface-container-highest text-primary-container'
+            "
+          >
+            <LucideUser v-if="msg.role === 'user'" class="w-4 h-4" />
+            <LucideBot v-else class="w-4 h-4" />
           </div>
 
-          <!-- Message Bubble -->
-          <div class="rounded-2xl px-5 py-3.5 text-[15px] leading-relaxed break-words overflow-hidden transition-all"
-               :class="[
-                 msg.role === 'user'
-                  ? 'bg-gray-900 dark:bg-gradient-to-br dark:from-primary-600 dark:to-primary-700 text-white rounded-tr-md shadow-md'
-                  : 'bg-white dark:bg-[#0f0f22] border border-gray-100 dark:border-white/[0.06] text-gray-800 dark:text-gray-200 rounded-tl-md',
-                 msg.isError ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400' : '',
-                 (!msg.content && isLoading && i === messages.length - 1 && msg.role === 'assistant') ? 'flex items-center min-h-[48px]' : ''
-               ]">
-            <div v-if="msg.content" class="whitespace-pre-wrap font-sans max-w-full overflow-x-auto custom-scrollbar">{{ msg.content }}</div>
-            <div v-else-if="isLoading && i === messages.length - 1 && msg.role === 'assistant'" class="flex items-center space-x-1.5 px-1">
-              <span class="w-2 h-2 bg-primary-400/70 rounded-full animate-bounce"></span>
-              <span class="w-2 h-2 bg-accent-cyan/70 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
-              <span class="w-2 h-2 bg-primary-400/70 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+          <!-- Bubble -->
+          <div
+            class="rounded-3xl px-5 py-3.5 text-[15px] leading-relaxed break-words overflow-hidden transition-all"
+            :class="[
+              msg.role === 'user'
+                ? 'bg-primary-container text-primary-on font-black'
+                : 'bg-surface-container-highest text-text-main border border-white/5',
+              msg.isError
+                ? '!bg-red-500/10 !border-red-500/20 !text-red-400 font-medium'
+                : '',
+              !msg.content && isLoading && i === messages.length - 1 && msg.role === 'assistant'
+                ? 'flex items-center min-h-[48px]'
+                : ''
+            ]"
+          >
+            <div
+              v-if="msg.content"
+              class="whitespace-pre-wrap font-body max-w-full overflow-x-auto custom-scrollbar"
+            >
+              {{ msg.content }}
+            </div>
+            <div
+              v-else-if="
+                isLoading && i === messages.length - 1 && msg.role === 'assistant'
+              "
+              class="flex items-center space-x-1.5 px-1"
+            >
+              <span
+                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+              ></span>
+              <span
+                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+                style="animation-delay: 0.15s"
+              ></span>
+              <span
+                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+                style="animation-delay: 0.3s"
+              ></span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Input Area -->
-    <div class="relative shrink-0">
+    <!-- Input area -->
+    <div class="shrink-0 space-y-4">
+      <!-- Model selector -->
+      <div class="flex flex-wrap items-center gap-3">
+        <span
+          class="text-[10px] font-black uppercase tracking-widest text-text-muted"
+        >
+          Model
+        </span>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="model in availableModels"
+            :key="model.id"
+            @click="selectedModel = model.id"
+            class="px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
+            :class="
+              selectedModel === model.id
+                ? 'bg-primary-container/20 border-primary-container text-primary-container shadow-lg shadow-primary-container/10'
+                : 'bg-surface-container-high border-white/5 text-text-muted hover:border-white/10 hover:bg-white/5'
+            "
+          >
+            {{ model.name }}
+          </button>
+        </div>
+      </div>
+
       <form @submit.prevent="sendMessage" class="relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 via-accent-cyan/20 to-primary-500/20 rounded-[20px] blur-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
-        <div class="relative flex items-end bg-white/90 dark:bg-[#0c0c1d]/80 backdrop-blur-xl border border-gray-200/80 dark:border-white/[0.06] rounded-2xl transition-all duration-300 focus-within:border-primary-500/30 dark:focus-within:border-primary-500/20">
+        <div
+          class="relative flex items-end bg-surface-container-high border border-white/5 rounded-2xl transition-all duration-300 focus-within:border-primary-container/40 focus-within:shadow-glow-emerald"
+          :class="{ 'opacity-70': !auth.isLoggedIn }"
+        >
           <textarea
             v-model="input"
             @keydown.enter.prevent="handleEnter"
             @input="adjustTextareaHeight"
             ref="textareaRef"
-            placeholder="Type a message..."
-            class="w-full bg-transparent border-none px-5 py-4 text-[15px] text-gray-900 dark:text-white focus:outline-none resize-none max-h-[200px] min-h-[56px] custom-scrollbar placeholder:text-gray-400 dark:placeholder:text-gray-600"
+            :placeholder="
+              auth.isLoggedIn ? 'Type a message...' : 'Connect wallet to chat'
+            "
+            :disabled="!auth.isLoggedIn"
+            class="w-full bg-transparent border-none px-5 py-4 text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
             rows="1"
           ></textarea>
           <div class="p-2 shrink-0 flex items-end mb-1">
             <button
+              v-if="auth.isLoggedIn"
               type="submit"
               :disabled="!input.trim() || isLoading"
-              class="p-2.5 bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-500 dark:to-accent-cyan hover:opacity-90 text-white rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 shadow-glow disabled:shadow-none"
+              class="p-2.5 kinetic-gradient text-primary-on rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-glow-emerald"
               title="Send (Enter)"
             >
               <LucideSend class="w-4 h-4" />
             </button>
+            <button
+              v-else
+              type="button"
+              @click="openLogin"
+              class="px-3 py-2 kinetic-gradient text-primary-on rounded-xl text-[11px] font-black tracking-widest uppercase flex items-center gap-1.5 hover:shadow-glow-emerald active:scale-95 transition-all"
+              title="Connect wallet"
+            >
+              <LucideWallet class="w-3.5 h-3.5" />
+              Connect
+            </button>
           </div>
         </div>
       </form>
-      <div class="text-center mt-3 text-[11px] text-gray-400 dark:text-gray-600 font-medium">
-        Press <kbd class="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] font-mono text-[10px]">Enter</kbd> to send, <kbd class="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] font-mono text-[10px]">Shift</kbd> + <kbd class="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] font-mono text-[10px]">Enter</kbd> for new line
+
+      <div class="text-center text-[11px] text-text-muted font-medium">
+        Press
+        <kbd
+          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+          >Enter</kbd
+        >
+        to send,
+        <kbd
+          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+          >Shift</kbd
+        >
+        +
+        <kbd
+          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+          >Enter</kbd
+        >
+        for new line
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { LucideSend, LucideMessageSquare, LucideUser, LucideBot } from 'lucide-vue-next'
+import {
+  LucideSend,
+  LucideMessageCircle,
+  LucideUser,
+  LucideBot,
+  LucideWallet
+} from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/useToast'
+import { useLoginModal } from '~/composables/useLoginModal'
 import { ref, nextTick, watch } from 'vue'
 
 const auth = useAuthStore()
 const toast = useToast()
+const { open: openLogin } = useLoginModal()
 const messages = ref([])
 const input = ref('')
 const isLoading = ref(false)
 const chatContainer = ref(null)
 const textareaRef = ref(null)
 const config = useRuntimeConfig()
+
+const availableModels = [
+  { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
+]
+const selectedModel = ref(availableModels[0].id)
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -132,33 +282,37 @@ function getUserFriendlyErrorMessage(error) {
       const parts = error.message.split('|||')
       const status = parseInt(parts[1], 10)
 
-      if (status === 400) return "The request was invalid. Please check your input."
-      if (status === 401) return "Your session has expired or is invalid. Please log in again."
-      if (status === 402) return "Insufficient balance. Please deposit funds to continue."
-      if (status === 403) return "You do not have permission to perform this action."
-      if (status === 404) return "The requested model or service is currently unavailable."
+      if (status === 400) return 'The request was invalid. Please check your input.'
+      if (status === 401) return 'Your session has expired or is invalid. Please log in again.'
+      if (status === 402) return 'Insufficient balance. Please deposit funds to continue.'
+      if (status === 403) return 'You do not have permission to perform this action.'
+      if (status === 404) return 'The requested model or service is currently unavailable.'
       if (status === 429) return "You're sending messages too fast. Please wait a moment and try again."
-      if (status >= 500) return "The AI server is currently experiencing high load or maintenance. Please try again later."
-
-      return "An unexpected server issue occurred. Please try again."
+      if (status >= 500) return 'The AI server is currently experiencing high load or maintenance. Please try again later.'
+      return 'An unexpected server issue occurred. Please try again.'
     } catch (e) {
-      return "A communication error occurred. Please try again."
+      return 'A communication error occurred. Please try again.'
     }
   }
 
   if (error.name === 'TypeError' || (error.message && error.message.toLowerCase().includes('fetch'))) {
-    return "Network error. Please check your internet connection and verify the server is reachable."
+    return 'Network error. Please check your internet connection and verify the server is reachable.'
   }
 
   if (error.name === 'AbortError') {
-    return "The request timed out. Please try again."
+    return 'The request timed out. Please try again.'
   }
 
-  return "An unexpected error occurred while sending your message. Please try again."
+  return 'An unexpected error occurred while sending your message. Please try again.'
 }
 
 async function sendMessage() {
   if (!input.value.trim() || isLoading.value) return
+
+  if (!auth.isLoggedIn) {
+    openLogin()
+    return
+  }
 
   const userMsg = { role: 'user', content: input.value.trim() }
   messages.value.push(userMsg)
@@ -168,7 +322,11 @@ async function sendMessage() {
 
   const token = auth.token
   if (!token) {
-    messages.value.push({ role: 'assistant', content: 'Error: No auth token found. Please login from the sidebar.', isError: true })
+    messages.value.push({
+      role: 'assistant',
+      content: 'Error: No auth token found. Please login from the sidebar.',
+      isError: true
+    })
     isLoading.value = false
     toast.error('Authentication required')
     scrollToBottom()
@@ -181,27 +339,25 @@ async function sendMessage() {
 
   const chatMessages = messages.value
     .slice(0, -1)
-    .filter(m => m.content && !m.isError)
-    .map(m => ({ role: m.role, content: m.content }))
+    .filter((m) => m.content && !m.isError)
+    .map((m) => ({ role: m.role, content: m.content }))
 
   try {
     const res = await fetch(`${config.public.apiBase}/api/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
-        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
+        model: selectedModel.value,
         messages: chatMessages,
         stream: true
       })
     })
 
     if (!res.ok) {
-      if (res.status === 401) {
-        auth.logout()
-      }
+      if (res.status === 401) auth.logout()
       const errText = await res.text()
       throw new Error(`HTTP_ERROR:|||${res.status}|||${errText}`)
     }
@@ -246,7 +402,6 @@ async function sendMessage() {
         }
       }
     }
-
   } catch (error) {
     console.error('Chat Error:', error)
     messages.value[activeMessageIndex].content = getUserFriendlyErrorMessage(error)
@@ -258,23 +413,3 @@ async function sendMessage() {
   }
 }
 </script>
-
-<style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.15);
-  border-radius: 3px;
-}
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.2);
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.3);
-}
-</style>
