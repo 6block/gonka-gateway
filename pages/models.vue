@@ -140,15 +140,33 @@
           </div>
 
           <!-- Stats -->
-          <div class="flex flex-wrap items-center gap-x-10 gap-y-6">
-            <div v-for="stat in modelData.stats" :key="stat.label" class="space-y-1.5">
+          <div class="flex flex-wrap items-start gap-x-12 gap-y-6">
+            <div class="space-y-1.5">
               <p
                 class="text-[10px] font-bold text-text-muted uppercase tracking-widest"
               >
-                {{ stat.label }}
+                Max Output
               </p>
               <p class="text-lg font-black font-headline tracking-tight">
-                {{ stat.value }}
+                {{ modelData.maxOutput }}
+              </p>
+            </div>
+            <div class="space-y-1.5">
+              <p
+                class="text-[10px] font-bold text-text-muted uppercase tracking-widest"
+              >
+                Price
+              </p>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-lg font-black font-headline tracking-tight">
+                  {{ modelData.price.amount }}
+                </span>
+                <span class="text-xs font-black font-headline tracking-tight">
+                  / {{ modelData.price.unit }}
+                </span>
+              </div>
+              <p class="text-[11px] text-text-muted leading-snug">
+                {{ modelData.price.note }}
               </p>
             </div>
           </div>
@@ -203,7 +221,12 @@ const modelData = {
   id: 'bailian/qwen3-235b-a22b-instruct-2507-fp8',
   description:
     'A large-scale, instruction-tuned Mixture-of-Experts language model optimized for high-quality general-purpose text generation, strong reasoning ability, and long-context understanding, with efficient FP8 deployment.',
-  stats: [{ label: 'Max Output', value: '262K' }],
+  maxOutput: '262K',
+  price: {
+    amount: '$0.001',
+    unit: '1M tokens',
+    note: 'Same rate for input and output tokens'
+  },
   tags: [
     {
       label: 'chat',

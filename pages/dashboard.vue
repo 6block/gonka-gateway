@@ -88,12 +88,12 @@
             class="flex items-center gap-2 bg-surface-container-lowest p-3.5 rounded-xl border border-white/5"
           >
             <code
-              class="text-xs font-mono flex-1 overflow-hidden text-ellipsis text-primary-dim"
-              :class="{ 'blur-sm select-none': apiKey && !showKey }"
+              class="text-xs font-mono flex-1 overflow-hidden text-ellipsis text-primary-dim whitespace-nowrap"
             >
               <template v-if="!auth.isLoggedIn">-</template>
               <template v-else-if="isKeyLoading">Loading…</template>
               <template v-else-if="!apiKey">-</template>
+              <template v-else-if="!showKey">**************</template>
               <template v-else>{{ apiKey }}</template>
             </code>
             <div class="flex gap-0.5">
@@ -357,7 +357,7 @@ const metricsDisplay = computed(() => {
       key: 'requests',
       label: 'Requests',
       value: loggedIn ? formatInt(metrics.value.monthly_requests) : '-',
-      unit: 'reqs',
+      unit: 'Reqs',
       icon: LucideTerminal,
       iconClass: 'text-tertiary'
     },
@@ -365,7 +365,7 @@ const metricsDisplay = computed(() => {
       key: 'tokens',
       label: 'Tokens',
       value: loggedIn ? formatInt(metrics.value.monthly_token_used) : '-',
-      unit: 'tokens',
+      unit: 'Tokens',
       icon: LucideShield,
       iconClass: 'text-primary-dim'
     }
