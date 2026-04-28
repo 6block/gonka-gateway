@@ -80,32 +80,6 @@
             ><code>{{ modelData.codeExamples[activeLang] }}</code></pre>
           </div>
         </div>
-
-        <!-- Pricing -->
-        <div class="space-y-4">
-          <h4
-            class="text-sm font-black font-headline uppercase tracking-widest text-text-muted flex items-center gap-2"
-          >
-            <LucideTag class="w-4 h-4" />
-            Pricing
-          </h4>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div
-              v-for="p in pricingRows"
-              :key="p.label"
-              class="bg-surface-container-high p-4 rounded-xl border border-white/5 space-y-1"
-            >
-              <p
-                class="text-[10px] font-black text-text-muted uppercase tracking-widest"
-              >
-                {{ p.label }}
-              </p>
-              <p class="text-sm font-black font-headline tracking-tight">
-                {{ p.value }}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </template>
 
