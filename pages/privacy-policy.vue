@@ -170,9 +170,9 @@
               <p>
                 To exercise these rights, please contact us at:
                 <a
-                  href="mailto:contact@gonkarouter.com"
+                  href="mailto:contact@gonka-router.com"
                   class="text-primary-container font-black hover:underline"
-                  >contact@gonkarouter.com</a
+                  >contact@gonka-router.com</a
                 >
               </p>
             </div>
@@ -209,9 +209,9 @@
             <p class="font-bold text-text-main">
               Email:
               <a
-                href="mailto:contact@gonkarouter.com"
+                href="mailto:contact@gonka-router.com"
                 class="text-primary-container hover:underline"
-                >contact@gonkarouter.com</a
+                >contact@gonka-router.com</a
               >
             </p>
           </section>

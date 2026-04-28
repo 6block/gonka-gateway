@@ -102,11 +102,11 @@
           </div>
 
           <a
-            href="mailto:contact@gonkarouter.com"
+            href="mailto:contact@gonka-router.com"
             class="text-text-muted hover:text-primary-container transition-all flex items-center gap-2 text-sm font-medium bg-white/5 px-4 py-1.5 rounded-full border border-white/5"
           >
             <LucideMail class="w-4 h-4 opacity-60" />
-            contact@gonkarouter.com
+            contact@gonka-router.com
           </a>
 
           <div class="flex items-center gap-6 text-xs font-bold text-text-muted">

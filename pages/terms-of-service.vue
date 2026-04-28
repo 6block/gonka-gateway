@@ -202,9 +202,9 @@
             <p>
               Email:
               <a
-                href="mailto:contact@gonkarouter.com"
+                href="mailto:contact@gonka-router.com"
                 class="text-primary-container hover:underline font-bold"
-                >contact@gonkarouter.com</a
+                >contact@gonka-router.com</a
               >
             </p>
           </section>
