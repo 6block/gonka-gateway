@@ -77,7 +77,7 @@
             </div>
             <pre
               class="p-8 text-sm font-mono leading-relaxed text-primary-dim overflow-x-auto min-h-[300px]"
-            ><code>{{ modelData.codeExamples[activeLang] }}</code></pre>
+            ><code>{{ codeExamples[activeLang] }}</code></pre>
           </div>
         </div>
       </div>
@@ -185,10 +185,15 @@ import {
 import { useToast } from '~/composables/useToast'
 
 const toast = useToast()
+const config = useRuntimeConfig()
 
 const selectedModel = ref(null)
 const activeLang = ref('python')
 const languageTabs = ['python', 'typescript', 'javascript', 'curl']
+
+// Canonical model identifier that the gateway accepts (matches the working
+// cURL sample on the Dashboard page).
+const MODEL_ID = 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8'
 
 const modelData = {
   name: 'Qwen3-235b-a22b-instruct-2507-fp8',
@@ -239,49 +244,77 @@ const modelData = {
     cacheRead: '$0.05 / 1M',
     cacheWrite: '$0.625 / 1M'
   },
-  codeExamples: {
-    python: `import gonka_router
-
-client = gonka_router.Client(api_key="GR_BETA_...0x")
-response = client.complete(
-    model="bailian/qwen3-235b-a22b-instruct-2507-fp8",
-    prompt="Optimize this neural circuit.",
-    latency_profile="ultra-low"
-)`,
-    typescript: `import { GonkaClient } from '@gonka/sdk';
-
-const client = new GonkaClient({ apiKey: 'GR_BETA_...0x' });
-
-async function run() {
-  const response = await client.complete({
-    model: 'bailian/qwen3-235b-a22b-instruct-2507-fp8',
-    prompt: 'Optimize this neural circuit.',
-    latencyProfile: 'ultra-low'
-  });
-  console.log(response.text);
-}`,
-    javascript: `const { GonkaClient } = require('@gonka/sdk');
-
-const client = new GonkaClient({ apiKey: 'GR_BETA_...0x' });
-
-async function run() {
-  const response = await client.complete({
-    model: 'bailian/qwen3-235b-a22b-instruct-2507-fp8',
-    prompt: 'Optimize this neural circuit.',
-    latencyProfile: 'ultra-low'
-  });
-  console.log(response.text);
-}`,
-    curl: `curl https://api.gonkarouter.com/v1/complete \\
-  -H "Authorization: Bearer GR_BETA_...0x" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "model": "bailian/qwen3-235b-a22b-instruct-2507-fp8",
-    "prompt": "Optimize this neural circuit.",
-    "latency_profile": "ultra-low"
-  }'`
-  }
 }
+
+// Code examples are computed against the runtime apiBase so the displayed
+// snippets always match the gateway's real endpoint and can be copy-pasted
+// without further edits. They use the OpenAI-compatible /v1/chat/completions
+// surface that the gateway already exposes (see Dashboard's API Reference).
+const baseUrl = computed(() => `${config.public.apiBase}/v1`)
+
+const codeExamples = computed(() => ({
+  python: `# pip install openai
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-xxxxxx",
+    base_url="${baseUrl.value}",
+)
+
+response = client.chat.completions.create(
+    model="${MODEL_ID}",
+    messages=[
+        {"role": "user", "content": "Hello!"},
+    ],
+)
+
+print(response.choices[0].message.content)`,
+
+  typescript: `// npm install openai
+import OpenAI from 'openai'
+
+const client = new OpenAI({
+  apiKey: sk-xxxxxx,
+  baseURL: '${baseUrl.value}',
+})
+
+const response = await client.chat.completions.create({
+  model: '${MODEL_ID}',
+  messages: [
+    { role: 'user', content: 'Hello!' },
+  ],
+})
+
+console.log(response.choices[0].message.content)`,
+
+  javascript: `// npm install openai
+const OpenAI = require('openai')
+
+const client = new OpenAI({
+  apiKey: sk-xxxxxx,
+  baseURL: '${baseUrl.value}',
+})
+
+;(async () => {
+  const response = await client.chat.completions.create({
+    model: '${MODEL_ID}',
+    messages: [
+      { role: 'user', content: 'Hello!' },
+    ],
+  })
+  console.log(response.choices[0].message.content)
+})()`,
+
+  curl: `curl -X POST ${baseUrl.value}/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer sk-xxxxxx" \\
+  -d '{
+    "model": "${MODEL_ID}",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'`
+}))
 
 const pricingRows = computed(() => [
   { label: 'Input', value: modelData.pricing.input },
@@ -292,7 +325,7 @@ const pricingRows = computed(() => [
 
 async function copyCode() {
   try {
-    await navigator.clipboard.writeText(modelData.codeExamples[activeLang.value])
+    await navigator.clipboard.writeText(codeExamples.value[activeLang.value])
     toast.success('Code copied to clipboard')
   } catch (err) {
     toast.error('Failed to copy code')
