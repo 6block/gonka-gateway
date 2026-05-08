@@ -30,7 +30,7 @@
       class="bg-surface-container-high rounded-2xl overflow-hidden border border-white/5"
     >
       <!-- Toolbar -->
-      <div
+      <!-- <div
         class="p-6 border-b border-white/5 flex flex-wrap items-center gap-4"
       >
         <div
@@ -58,7 +58,7 @@
         >
           Clear Filters
         </button>
-      </div>
+      </div> -->
 
       <!-- Table -->
       <div class="w-full overflow-x-auto">
