@@ -1,10 +1,9 @@
-import { ref } from 'vue'
-
-// Shared module-scoped state so any page can drive the login modal
-// that is rendered inside the default layout.
-const isOpen = ref(false)
-
+// Per-request shared state for the on-demand login modal that lives in
+// the default layout. useState ensures the modal flag is isolated to the
+// current SSR request, not shared across all concurrent server requests.
 export const useLoginModal = () => {
+  const isOpen = useState<boolean>('app:login-modal-open', () => false)
+
   const open = () => {
     isOpen.value = true
   }

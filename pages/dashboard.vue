@@ -412,9 +412,12 @@ async function copyBaseUrl() {
 }
 
 async function copyCurl() {
+  // Mirror the same masking the rendered cURL block uses (see template):
+  // never put the live key on the clipboard while the user has it hidden.
+  const keyForCopy = apiKey.value && showKey.value ? apiKey.value : '$API_KEY'
   const body = `curl -X POST ${config.public.apiBase}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${apiKey.value || '$API_KEY'}" \\
+  -H "Authorization: Bearer ${keyForCopy}" \\
   -d '{"model":"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8","messages":[{"role":"user","content":"Hello!"}]}'`
   try {
     await navigator.clipboard.writeText(body)

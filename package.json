@@ -9,6 +9,8 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@nuxtjs/tailwindcss": "6.11.4",
     "@pinia/nuxt": "0.5.1",
     "ethers": "^6.16.0",
     "lucide-vue-next": "^0.474.0",
@@ -19,8 +21,5 @@
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
-  "devDependencies": {
-    "@nuxtjs/color-mode": "^4.0.0",
-    "@nuxtjs/tailwindcss": "6.11.4"
-  }
+  "devDependencies": {}
 }
