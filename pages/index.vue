@@ -179,16 +179,22 @@
               </div>
             </div>
             <div class="p-10 font-mono text-base leading-relaxed overflow-x-auto">
-              <pre class="text-secondary"><code><span class="text-primary-dim">import</span> gonka_router
+              <pre class="text-secondary"><code><span class="text-text-muted"># pip install openai</span>
+<span class="text-primary-dim">from</span> openai <span class="text-primary-dim">import</span> OpenAI
 
-<span class="text-text-muted"># Initialize high-frequency client</span>
-client = gonka_router.Client(api_key=<span class="text-tertiary">"GR_BETA_...0x"</span>)
+client = OpenAI(
+    api_key=<span class="text-tertiary">"sk-xxxxxx"</span>,
+    base_url=<span class="text-tertiary">"{{ baseUrl }}"</span>,
+)
 
-response = client.complete(
-    model=<span class="text-tertiary">"bailian/qwen3-235b-a22b-instruct-2507-fp8"</span>,
-    prompt=<span class="text-tertiary">"Optimize this neural circuit."</span>,
-    latency_profile=<span class="text-tertiary">"ultra-low"</span>
-)<span class="inline-block w-2 h-5 bg-primary-container ml-1 align-middle animate-pulse"></span></code></pre>
+response = client.chat.completions.create(
+    model=<span class="text-tertiary">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
+    messages=[
+        {<span class="text-tertiary">"role"</span>: <span class="text-tertiary">"user"</span>, <span class="text-tertiary">"content"</span>: <span class="text-tertiary">"Hello!"</span>},
+    ],
+)
+
+print(response.choices[<span class="text-tertiary">0</span>].message.content)<span class="inline-block w-2 h-5 bg-primary-container ml-1 align-middle animate-pulse"></span></code></pre>
             </div>
           </div>
 
@@ -215,6 +221,9 @@ import {
 } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
+
+const config = useRuntimeConfig()
+const baseUrl = computed(() => `${config.public.apiBase}/v1`)
 
 const heroDescription =
   'One API for All AI Models\nDevelopers first\nAt $0.001 per 1M tokens'
