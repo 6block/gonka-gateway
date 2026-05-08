@@ -314,6 +314,11 @@ async function fetchDeposits(page = 1) {
       params,
       headers: { Authorization: `Bearer ${auth.token}` }
     })
+
+    // const models = await $fetch(`${apiBase}/v1/models`, {
+    //   headers: { Authorization: `Bearer ${auth.token}` }
+    // })
+
     items.value = data.items || []
     total.value = data.total || 0
     currentPage.value = data.page || page

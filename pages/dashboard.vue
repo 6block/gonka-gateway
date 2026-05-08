@@ -274,19 +274,68 @@
           <p class="text-sm text-text-muted font-body font-light">
             List available models.
           </p>
-          <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
-            <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
-              <pre class="text-secondary"><code>{
+
+          <!-- Request -->
+          <div class="space-y-2">
+            <p class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase px-1">
+              Request
+            </p>
+            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
+              <div
+                class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-white/5"
+              >
+                <span
+                  class="text-[9px] font-black text-text-muted tracking-widest uppercase"
+                >
+                  cURL
+                </span>
+                <button
+                  @click="copyCurlModels"
+                  class="p-1 hover:text-primary-container transition-colors"
+                  title="Copy"
+                >
+                  <LucideCopy class="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+                <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X GET {{ config.public.apiBase }}/v1/models \
+  -H <span class="text-tertiary">"Content-Type: application/json"</span> \
+  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span></code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Response -->
+          <div class="space-y-2">
+            <p class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase px-1">
+              Response
+            </p>
+            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5">
+              <div
+                class="bg-surface-container-high px-4 py-2 flex items-center justify-between border-b border-white/5"
+              >
+                <span
+                  class="text-[9px] font-black text-text-muted tracking-widest uppercase"
+                >
+                  JSON
+                </span>
+                <span
+                  class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary-container/10 text-primary-container text-[9px] font-black tracking-widest border border-primary-container/20"
+                >
+                  200 OK
+                </span>
+              </div>
+              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+                <pre class="text-secondary"><code>{
   <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"list"</span>,
   <span class="text-primary-dim">"data"</span>: [
     {
       <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
-      <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>,
-      <span class="text-primary-dim">"created"</span>: <span class="text-tertiary">1677610602</span>,
-      <span class="text-primary-dim">"owned_by"</span>: <span class="text-tertiary">"gonka"</span>
+      <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
     }
   ]
 }</code></pre>
+              </div>
             </div>
           </div>
         </div>
@@ -411,14 +460,29 @@ async function copyBaseUrl() {
   }
 }
 
+// Mirror the same masking the rendered cURL blocks use: never put the live
+// key on the clipboard while the user has it hidden.
+function maskedKey() {
+  return apiKey.value && showKey.value ? apiKey.value : '$API_KEY'
+}
+
 async function copyCurl() {
-  // Mirror the same masking the rendered cURL block uses (see template):
-  // never put the live key on the clipboard while the user has it hidden.
-  const keyForCopy = apiKey.value && showKey.value ? apiKey.value : '$API_KEY'
   const body = `curl -X POST ${config.public.apiBase}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${keyForCopy}" \\
+  -H "Authorization: Bearer ${maskedKey()}" \\
   -d '{"model":"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8","messages":[{"role":"user","content":"Hello!"}]}'`
+  try {
+    await navigator.clipboard.writeText(body)
+    toast.success('cURL command copied')
+  } catch (err) {
+    toast.error('Failed to copy')
+  }
+}
+
+async function copyCurlModels() {
+  const body = `curl -X GET ${config.public.apiBase}/v1/models \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer ${maskedKey()}"`
   try {
     await navigator.clipboard.writeText(body)
     toast.success('cURL command copied')
