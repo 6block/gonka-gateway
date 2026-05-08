@@ -130,6 +130,10 @@
       <div
         v-if="isLoginOpen && !auth.isLoggedIn"
         class="fixed inset-0 z-[90] flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-modal-title"
+        @keydown.esc="closeLoginModal()"
       >
         <div
           class="absolute inset-0 bg-black/60 backdrop-blur-xl"
@@ -151,6 +155,7 @@
           <button
             @click="closeLoginModal()"
             class="absolute top-4 right-4 p-2 rounded-full text-text-muted hover:text-text-main hover:bg-white/5 transition-all z-20"
+            aria-label="Close login dialog"
             title="Close"
           >
             <LucideX class="w-4 h-4" />
@@ -165,6 +170,7 @@
               </div>
             </div>
             <h2
+              id="login-modal-title"
               class="text-2xl font-black font-headline text-center text-text-main mb-2 tracking-tight"
             >
               Connect your wallet
@@ -174,6 +180,7 @@
             </p>
 
             <button
+              ref="loginPrimaryBtn"
               @click="connectMetaMask"
               :disabled="!!isConnecting"
               class="relative w-full overflow-hidden kinetic-gradient text-primary-on font-black py-3.5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex justify-center items-center gap-2 shadow-glow-emerald"
@@ -233,7 +240,7 @@ import {
   LucideX
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import PaymentModal from '~/components/PaymentModal.vue'
 import Toast from '~/components/Toast.vue'
 import { useToast } from '~/composables/useToast'
@@ -247,8 +254,19 @@ const isConnecting = ref(false)
 const hasMetaMask = ref(false)
 const cachedMetaMaskProvider = ref(null)
 const showPaymentModal = ref(false)
+const loginPrimaryBtn = ref(null)
 
 const openLogin = () => openLoginModal()
+
+// Move keyboard focus into the dialog when it opens so screen-reader users
+// land on the primary action and Esc/Tab work naturally.
+watch(isLoginOpen, (open) => {
+  if (open) {
+    nextTick(() => {
+      loginPrimaryBtn.value?.focus()
+    })
+  }
+})
 
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LucideLayoutDashboard },

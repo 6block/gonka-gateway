@@ -303,8 +303,15 @@ async function fetchDeposits(page = 1) {
   loading.value = true
   error.value = null
   try {
+    // Push the date filter to the server so cross-page filtering works.
+    // The local computed `filteredItems` still applies as a defensive
+    // second pass in case the backend ignores the params.
+    const params = { page, page_size: PAGE_SIZE }
+    if (startDate.value) params.start_date = startDate.value
+    if (endDate.value) params.end_date = endDate.value
+
     const data = await $fetch(`${apiBase}/api/billing/deposits`, {
-      params: { page, page_size: PAGE_SIZE },
+      params,
       headers: { Authorization: `Bearer ${auth.token}` }
     })
     items.value = data.items || []
@@ -327,6 +334,12 @@ function clearDateFilter() {
   startDate.value = ''
   endDate.value = ''
 }
+
+// Whenever either date input changes, reset to page 1 and refetch with
+// the new filters so the user always lands on the right slice.
+watch([startDate, endDate], () => {
+  if (auth.isLoggedIn) fetchDeposits(1)
+})
 
 function formatDate(iso) {
   if (!iso) return '-'

@@ -3,6 +3,10 @@
     <div
       v-if="isOpen"
       class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="payment-modal-title"
+      @keydown.esc="close"
     >
       <div
         class="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -10,7 +14,9 @@
       ></div>
 
       <div
-        class="relative w-full max-w-md bg-surface-container-low rounded-[2rem] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[95vh] animate-scale-in"
+        ref="dialogRef"
+        tabindex="-1"
+        class="relative w-full max-w-md bg-surface-container-low rounded-[2rem] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[95vh] animate-scale-in focus:outline-none"
       >
         <!-- Header -->
         <div class="flex items-center justify-between p-5 md:p-6 pb-2 shrink-0">
@@ -20,13 +26,18 @@
             >
               <LucideCreditCard class="w-5 h-5" />
             </div>
-            <h2 class="text-lg md:text-xl font-black font-headline tracking-tight">
+            <h2
+              id="payment-modal-title"
+              class="text-lg md:text-xl font-black font-headline tracking-tight"
+            >
               Add Funds
             </h2>
           </div>
           <button
             @click="close"
             class="p-1.5 hover:bg-white/5 rounded-full transition-colors text-text-muted"
+            aria-label="Close payment dialog"
+            title="Close"
           >
             <LucideX class="w-5 h-5" />
           </button>
@@ -169,7 +180,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import {
   LucideX,
   LucideLoader2,
@@ -196,6 +207,7 @@ const config = useNuxtApp().$config
 const toast = useToast()
 
 const isLoading = ref(false)
+const dialogRef = ref(null)
 const depositAddress = ref('')
 const copied = ref(false)
 
@@ -223,8 +235,10 @@ const fetchDepositAddress = async () => {
 watch(
   () => props.isOpen,
   (newVal) => {
-    if (newVal && !depositAddress.value) {
-      fetchDepositAddress()
+    if (newVal) {
+      if (!depositAddress.value) fetchDepositAddress()
+      // Move focus into the dialog so Esc / Tab work for keyboard users.
+      nextTick(() => dialogRef.value?.focus())
     }
   }
 )

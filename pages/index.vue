@@ -66,26 +66,6 @@
           </button>
         </div>
 
-        <!-- Live stats ticker -->
-        <!-- <div
-          class="mt-16 flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-50 hover:opacity-100 transition-opacity duration-500"
-        >
-          <div v-for="stat in stats" :key="stat.label" class="text-left">
-            <p
-              class="text-[10px] font-black font-label tracking-[0.2em] uppercase text-text-muted mb-1"
-            >
-              {{ stat.label }}
-            </p>
-            <div class="flex items-baseline gap-1">
-              <span
-                class="text-xl font-black font-headline tracking-tighter text-text-main"
-              >
-                {{ formatStat(stat) }}
-              </span>
-              <span class="text-xs font-black text-primary-container">{{ stat.suffix }}</span>
-            </div>
-          </div>
-        </div> -->
       </div>
     </section>
 
@@ -241,46 +221,21 @@ const features = [
   { label: 'Private VPC Deployment', icon: LucideShield }
 ]
 
-const baseStats = [
-  { label: 'Active Nodes', value: 837, suffix: '' },
-  { label: 'Avg Latency', value: 0.86, suffix: 'ms', decimals: 2 },
-  { label: 'Requests / Sec', value: 12461, suffix: '+' }
-]
-
-const variation = ref(baseStats.map(() => 0))
-
-const stats = computed(() =>
-  baseStats.map((stat, i) => ({ ...stat, displayValue: stat.value + variation.value[i] }))
-)
-
-function formatStat(stat) {
-  const v = stat.displayValue ?? stat.value
-  const decimals = stat.decimals ?? 0
-  return v.toLocaleString(undefined, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  })
-}
-
 function scrollToModels() {
   const el = document.getElementById('models')
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
-const particles = Array.from({ length: 6 }, (_, i) => ({
-  id: i,
-  style: `left:${Math.random() * 100}%; top:${Math.random() * 100}%; animation-delay:${
-    Math.random() * 10
-  }s; animation-duration:${10 + Math.random() * 20}s;`
-}))
-
-let tickerTimer = null
+// Particles must be generated client-only — Math.random() during SSR vs.
+// hydration would produce a Vue hydration mismatch warning.
+const particles = ref([])
 onMounted(() => {
-  tickerTimer = setInterval(() => {
-    variation.value = baseStats.map(
-      (stat) => (Math.random() - 0.5) * stat.value * 0.02
-    )
-  }, 2000)
+  particles.value = Array.from({ length: 6 }, (_, i) => ({
+    id: i,
+    style: `left:${Math.random() * 100}%; top:${Math.random() * 100}%; animation-delay:${
+      Math.random() * 10
+    }s; animation-duration:${10 + Math.random() * 20}s;`
+  }))
 })
 </script>
 

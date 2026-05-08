@@ -196,8 +196,10 @@ const languageTabs = ['python', 'typescript', 'javascript', 'curl']
 const MODEL_ID = 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8'
 
 const modelData = {
+  // Display name and id are kept in sync with the canonical MODEL_ID that
+  // the gateway accepts, so users who copy the id from the card succeed.
   name: 'Qwen3-235b-a22b-instruct-2507-fp8',
-  id: 'bailian/qwen3-235b-a22b-instruct-2507-fp8',
+  id: MODEL_ID,
   description:
     'A large-scale, instruction-tuned Mixture-of-Experts language model optimized for high-quality general-purpose text generation, strong reasoning ability, and long-context understanding, with efficient FP8 deployment.',
   maxOutput: '262K',
@@ -274,7 +276,7 @@ print(response.choices[0].message.content)`,
 import OpenAI from 'openai'
 
 const client = new OpenAI({
-  apiKey: sk-xxxxxx,
+  apiKey: 'sk-xxxxxx',
   baseURL: '${baseUrl.value}',
 })
 
@@ -291,7 +293,7 @@ console.log(response.choices[0].message.content)`,
 const OpenAI = require('openai')
 
 const client = new OpenAI({
-  apiKey: sk-xxxxxx,
+  apiKey: 'sk-xxxxxx',
   baseURL: '${baseUrl.value}',
 })
 
