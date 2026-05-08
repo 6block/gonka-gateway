@@ -177,10 +177,7 @@ import {
   LucideCopy,
   LucideChevronLeft,
   LucideMessageCircle,
-  LucideEye,
-  LucideDatabase,
-  LucideVideo,
-  LucideTag
+  LucideDatabase
 } from 'lucide-vue-next'
 import { useToast } from '~/composables/useToast'
 
@@ -198,7 +195,7 @@ const MODEL_ID = 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8'
 const modelData = {
   // Display name and id are kept in sync with the canonical MODEL_ID that
   // the gateway accepts, so users who copy the id from the card succeed.
-  name: 'Qwen3-235b-a22b-instruct-2507-fp8',
+  name: 'Qwen3-235B-A22B-Instruct-2507-FP8',
   id: MODEL_ID,
   description:
     'A large-scale, instruction-tuned Mixture-of-Experts language model optimized for high-quality general-purpose text generation, strong reasoning ability, and long-context understanding, with efficient FP8 deployment.',
@@ -208,15 +205,11 @@ const modelData = {
     unit: '1M tokens',
     note: 'Same rate for input and output tokens'
   },
+  // Only capabilities the model actually supports.
   tags: [
     {
       label: 'chat',
       color: 'bg-red-500/10 text-red-400 border-red-500/20'
-    },
-    {
-      label: 'Vision',
-      icon: LucideEye,
-      color: 'bg-surface-container-highest text-text-muted border-white/5'
     },
     {
       label: 'Function',
@@ -232,20 +225,9 @@ const modelData = {
       label: 'Cache',
       icon: LucideDatabase,
       color: 'bg-primary-container/10 text-primary-container border-primary-container/20'
-    },
-    {
-      label: 'Video',
-      icon: LucideVideo,
-      color: 'bg-surface-container-highest text-text-muted border-white/5'
     }
   ],
-  date: '2026-04-02',
-  pricing: {
-    input: '$0.5 / 1M',
-    output: '$3 / 1M',
-    cacheRead: '$0.05 / 1M',
-    cacheWrite: '$0.625 / 1M'
-  },
+  date: '2026-04-02'
 }
 
 // Code examples are computed against the runtime apiBase so the displayed
@@ -317,13 +299,6 @@ const client = new OpenAI({
     ]
   }'`
 }))
-
-const pricingRows = computed(() => [
-  { label: 'Input', value: modelData.pricing.input },
-  { label: 'Output', value: modelData.pricing.output },
-  { label: 'Cache Read', value: modelData.pricing.cacheRead },
-  { label: 'Cache Write', value: modelData.pricing.cacheWrite }
-])
 
 async function copyCode() {
   try {

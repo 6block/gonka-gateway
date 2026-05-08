@@ -111,10 +111,10 @@
         <h2
           class="font-headline text-5xl md:text-6xl font-black text-text-main mb-8 tracking-tight"
         >
-          Featured Model: QWen3-235B
+          Featured Model: Qwen3-235B
         </h2>
         <p class="font-body text-text-muted text-xl mb-20 max-w-3xl mx-auto font-light leading-relaxed">
-          Optimized Qwen3–235B: Industry-leading reasoning performance with 40%
+          Optimized Qwen3-235B: Industry-leading reasoning performance with 40%
           faster Time to First Token (TTFT).
         </p>
 

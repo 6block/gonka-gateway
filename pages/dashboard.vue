@@ -438,7 +438,7 @@ async function fetchApiKey() {
     apiKey.value = key || ''
   } catch (e) {
     if (e?.response?.status === 401) auth.logout()
-    console.error('Fetch API key error:', e)
+    if (import.meta.dev) console.error('Fetch API key error:', e)
   } finally {
     isKeyLoading.value = false
   }
@@ -474,7 +474,7 @@ async function fetchBalance() {
   } catch (e) {
     if (e?.response?.status === 401) auth.logout()
     error.value = e?.data?.message || e?.message || 'Failed to fetch balance information'
-    console.error('Fetch balance error:', e)
+    if (import.meta.dev) console.error('Fetch balance error:', e)
   } finally {
     loading.value = false
   }

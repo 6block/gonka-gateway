@@ -355,7 +355,7 @@ async function connectMetaMask() {
       accounts = await provider.request({ method: 'eth_requestAccounts' })
     } catch (e) {
       if (e && e.code === -32603) {
-        console.warn('eth_requestAccounts failed with -32603, trying legacy enable()...', e)
+        if (import.meta.dev) console.warn('eth_requestAccounts failed with -32603, trying legacy enable()...', e)
         if (typeof provider.enable === 'function') {
           accounts = await provider.enable()
         } else {
@@ -376,7 +376,7 @@ async function connectMetaMask() {
       throw new Error('No accounts returned from wallet.')
     }
   } catch (err) {
-    console.error('MetaMask connection error:', err)
+    if (import.meta.dev) console.error('MetaMask connection error:', err)
     if (err && err.code === 4001) {
       toast.info('Connection request cancelled.')
     } else {

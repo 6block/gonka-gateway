@@ -396,14 +396,14 @@ async function sendMessage() {
                 }
               }
             } catch (e) {
-              console.error('Frontend Parse Error:', e, line)
+              if (import.meta.dev) console.error('Frontend Parse Error:', e, line)
             }
           }
         }
       }
     }
   } catch (error) {
-    console.error('Chat Error:', error)
+    if (import.meta.dev) console.error('Chat Error:', error)
     messages.value[activeMessageIndex].content = getUserFriendlyErrorMessage(error)
     messages.value[activeMessageIndex].isError = true
     toast.error('Message failed to send')
