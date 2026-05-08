@@ -24,6 +24,10 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
 
   async function login(address: string, provider: any) {
+    if (!import.meta.client) {
+      throw new Error('login() must be called from the browser')
+    }
+
     const config = useNuxtApp().$config
     const apiBase = config.public.apiBase
 

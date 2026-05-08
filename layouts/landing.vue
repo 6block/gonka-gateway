@@ -148,7 +148,9 @@ const handleScroll = () => {
     scrollProgress.value = 0
     return
   }
-  scrollProgress.value = window.scrollY / totalHeight
+  // Clamp to [0, 1] so iOS rubber-banding can't push scaleX above 1 and flash.
+  const raw = window.scrollY / totalHeight
+  scrollProgress.value = Math.max(0, Math.min(1, raw))
 }
 
 const scrollTo = (id) => {

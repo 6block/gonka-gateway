@@ -42,7 +42,7 @@ export default {
         },
         secondary: 'rgb(var(--secondary-rgb) / <alpha-value>)',
         tertiary: 'rgb(var(--tertiary-rgb) / <alpha-value>)',
-        // Legacy fallbacks (kept to avoid blowing up stray utility classes)
+        // Neutral grays kept for any text-gray-* / border-gray-* usages.
         gray: {
           50: '#fafafa',
           100: '#f4f4f5',
@@ -56,12 +56,6 @@ export default {
           900: '#18181b',
           950: '#09090b'
         },
-        accent: {
-          emerald: '#00ef99',
-          cyan: '#64fcc9',
-          pink: '#ec4899',
-          blue: '#60a5fa'
-        }
       },
       animation: {
         'fade-in': 'fadeIn 0.4s ease-out',
