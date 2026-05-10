@@ -341,7 +341,7 @@ async function connectMetaMask() {
     findMetaMaskProviderLegacy()
 
   if (!provider) {
-    toast.error('未检测到 MetaMask，请先安装 MetaMask 扩展。')
+    toast.error('MetaMask not detected. Please install the MetaMask extension first.')
     setTimeout(() => {
       window.open('https://metamask.io/download/', '_blank')
     }, 2000)
@@ -360,7 +360,7 @@ async function connectMetaMask() {
           accounts = await provider.enable()
         } else {
           throw new Error(
-            'MetaMask 内部错误且不支持旧版 enable() 方法，请尝试刷新页面后重新连接。'
+            'MetaMask internal error and the legacy enable() method is not supported. Please refresh the page and try connecting again.'
           )
         }
       } else {
