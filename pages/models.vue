@@ -90,7 +90,7 @@
           v-for="model in models"
           :key="model.id"
           @click="selectedModelId = model.id"
-          class="bg-surface-container-low border border-white/5 rounded-2xl overflow-hidden hover:border-primary-container/30 transition-all group cursor-pointer"
+          class="bg-surface-container-low border border-white/5 rounded-2xl hover:border-primary-container/30 transition-all group cursor-pointer"
         >
           <div class="p-6 md:p-8 space-y-8">
             <div class="flex items-start justify-between">
@@ -141,27 +141,49 @@
                   >
                     <button
                       type="button"
-                      class="peer text-text-muted hover:text-primary-container transition-colors focus:outline-none focus-visible:text-primary-container"
+                      class="peer text-text-muted hover:text-primary-container focus-visible:text-primary-container transition-colors focus:outline-none"
                       aria-label="Pricing details"
                     >
                       <LucideHelpCircle class="w-3.5 h-3.5" />
                     </button>
+                    <!-- Tooltip: centered above the ? icon. The card no longer
+                         clips overflow, so the full panel renders even when it
+                         extends past the card's top edge. -->
                     <span
-                      class="pointer-events-none absolute left-1/2 bottom-full mb-2 -translate-x-1/2 w-[280px] z-20 opacity-0 translate-y-1 transition-all duration-150 peer-hover:opacity-100 peer-hover:translate-y-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0"
+                      class="pointer-events-none absolute bottom-full left-1/2 mb-3 z-20 w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 opacity-0 translate-y-1 transition-all duration-150 peer-hover:opacity-100 peer-hover:translate-y-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0"
                       role="tooltip"
                     >
                       <span
-                        class="block bg-surface-container-highest border border-white/10 rounded-xl shadow-2xl shadow-black/50 p-4 text-left text-[11px] leading-relaxed font-body space-y-1.5"
+                        class="relative block bg-[#0a0a0a]/95 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-5 text-left font-body"
                       >
-                        <span class="block text-red-400">
-                          Utilization &gt; 60% &nbsp;→&nbsp; increase the model’s token price
+                        <span
+                          class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-[13px] leading-snug"
+                        >
+                          <span class="text-red-400 whitespace-nowrap">
+                            Utilization &gt; 60%
+                          </span>
+                          <span class="text-red-400">
+                            →&nbsp; increase the model’s token price
+                          </span>
+
+                          <span class="text-primary-container whitespace-nowrap">
+                            Utilization &lt; 40%
+                          </span>
+                          <span class="text-primary-container">
+                            →&nbsp; reduce the model’s token price
+                          </span>
+
+                          <span class="text-text-muted whitespace-nowrap">
+                            Utilization between 40%–60%
+                          </span>
+                          <span class="text-text-muted">
+                            →&nbsp; keep the token price unchanged
+                          </span>
                         </span>
-                        <span class="block text-primary-container">
-                          Utilization &lt; 40% &nbsp;→&nbsp; reduce the model’s token price
-                        </span>
-                        <span class="block text-text-muted">
-                          Utilization between 40%–60% &nbsp;→&nbsp; keep the token price unchanged
-                        </span>
+                        <!-- Caret centered under the tooltip, aligned with the ? icon -->
+                        <span
+                          class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0a0a0a]/95 border-r border-b border-white/10 rotate-45"
+                        ></span>
                       </span>
                     </span>
                   </span>

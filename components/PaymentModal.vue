@@ -211,6 +211,10 @@ const dialogRef = ref(null)
 const depositAddress = ref('')
 const copied = ref(false)
 
+// Validate the API-supplied deposit address before showing it as a QR code.
+// Without this, a compromised backend or MITM could redirect funds silently.
+const EVM_ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/
+
 const fetchDepositAddress = async () => {
   if (!auth.token) return
 
@@ -221,8 +225,22 @@ const fetchDepositAddress = async () => {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
 
-    if (res && res.address) {
-      depositAddress.value = res.address
+    const rawAddress = res?.address
+    if (typeof rawAddress !== 'string' || !EVM_ADDRESS_PATTERN.test(rawAddress)) {
+      depositAddress.value = ''
+      toast.error('Received an invalid deposit address. Please contact support before sending funds.')
+      if (import.meta.dev) {
+        console.error('Invalid deposit address from API:', rawAddress)
+      }
+      return
+    }
+
+    // Use ethers checksum form so the displayed address matches EIP-55 expectations.
+    try {
+      const { getAddress } = await import('ethers')
+      depositAddress.value = getAddress(rawAddress)
+    } catch {
+      depositAddress.value = rawAddress
     }
   } catch (error) {
     if (error?.response?.status === 401) {

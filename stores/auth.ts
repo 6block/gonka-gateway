@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { SiweMessage } from 'siwe'
-import { getAddress } from 'ethers'
 import { useCookie, useNuxtApp } from '#app'
 
 interface AuthUser {
@@ -32,6 +30,13 @@ export const useAuthStore = defineStore('auth', () => {
     const apiBase = config.public.apiBase
 
     try {
+      // Dynamically import heavy Web3 deps only on the auth path,
+      // keeping ethers (~700KB) and siwe (~50KB) out of the initial bundle.
+      const [{ SiweMessage }, { getAddress }] = await Promise.all([
+        import('siwe'),
+        import('ethers')
+      ])
+
       const checksumAddress = getAddress(address)
 
       // 1. Get nonce

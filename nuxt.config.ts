@@ -1,13 +1,49 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const isProd = process.env.NODE_ENV === 'production'
+
+const apiOrigin = process.env.API_BASE || 'https://api.gonkascan.com'
+
+// CSP allows the API origin for fetch/XHR and Google Fonts for typography.
+// 'unsafe-inline' is required for Nuxt SSR hydration scripts/styles.
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  `connect-src 'self' ${apiOrigin}${isProd ? '' : ' ws: wss:'}`
+].join('; ')
+
+const securityHeaders: Record<string, string> = {
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+  'Content-Security-Policy': contentSecurityPolicy
+}
+
+if (isProd) {
+  securityHeaders['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
+}
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   ssr: true,
-  devtools: { enabled: true },
+  devtools: { enabled: !isProd },
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@nuxtjs/color-mode'
   ],
+  nitro: {
+    routeRules: {
+      '/**': { headers: securityHeaders }
+    }
+  },
   css: ['~/assets/css/tokens.css'],
   colorMode: {
     preference: 'dark',
@@ -45,8 +81,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      // apiBase: process.env.API_BASE || 'http://36.189.234.197:18013' // 测试环境
-      apiBase: process.env.API_BASE || 'https://api.gonkascan.com' // 生产环境
+      apiBase: process.env.API_BASE || 'https://api.gonkascan.com'
     }
   },
   devServer: {

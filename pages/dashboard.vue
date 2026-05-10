@@ -126,6 +126,14 @@
               </button>
             </div>
           </div>
+          <p
+            v-if="auth.isLoggedIn && keyError && !isKeyLoading"
+            class="text-xs text-red-400 font-body flex items-center gap-2"
+            role="alert"
+          >
+            <LucideAlertCircle class="w-3.5 h-3.5 shrink-0" />
+            {{ keyError }}
+          </p>
         </div>
 
         <!-- Base URL -->
@@ -376,6 +384,7 @@ const error = ref(null)
 
 const apiKey = ref('')
 const isKeyLoading = ref(false)
+const keyError = ref(null)
 const copied = ref(false)
 const showKey = ref(false)
 
@@ -425,9 +434,12 @@ const metricsDisplay = computed(() => {
   ]
 })
 
+// Return '-' (not '0') when the value cannot be parsed so users can tell apart
+// "real zero" from "data missing / load failed".
 function formatNumber(val, decimals = 2) {
+  if (val === null || val === undefined || val === '') return '-'
   const n = parseFloat(val)
-  if (isNaN(n)) return '0.00'
+  if (isNaN(n)) return '-'
   return n.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: decimals
@@ -435,8 +447,9 @@ function formatNumber(val, decimals = 2) {
 }
 
 function formatInt(val) {
+  if (val === null || val === undefined || val === '') return '-'
   const n = parseInt(val, 10)
-  if (isNaN(n)) return '0'
+  if (isNaN(n)) return '-'
   return n.toLocaleString('en-US')
 }
 
@@ -498,15 +511,25 @@ async function copyCurlModels() {
 async function fetchApiKey() {
   if (!auth.token) return
   isKeyLoading.value = true
+  keyError.value = null
   try {
     const data = await $fetch(`${config.public.apiBase}/api/keys`, {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
     const key = data?.items?.[0]?.key
     apiKey.value = key || ''
+    if (!key) {
+      keyError.value = 'No API key found on this account.'
+    }
   } catch (e) {
-    if (e?.response?.status === 401) auth.logout()
-    if (import.meta.dev) console.error('Fetch API key error:', e)
+    apiKey.value = ''
+    if (e?.response?.status === 401) {
+      auth.logout()
+    } else {
+      keyError.value = 'Failed to load API key. Please refresh the page.'
+      toast.error('Failed to load API key')
+    }
+    console.error('Fetch API key error:', e)
   } finally {
     isKeyLoading.value = false
   }
@@ -520,29 +543,45 @@ async function fetchBalance() {
     const data = await $fetch(`${config.public.apiBase}/api/me`, {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
-    if (data) {
-      // Response shape: { balance: { USDT: "10" }, usage: { chat: { ... } } }
-      // Prefer USDT; fall back to whichever currency key the server returns first.
-      const balanceMap = (data.balance && typeof data.balance === 'object') ? data.balance : {}
-      const currency = balanceMap.USDT !== undefined
-        ? 'USDT'
-        : Object.keys(balanceMap)[0] || 'USDT'
-      const balance = balanceMap[currency] ?? 0
 
-      const chat = data.usage?.chat || {}
+    // Response shape: { balance: { USDT: "10" }, usage: { chat: { ... } } }
+    // If the shape is unexpected, surface a clear error rather than silently
+    // showing $0.00 and risking the user thinking their funds are gone.
+    if (!data || typeof data !== 'object') {
+      throw new Error('Unexpected response from /api/me')
+    }
+    if (!data.balance || typeof data.balance !== 'object') {
+      error.value = 'Account data is unavailable. Please refresh the page.'
+      console.warn('Unexpected /api/me payload (missing balance):', data)
+      return
+    }
 
-      metrics.value = {
-        balance,
-        currency,
-        monthly_cost: chat.monthly_cost ?? 0,
-        monthly_requests: chat.monthly_requests ?? 0,
-        monthly_token_used: chat.monthly_token_used ?? 0
-      }
+    const balanceMap = data.balance
+    // Prefer USDT; fall back to whichever currency key the server returns first.
+    const currency = balanceMap.USDT !== undefined
+      ? 'USDT'
+      : Object.keys(balanceMap)[0] || 'USDT'
+    const balance = balanceMap[currency] ?? 0
+
+    const chat = data.usage?.chat || {}
+
+    metrics.value = {
+      balance,
+      currency,
+      monthly_cost: chat.monthly_cost ?? 0,
+      monthly_requests: chat.monthly_requests ?? 0,
+      monthly_token_used: chat.monthly_token_used ?? 0
     }
   } catch (e) {
-    if (e?.response?.status === 401) auth.logout()
-    error.value = e?.data?.message || e?.message || 'Failed to fetch balance information'
-    if (import.meta.dev) console.error('Fetch balance error:', e)
+    if (e?.response?.status === 401) {
+      auth.logout()
+    } else {
+      // Show a friendly message in the UI; keep the original error in the
+      // console for ops/debugging (no dev-only gate — silent prod is the bug).
+      error.value = 'Failed to load account data. Please refresh the page.'
+      toast.error('Failed to load account data')
+    }
+    console.error('Fetch balance error:', e)
   } finally {
     loading.value = false
   }
@@ -573,6 +612,7 @@ watch(
       apiKey.value = ''
       showKey.value = false
       error.value = null
+      keyError.value = null
     }
   }
 )
