@@ -4,7 +4,7 @@
       <div>
         <h2 class="text-2xl font-black font-headline tracking-tight leading-none">Chat</h2>
         <p class="text-text-muted mt-2 font-body text-sm">
-          Interact with Qwen3-235B
+          Interact with frontier open-source models
         </p>
       </div>
       <div
@@ -242,6 +242,7 @@ const textareaRef = ref(null)
 const config = useRuntimeConfig()
 
 const availableModels = [
+  { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6' },
   { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
 ]
 const selectedModel = ref(availableModels[0].id)

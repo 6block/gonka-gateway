@@ -210,7 +210,7 @@
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span> \
   -d <span class="text-tertiary">'{
-    "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
+    "model": "moonshotai/Kimi-K2.6",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'</span></code></pre>
               </div>
@@ -331,6 +331,10 @@
   <span class="text-primary-dim">"data"</span>: [
     {
       <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
+      <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
+    },
+    {
+      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"moonshotai/Kimi-K2.6"</span>,
       <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
     }
   ]
@@ -470,7 +474,7 @@ async function copyCurl() {
   const body = `curl -X POST ${config.public.apiBase}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${maskedKey()}" \\
-  -d '{"model":"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8","messages":[{"role":"user","content":"Hello!"}]}'`
+  -d '{"model":"moonshotai/Kimi-K2.6","messages":[{"role":"user","content":"Hello!"}]}'`
   try {
     await navigator.clipboard.writeText(body)
     toast.success('cURL command copied')

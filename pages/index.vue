@@ -24,7 +24,7 @@
             <span
               class="font-label text-xs tracking-widest uppercase text-secondary font-bold"
             >
-              Now supporting QWen3-235B
+              Now Supporting Kimi-K2.6
             </span>
           </div>
         </div>
@@ -41,7 +41,7 @@
         >
           <LucideZap class="w-4 h-4 text-primary-container" />
           <span class="text-xs sm:text-sm font-bold tracking-wide text-primary-container">
-            Start with one FREE week
+            New users get $20 daily credits for 7 days after sign-up
           </span>
         </div>
 
@@ -108,14 +108,39 @@
       class="asymmetric-padding px-6 md:px-8 bg-surface relative overflow-hidden"
     >
       <div class="max-w-5xl mx-auto text-center relative z-10">
+        <!-- Model toggle -->
+        <div class="flex justify-center mb-10">
+          <div
+            class="inline-flex bg-surface-container-high p-1 rounded-full border border-white/5"
+            role="tablist"
+            aria-label="Featured model selector"
+          >
+            <button
+              v-for="model in featuredModels"
+              :key="model.id"
+              type="button"
+              role="tab"
+              :aria-selected="featuredModel === model.id"
+              @click="featuredModel = model.id"
+              class="px-5 py-2 rounded-full text-xs font-black tracking-tight transition-all"
+              :class="
+                featuredModel === model.id
+                  ? 'bg-primary-container text-primary-on shadow-lg shadow-primary-container/20'
+                  : 'text-text-muted hover:text-text-main'
+              "
+            >
+              {{ model.label }}
+            </button>
+          </div>
+        </div>
+
         <h2
           class="font-headline text-5xl md:text-6xl font-black text-text-main mb-8 tracking-tight"
         >
-          Featured Model: Qwen3-235B
+          Featured Model: {{ activeFeatured.label }}
         </h2>
         <p class="font-body text-text-muted text-xl mb-20 max-w-3xl mx-auto font-light leading-relaxed">
-          Optimized Qwen3-235B: Industry-leading reasoning performance with 40%
-          faster Time to First Token (TTFT).
+          {{ activeFeatured.tagline }}
         </p>
 
         <div class="flex flex-col gap-16 items-center">
@@ -168,7 +193,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model=<span class="text-tertiary">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
+    model=<span class="text-tertiary">"{{ activeFeatured.apiId }}"</span>,
     messages=[
         {<span class="text-tertiary">"role"</span>: <span class="text-tertiary">"user"</span>, <span class="text-tertiary">"content"</span>: <span class="text-tertiary">"Hello!"</span>},
     ],
@@ -220,6 +245,27 @@ const features = [
   { label: 'Function Calling Ready', icon: LucideTerminal },
   { label: 'Private VPC Deployment', icon: LucideShield }
 ]
+
+const featuredModels = [
+  {
+    id: 'kimi',
+    label: 'Kimi-K2.6',
+    apiId: 'moonshotai/Kimi-K2.6',
+    tagline:
+      'Optimized Kimi-K2.6: Superior long-context reasoning with enhanced throughput on the Gonka pipeline.'
+  },
+  {
+    id: 'qwen',
+    label: 'Qwen3-235B',
+    apiId: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
+    tagline:
+      'Optimized Qwen3-235B: Industry-leading reasoning performance with 40% faster Time to First Token (TTFT).'
+  }
+]
+const featuredModel = ref(featuredModels[0].id)
+const activeFeatured = computed(
+  () => featuredModels.find((m) => m.id === featuredModel.value) ?? featuredModels[0]
+)
 
 function scrollToModels() {
   const el = document.getElementById('models')
