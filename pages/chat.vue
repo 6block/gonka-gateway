@@ -1,15 +1,15 @@
 <template>
-  <div class="h-full flex flex-col p-4 lg:p-8 max-w-5xl mx-auto animate-fade-in relative w-full">
-    <div class="flex justify-between items-center mb-6 gap-4">
-      <div>
-        <h2 class="text-2xl font-black font-headline tracking-tight leading-none">Chat</h2>
-        <p class="text-text-muted mt-2 font-body text-sm">
+  <div class="h-full flex flex-col p-3 sm:p-4 lg:p-8 max-w-5xl mx-auto animate-fade-in relative w-full">
+    <div class="flex justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4 flex-wrap">
+      <div class="min-w-0">
+        <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">Chat</h2>
+        <p class="text-text-muted mt-1.5 sm:mt-2 font-body text-xs sm:text-sm">
           Interact with frontier open-source models
         </p>
       </div>
       <div
         v-if="!auth.isLoggedIn"
-        class="inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2 shrink-0"
+        class="inline-flex items-center gap-2 sm:gap-3 bg-surface-container-high border border-white/5 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shrink-0"
       >
         <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
         <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
@@ -26,7 +26,7 @@
 
     <!-- Messages -->
     <div
-      class="flex-1 bg-surface-container-high rounded-3xl p-5 md:p-6 overflow-y-auto mb-5 flex flex-col space-y-5 border border-white/5 custom-scrollbar"
+      class="flex-1 bg-surface-container-high rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 overflow-y-auto mb-4 sm:mb-5 flex flex-col space-y-4 sm:space-y-5 border border-white/5 custom-scrollbar min-h-0"
       ref="chatContainer"
     >
       <div
@@ -69,12 +69,12 @@
         :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
       >
         <div
-          class="flex items-start max-w-[85%] md:max-w-[75%] gap-3"
+          class="flex items-start max-w-[90%] sm:max-w-[85%] md:max-w-[75%] gap-2 sm:gap-3"
           :class="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
         >
           <!-- Avatar -->
           <div
-            class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+            class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border border-white/5"
             :class="
               msg.role === 'user'
                 ? 'bg-primary-container text-primary-on'
@@ -87,7 +87,7 @@
 
           <!-- Bubble -->
           <div
-            class="rounded-3xl px-5 py-3.5 text-[15px] leading-relaxed break-words overflow-hidden transition-all"
+            class="rounded-2xl sm:rounded-3xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-[15px] leading-relaxed break-words overflow-hidden transition-all"
             :class="[
               msg.role === 'user'
                 ? 'bg-primary-container text-primary-on font-black'
@@ -130,20 +130,20 @@
     </div>
 
     <!-- Input area -->
-    <div class="shrink-0 space-y-4">
+    <div class="shrink-0 space-y-3 sm:space-y-4">
       <!-- Model selector -->
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <span
           class="text-[10px] font-black uppercase tracking-widest text-text-muted"
         >
           Model
         </span>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             v-for="model in availableModels"
             :key="model.id"
             @click="selectedModel = model.id"
-            class="px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
+            class="px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
             :class="
               selectedModel === model.id
                 ? 'bg-primary-container/20 border-primary-container text-primary-container shadow-lg shadow-primary-container/10'
@@ -169,8 +169,11 @@
               auth.isLoggedIn ? 'Type a message...' : 'Connect wallet to chat'
             "
             :disabled="!auth.isLoggedIn"
-            class="w-full bg-transparent border-none px-5 py-4 text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
+            class="w-full bg-transparent border-none px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[52px] sm:min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
             rows="1"
+            inputmode="text"
+            autocapitalize="sentences"
+            autocomplete="off"
           ></textarea>
           <div class="p-2 shrink-0 flex items-end mb-1">
             <button
@@ -196,7 +199,7 @@
         </div>
       </form>
 
-      <div class="text-center text-[11px] text-text-muted font-medium">
+      <div class="hidden sm:block text-center text-[11px] text-text-muted font-medium">
         Press
         <kbd
           class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"

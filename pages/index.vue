@@ -3,7 +3,7 @@
     <!-- Hero -->
     <section
       id="hero"
-      class="relative asymmetric-padding px-6 md:px-8 overflow-hidden min-h-[90vh] flex flex-col items-center justify-center text-center"
+      class="relative asymmetric-padding px-4 sm:px-6 md:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex flex-col items-center justify-center text-center"
     >
       <!-- Floating particles -->
       <div class="absolute inset-0 z-0 pointer-events-none">
@@ -30,7 +30,7 @@
         </div>
 
         <h1
-          class="font-headline text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 leading-[1.05] animate-float"
+          class="font-headline text-[2.25rem] leading-[1.08] sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-5 sm:mb-6 sm:leading-[1.05] animate-float"
         >
           <span class="text-primary-dim">AI Model Router</span><br />
           <span class="text-text-main">on the Gonka Network</span>
@@ -46,21 +46,21 @@
         </div>
 
         <p
-          class="font-body text-text-muted text-xl md:text-2xl max-w-3xl mx-auto mb-16 leading-relaxed font-light whitespace-pre-line"
+          class="font-body text-text-muted text-base sm:text-xl md:text-2xl max-w-3xl mx-auto mb-12 sm:mb-16 leading-relaxed font-light whitespace-pre-line"
         >
           {{ heroDescription }}
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
           <NuxtLink
             to="/dashboard"
-            class="w-full sm:w-auto kinetic-gradient text-primary-on px-8 py-4 rounded-full font-headline font-black text-lg transition-all hover:-translate-y-0.5 hover:scale-[1.03] active:scale-95 hover:shadow-glow-emerald-lg"
+            class="w-full sm:w-auto kinetic-gradient text-primary-on px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-headline font-black text-base sm:text-lg transition-all hover:-translate-y-0.5 hover:scale-[1.03] active:scale-95 hover:shadow-glow-emerald-lg"
           >
             Get API Keys
           </NuxtLink>
           <button
             @click="scrollToModels"
-            class="w-full sm:w-auto bg-surface-container-highest text-text-main ghost-border px-8 py-4 rounded-full font-headline font-bold text-lg hover:bg-surface-container-high transition-all hover:-translate-y-0.5"
+            class="w-full sm:w-auto bg-surface-container-highest text-text-main ghost-border px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-headline font-bold text-base sm:text-lg hover:bg-surface-container-high transition-all hover:-translate-y-0.5"
           >
             Explore Models
           </button>
@@ -72,29 +72,29 @@
     <!-- Why Choose -->
     <section
       id="features"
-      class="pt-12 pb-24 px-6 md:px-8 bg-surface relative overflow-hidden"
+      class="pt-10 sm:pt-12 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
     >
       <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
+        <div class="text-center mb-8 sm:mb-12">
           <h2
-            class="font-headline text-4xl md:text-5xl font-black text-text-main tracking-tight"
+            class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight"
           >
             Why Choose GonkaRouter
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <div
             v-for="item in whyItems"
             :key="item.title"
-            class="bg-surface-container-high p-8 rounded-[2rem] border border-white/5 hover:border-primary-container/30 transition-all group hover:-translate-y-1.5 duration-300"
+            class="bg-surface-container-high p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-white/5 hover:border-primary-container/30 transition-all group hover:-translate-y-1.5 duration-300"
           >
             <div
-              class="w-12 h-12 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-6 group-hover:scale-110 transition-transform"
+              class="w-11 h-11 sm:w-12 sm:h-12 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-4 sm:mb-6 group-hover:scale-110 transition-transform"
             >
-              <component :is="item.icon" class="w-6 h-6" />
+              <component :is="item.icon" class="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 class="font-headline font-black text-xl text-text-main leading-tight">
+            <h3 class="font-headline font-black text-lg sm:text-xl text-text-main leading-tight">
               {{ item.title }}
             </h3>
           </div>
@@ -105,7 +105,7 @@
     <!-- Featured Model -->
     <section
       id="models"
-      class="asymmetric-padding px-6 md:px-8 bg-surface relative overflow-hidden"
+      class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
     >
       <div class="max-w-5xl mx-auto text-center relative z-10">
         <!-- Model toggle -->
@@ -135,23 +135,23 @@
         </div>
 
         <h2
-          class="font-headline text-5xl md:text-6xl font-black text-text-main mb-8 tracking-tight"
+          class="font-headline text-3xl sm:text-5xl md:text-6xl font-black text-text-main mb-6 sm:mb-8 tracking-tight"
         >
           Featured Model: {{ activeFeatured.label }}
         </h2>
-        <p class="font-body text-text-muted text-xl mb-20 max-w-3xl mx-auto font-light leading-relaxed">
+        <p class="font-body text-text-muted text-base sm:text-xl mb-12 sm:mb-20 max-w-3xl mx-auto font-light leading-relaxed">
           {{ activeFeatured.tagline }}
         </p>
 
-        <div class="flex flex-col gap-16 items-center">
-          <div class="flex flex-wrap justify-center gap-6">
+        <div class="flex flex-col gap-10 sm:gap-16 items-center">
+          <div class="flex flex-wrap justify-center gap-3 sm:gap-6">
             <div
               v-for="feature in features"
               :key="feature.label"
-              class="flex items-center gap-3 bg-surface-container-high px-8 py-4 rounded-full ghost-border hover:border-primary-container/30 hover:bg-surface-container-highest transition-all cursor-default hover:scale-105 duration-300"
+              class="flex items-center gap-2 sm:gap-3 bg-surface-container-high px-5 sm:px-8 py-3 sm:py-4 rounded-full ghost-border hover:border-primary-container/30 hover:bg-surface-container-highest transition-all cursor-default hover:scale-105 duration-300"
             >
-              <component :is="feature.icon" class="w-5 h-5 text-primary-container" />
-              <span class="font-label text-sm font-bold text-text-main tracking-wide">
+              <component :is="feature.icon" class="w-4 h-4 sm:w-5 sm:h-5 text-primary-container" />
+              <span class="font-label text-xs sm:text-sm font-bold text-text-main tracking-wide">
                 {{ feature.label }}
               </span>
             </div>
@@ -162,7 +162,7 @@
             class="w-full bg-surface-container-lowest rounded-2xl border border-outline-variant/10 overflow-hidden text-left relative z-10 shadow-xl shadow-black/30 hover:-translate-y-1 transition-transform duration-500"
           >
             <div
-              class="bg-surface-container-high px-6 py-4 flex items-center gap-3 border-b border-white/5"
+              class="bg-surface-container-high px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3 border-b border-white/5"
             >
               <div class="flex gap-2">
                 <div class="w-3 h-3 rounded-full bg-red-500/40"></div>
@@ -170,7 +170,7 @@
                 <div class="w-3 h-3 rounded-full bg-green-500/40"></div>
               </div>
               <span
-                class="text-xs text-text-muted font-label ml-6 font-bold tracking-widest uppercase"
+                class="text-[10px] sm:text-xs text-text-muted font-label ml-3 sm:ml-6 font-bold tracking-widest uppercase"
               >
                 inference.py
               </span>
@@ -183,7 +183,7 @@
                 </span>
               </div>
             </div>
-            <div class="p-10 font-mono text-base leading-relaxed overflow-x-auto">
+            <div class="p-5 sm:p-8 md:p-10 font-mono text-xs sm:text-sm md:text-base leading-relaxed overflow-x-auto custom-scrollbar">
               <pre class="text-secondary"><code><span class="text-text-muted"># pip install openai</span>
 <span class="text-primary-dim">from</span> openai <span class="text-primary-dim">import</span> OpenAI
 

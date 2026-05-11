@@ -1,8 +1,8 @@
 <template>
-  <div class="p-8 lg:p-12 max-w-6xl mx-auto space-y-8 animate-fade-in">
+  <div class="p-4 sm:p-6 md:p-8 lg:p-12 max-w-6xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
     <!-- Header -->
     <div>
-      <h1 class="text-2xl font-black font-headline tracking-tight leading-none">
+      <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">
         Models List
       </h1>
       <p class="text-text-muted mt-2 font-body text-sm">
@@ -12,27 +12,28 @@
 
     <!-- Detail view -->
     <template v-if="activeModel">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 sm:gap-4">
         <button
           @click="selectedModelId = null"
           class="p-2 hover:bg-white/5 rounded-full transition-colors text-text-muted hover:text-text-main"
+          aria-label="Back to model list"
         >
-          <LucideChevronLeft class="w-6 h-6" />
+          <LucideChevronLeft class="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
-        <h2 class="text-2xl font-black font-headline tracking-tight">Tutorial</h2>
+        <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight">Tutorial</h2>
       </div>
 
-      <div class="space-y-8">
+      <div class="space-y-6 sm:space-y-8">
         <!-- Hero -->
         <div
-          class="bg-surface-container-high p-8 rounded-3xl border border-white/5 flex flex-col md:flex-row gap-8 items-center"
+          class="bg-surface-container-high p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/5 flex flex-col md:flex-row gap-5 md:gap-8 items-center"
         >
           <component :is="activeModel.iconComponent" />
-          <div class="flex-1 text-center md:text-left space-y-2">
-            <h3 class="text-3xl font-black font-headline tracking-tight">
+          <div class="flex-1 text-center md:text-left space-y-2 min-w-0">
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight break-all md:break-normal">
               {{ activeModel.name }}
             </h3>
-            <p class="text-text-muted font-body leading-relaxed max-w-2xl">
+            <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed max-w-2xl">
               {{ activeModel.description }}
             </p>
           </div>
@@ -47,17 +48,17 @@
             Code Example
           </h4>
           <div
-            class="bg-surface-container-lowest rounded-3xl border border-white/5 overflow-hidden"
+            class="bg-surface-container-lowest rounded-2xl sm:rounded-3xl border border-white/5 overflow-hidden"
           >
             <div
-              class="bg-surface-container-highest/50 px-6 py-3 border-b border-white/5 flex flex-wrap justify-between items-center gap-4"
+              class="bg-surface-container-highest/50 px-4 sm:px-6 py-3 border-b border-white/5 flex flex-wrap justify-between items-center gap-3 sm:gap-4"
             >
-              <div class="flex bg-surface-container-lowest p-1 rounded-xl border border-white/5">
+              <div class="flex bg-surface-container-lowest p-1 rounded-xl border border-white/5 overflow-x-auto max-w-full">
                 <button
                   v-for="langId in languageTabs"
                   :key="langId"
                   @click="activeLang = langId"
-                  class="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                  class="px-3 sm:px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap"
                   :class="
                     activeLang === langId
                       ? 'bg-primary-container text-primary-on shadow-lg shadow-primary-container/20'
@@ -76,7 +77,7 @@
               </button>
             </div>
             <pre
-              class="p-8 text-sm font-mono leading-relaxed text-primary-dim overflow-x-auto min-h-[300px]"
+              class="p-4 sm:p-6 md:p-8 text-xs sm:text-sm font-mono leading-relaxed text-primary-dim overflow-x-auto min-h-[240px] sm:min-h-[300px] custom-scrollbar"
             ><code>{{ activeCodeExamples[activeLang] }}</code></pre>
           </div>
         </div>
@@ -85,20 +86,20 @@
 
     <!-- List view -->
     <template v-else>
-      <div class="space-y-6">
+      <div class="space-y-4 sm:space-y-6">
         <div
           v-for="model in models"
           :key="model.id"
           @click="selectedModelId = model.id"
           class="bg-surface-container-low border border-white/5 rounded-2xl hover:border-primary-container/30 transition-all group cursor-pointer"
         >
-          <div class="p-6 md:p-8 space-y-8">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-4">
+          <div class="p-5 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                 <component :is="model.iconComponent" />
-                <div>
-                  <div class="flex items-center gap-2">
-                    <h3 class="text-xl font-black font-headline tracking-tight">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="text-base sm:text-xl font-black font-headline tracking-tight break-all">
                       {{ model.name }}
                     </h3>
                     <div class="flex items-center gap-1 opacity-60">
@@ -106,18 +107,18 @@
                       <span class="text-xs font-black">AI</span>
                     </div>
                   </div>
-                  <p class="text-xs font-mono text-text-muted mt-1">{{ model.id }}</p>
+                  <p class="text-[11px] sm:text-xs font-mono text-text-muted mt-1 break-all">{{ model.id }}</p>
                 </div>
               </div>
               <div
-                class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white"
+                class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white shrink-0"
               >
                 <LucideZap class="w-4 h-4" />
               </div>
             </div>
 
             <!-- Stats -->
-            <div class="flex flex-wrap items-start gap-x-12 gap-y-6">
+            <div class="flex flex-wrap items-start gap-x-8 sm:gap-x-12 gap-y-4 sm:gap-y-6">
               <div class="space-y-1.5">
                 <p
                   class="text-[10px] font-bold text-text-muted uppercase tracking-widest"
@@ -150,14 +151,14 @@
                          clips overflow, so the full panel renders even when it
                          extends past the card's top edge. -->
                     <span
-                      class="pointer-events-none absolute bottom-full left-1/2 mb-3 z-20 w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 opacity-0 translate-y-1 transition-all duration-150 peer-hover:opacity-100 peer-hover:translate-y-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0"
+                      class="pointer-events-none absolute bottom-full left-1/2 mb-3 z-20 w-[min(420px,calc(100vw-2rem))] -translate-x-1/2 opacity-0 translate-y-1 transition-all duration-150 peer-hover:opacity-100 peer-hover:translate-y-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0"
                       role="tooltip"
                     >
                       <span
-                        class="relative block bg-[#0a0a0a]/95 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-5 text-left font-body"
+                        class="relative block bg-[#0a0a0a]/95 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-4 sm:p-5 text-left font-body"
                       >
                         <span
-                          class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-[13px] leading-snug"
+                          class="grid grid-cols-[auto_1fr] gap-x-3 sm:gap-x-4 gap-y-2.5 sm:gap-y-3 text-[12px] sm:text-[13px] leading-snug"
                         >
                           <span class="text-red-400 whitespace-nowrap">
                             Utilization &gt; 60%

@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-surface text-text-main pt-32 pb-24 px-6 md:px-8">
-    <div class="max-w-4xl mx-auto space-y-16">
+  <div class="bg-surface text-text-main pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8">
+    <div class="max-w-4xl mx-auto space-y-10 sm:space-y-16">
       <NuxtLink
         to="/"
         class="inline-flex items-center gap-3 text-primary-container hover:text-primary-dim transition-all font-black font-headline uppercase tracking-widest text-[10px] group"
@@ -9,9 +9,9 @@
         Back to Home
       </NuxtLink>
 
-      <div class="space-y-12">
-        <header class="space-y-4 border-b border-white/5 pb-10">
-          <h1 class="text-4xl md:text-6xl font-black font-headline tracking-tighter">
+      <div class="space-y-10 sm:space-y-12">
+        <header class="space-y-3 sm:space-y-4 border-b border-white/5 pb-6 sm:pb-10">
+          <h1 class="text-3xl sm:text-4xl md:text-6xl font-black font-headline tracking-tighter">
             Privacy Policy
           </h1>
           <p class="text-text-muted font-bold tracking-tight">
@@ -19,9 +19,9 @@
           </p>
         </header>
 
-        <article class="space-y-12 text-text-muted leading-relaxed font-medium">
+        <article class="space-y-8 sm:space-y-12 text-text-muted leading-relaxed font-medium">
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               1. Introduction
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -38,7 +38,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               2. Information We Collect
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm md:text-base">
@@ -69,7 +69,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               3. How We Use Information
             </h2>
             <div class="bg-surface-container-high/50 p-8 rounded-3xl border border-white/5">
@@ -92,7 +92,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               4. Data Retention
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -107,7 +107,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               5. Data Sharing and Disclosure
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -124,7 +124,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               6. Data Security
             </h2>
             <p class="text-sm md:text-base">
@@ -135,7 +135,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               7. Third-Party Services
             </h2>
             <p class="text-sm md:text-base">
@@ -147,7 +147,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               8. International Data Transfers
             </h2>
             <p class="text-sm md:text-base">
@@ -157,7 +157,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               9. Your Rights
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -179,7 +179,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               10. Children's Privacy
             </h2>
             <p class="text-sm md:text-base">
@@ -190,7 +190,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               11. Changes to This Policy
             </h2>
             <p class="text-sm md:text-base">
@@ -200,7 +200,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               12. Contact Us
             </h2>
             <p class="text-sm md:text-base">
@@ -217,7 +217,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               13. API-Specific Notes
             </h2>
             <ul class="list-disc pl-5 space-y-1 text-sm md:text-base">

@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-surface text-text-main pt-32 pb-24 px-6 md:px-8">
-    <div class="max-w-4xl mx-auto space-y-16">
+  <div class="bg-surface text-text-main pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8">
+    <div class="max-w-4xl mx-auto space-y-10 sm:space-y-16">
       <NuxtLink
         to="/"
         class="inline-flex items-center gap-3 text-primary-container hover:text-primary-dim transition-all font-black font-headline uppercase tracking-widest text-[10px] group"
@@ -10,8 +10,8 @@
       </NuxtLink>
 
       <div class="space-y-12">
-        <header class="space-y-4 border-b border-white/5 pb-10">
-          <h1 class="text-4xl md:text-6xl font-black font-headline tracking-tighter">
+        <header class="space-y-3 sm:space-y-4 border-b border-white/5 pb-6 sm:pb-10">
+          <h1 class="text-3xl sm:text-4xl md:text-6xl font-black font-headline tracking-tighter">
             Terms of Service
           </h1>
           <p class="text-text-muted font-bold tracking-tight">
@@ -19,9 +19,9 @@
           </p>
         </header>
 
-        <article class="space-y-12 text-text-muted leading-relaxed font-medium">
+        <article class="space-y-8 sm:space-y-12 text-text-muted leading-relaxed font-medium">
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               1. Acceptance of Terms
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -35,7 +35,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               2. Description of Service
             </h2>
             <p class="text-sm md:text-base">
@@ -50,7 +50,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               3. Eligibility
             </h2>
             <p class="text-sm md:text-base">
@@ -61,7 +61,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               4. User Responsibilities
             </h2>
             <div class="bg-surface-container-high p-8 rounded-3xl border border-white/5 space-y-6">
@@ -97,7 +97,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               5. API Usage
             </h2>
             <div class="space-y-4 text-sm md:text-base">
@@ -113,7 +113,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               6. Fees and Billing
             </h2>
             <p class="text-sm md:text-base">
@@ -123,7 +123,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               7. Intellectual Property
             </h2>
             <p class="text-sm md:text-base">
@@ -134,7 +134,7 @@
           </section>
 
           <section class="space-y-4">
-            <h2 class="text-2xl font-black font-headline tracking-tight text-text-main">
+            <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main">
               8. AI-Generated Content
             </h2>
             <p class="text-sm md:text-base">
@@ -149,7 +149,7 @@
             class="space-y-4 bg-primary-container/5 border border-primary-container/10 p-8 rounded-3xl"
           >
             <h2
-              class="text-2xl font-black font-headline tracking-tight text-primary-container"
+              class="text-xl sm:text-2xl font-black font-headline tracking-tight text-primary-container"
             >
               9. Security &amp; Web3 Disclaimer
             </h2>
@@ -170,7 +170,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div class="space-y-3">
                 <h2
-                  class="text-2xl font-black font-headline tracking-tight text-text-main"
+                  class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main"
                 >
                   10. Disclaimer of Warranties
                 </h2>
@@ -182,7 +182,7 @@
               </div>
               <div class="space-y-3">
                 <h2
-                  class="text-2xl font-black font-headline tracking-tight text-text-main"
+                  class="text-xl sm:text-2xl font-black font-headline tracking-tight text-text-main"
                 >
                   11. Limitation of Liability
                 </h2>

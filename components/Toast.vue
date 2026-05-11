@@ -1,12 +1,12 @@
 <template>
   <div
-    class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2.5 pointer-events-none"
+    class="fixed z-[200] flex flex-col gap-2.5 pointer-events-none top-[calc(env(safe-area-inset-top,0px)+0.75rem)] left-3 right-3 items-center sm:top-auto sm:bottom-6 sm:left-auto sm:right-6 sm:items-stretch"
   >
-    <TransitionGroup name="toast" tag="div" class="flex flex-col gap-2.5">
+    <TransitionGroup name="toast" tag="div" class="flex flex-col gap-2.5 w-full sm:w-auto items-center sm:items-stretch">
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-card backdrop-blur-2xl border text-sm font-bold font-body"
+        class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-card backdrop-blur-2xl border text-sm font-bold font-body max-w-[calc(100vw-1.5rem)] sm:max-w-md"
         :class="{
           'bg-surface-container-high border-white/5 text-text-main': toast.type === 'info',
           'bg-primary-container/10 border-primary-container/25 text-primary-container':
@@ -49,12 +49,15 @@ const { toasts, removeToast } = useToast()
 .toast-leave-active {
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.toast-enter-from {
-  opacity: 0;
-  transform: translateX(30px) scale(0.9);
-}
+.toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateX(30px) scale(0.9);
+  transform: translateY(-12px) scale(0.95);
+}
+@media (min-width: 640px) {
+  .toast-enter-from,
+  .toast-leave-to {
+    transform: translateX(30px) scale(0.9);
+  }
 }
 </style>

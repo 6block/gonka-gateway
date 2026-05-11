@@ -1,9 +1,9 @@
 <template>
-  <div class="p-8 lg:p-12 max-w-6xl mx-auto space-y-8 animate-fade-in">
+  <div class="p-4 sm:p-6 md:p-8 lg:p-12 max-w-6xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
       <div>
-        <h1 class="text-2xl font-black font-headline tracking-tight leading-none">
+        <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">
           Dashboard
         </h1>
         <p class="text-text-muted mt-2 font-body text-sm">
@@ -12,7 +12,7 @@
       </div>
       <div
         v-if="!auth.isLoggedIn"
-        class="inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2 animate-fade-in"
+        class="self-start inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2 animate-fade-in"
       >
         <span
           class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"
@@ -31,19 +31,19 @@
     </div>
 
     <!-- Metrics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <div
         v-for="stat in metricsDisplay"
         :key="stat.key"
-        class="bg-surface-container-high p-5 rounded-2xl flex justify-between items-start hover:bg-surface-container-highest transition-all group cursor-default border border-white/5"
+        class="bg-surface-container-high p-4 sm:p-5 rounded-2xl flex justify-between items-start gap-2 hover:bg-surface-container-highest transition-all group cursor-default border border-white/5"
       >
-        <div>
-          <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
+        <div class="min-w-0">
+          <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2 sm:mb-3 truncate">
             {{ stat.label }}
           </p>
-          <div class="flex items-baseline gap-1.5">
+          <div class="flex items-baseline gap-1.5 flex-wrap">
             <span
-              class="text-2xl font-black font-headline tracking-tight group-hover:text-primary-container transition-colors"
+              class="text-xl sm:text-2xl font-black font-headline tracking-tight group-hover:text-primary-container transition-colors break-all"
             >
               {{ loading ? '…' : stat.value }}
             </span>
@@ -68,12 +68,12 @@
     </div>
 
     <!-- Main grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
       <!-- Left column: credentials -->
-      <div class="lg:col-span-1 space-y-6">
+      <div class="lg:col-span-1 space-y-4 sm:space-y-6">
         <!-- API Key -->
         <div
-          class="bg-surface-container-high p-6 rounded-2xl space-y-5 border border-white/5"
+          class="bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-4 sm:space-y-5 border border-white/5"
         >
           <div class="flex items-center gap-3">
             <div class="p-2 bg-surface-container-highest rounded-xl">
@@ -138,7 +138,7 @@
 
         <!-- Base URL -->
         <div
-          class="bg-surface-container-high p-6 rounded-2xl space-y-5 border border-white/5"
+          class="bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-4 sm:space-y-5 border border-white/5"
         >
           <div class="flex items-center gap-3">
             <div class="p-2 bg-surface-container-highest rounded-xl">
@@ -152,7 +152,7 @@
           <div
             class="flex items-center gap-2 bg-surface-container-lowest p-3.5 rounded-xl border border-white/5"
           >
-            <code class="text-xs font-mono flex-1 text-secondary">
+            <code class="text-xs font-mono flex-1 text-secondary overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
               {{ config.public.apiBase }}/v1
             </code>
             <button
@@ -168,7 +168,7 @@
 
       <!-- Right column: API reference -->
       <div
-        class="lg:col-span-2 bg-surface-container-high p-6 rounded-2xl space-y-6 border border-white/5"
+        class="lg:col-span-2 bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-5 sm:space-y-6 border border-white/5"
       >
         <div class="flex items-center gap-3">
           <div class="p-2 bg-surface-container-highest rounded-xl">
@@ -213,7 +213,7 @@
                   <LucideCopy class="w-3.5 h-3.5" />
                 </button>
               </div>
-              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+              <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X POST {{ config.public.apiBase }}/v1/chat/completions \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span> \
@@ -245,7 +245,7 @@
                   200 OK
                 </span>
               </div>
-              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+              <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code>{
   <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"chatcmpl-123"</span>,
   <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"chat.completion"</span>,
@@ -305,7 +305,7 @@
                   <LucideCopy class="w-3.5 h-3.5" />
                 </button>
               </div>
-              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+              <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X GET {{ config.public.apiBase }}/v1/models \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span></code></pre>
@@ -333,7 +333,7 @@
                   200 OK
                 </span>
               </div>
-              <div class="p-5 font-mono text-xs leading-relaxed overflow-x-auto">
+              <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code>{
   <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"list"</span>,
   <span class="text-primary-dim">"data"</span>: [

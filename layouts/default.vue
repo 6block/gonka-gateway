@@ -1,34 +1,108 @@
 <template>
   <div
-    class="flex h-screen bg-surface text-text-main font-body selection:bg-primary-container selection:text-primary-on relative overflow-hidden"
+    class="flex flex-col lg:flex-row h-screen bg-surface text-text-main font-body selection:bg-primary-container selection:text-primary-on relative overflow-hidden"
   >
-    <!-- Left edge accent line -->
-    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-[#5b56f1] z-30"></div>
+    <!-- Left edge accent line (hidden on mobile to free up edge) -->
+    <div class="hidden lg:block absolute left-0 top-0 bottom-0 w-[3px] bg-[#5b56f1] z-30"></div>
 
-    <!-- Sidebar -->
-    <aside
-      class="w-64 bg-surface-container-low border-r border-white/5 flex flex-col p-6 z-20 h-full shrink-0"
+    <!-- Mobile top bar -->
+    <header
+      class="lg:hidden flex items-center justify-between gap-3 px-4 h-14 shrink-0 bg-surface-container-low border-b border-white/5 z-30"
     >
-      <!-- Logo -->
-      <NuxtLink to="/" class="mb-8 px-2 group cursor-pointer block">
+      <NuxtLink to="/" class="flex items-center gap-2 min-w-0" @click="closeDrawer">
         <span
-          class="text-xl font-black text-primary-container font-headline tracking-tighter block group-hover:scale-105 transition-transform origin-left animate-pulse-soft"
+          class="text-base font-black text-primary-container font-headline tracking-tighter truncate"
         >
           GonkaRouter
         </span>
-        <p class="text-[9px] font-black text-text-muted tracking-[0.2em] mt-1 uppercase">
-          AI Inference Gateway
-        </p>
       </NuxtLink>
+
+      <div class="flex items-center gap-1.5">
+        <button
+          @click="toggleColorMode"
+          class="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-primary-container hover:bg-white/5 transition-all"
+          title="Toggle theme"
+          aria-label="Toggle theme"
+        >
+          <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
+          <LucideMoon v-else class="w-5 h-5" />
+        </button>
+        <button
+          v-if="!auth.isLoggedIn"
+          @click="openLogin"
+          class="h-9 kinetic-gradient text-primary-on px-3 rounded-lg font-black text-[11px] tracking-tight flex items-center gap-1.5 shadow-lg shadow-primary-container/20"
+        >
+          <LucideWallet class="w-3.5 h-3.5" />
+          Connect
+        </button>
+        <button
+          v-else
+          @click="showPaymentModal = true"
+          class="h-9 kinetic-gradient text-primary-on px-3 rounded-lg font-black text-[11px] tracking-tight flex items-center gap-1.5 shadow-lg shadow-primary-container/20"
+        >
+          <LucideWallet class="w-3.5 h-3.5" />
+          Deposit
+        </button>
+        <button
+          @click="toggleDrawer"
+          class="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-text-main hover:bg-white/5 transition-all"
+          :aria-expanded="isDrawerOpen"
+          aria-controls="mobile-drawer"
+          aria-label="Open menu"
+        >
+          <LucideX v-if="isDrawerOpen" class="w-5 h-5" />
+          <LucideMenu v-else class="w-5 h-5" />
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile drawer overlay -->
+    <Transition name="modal-fade">
+      <div
+        v-if="isDrawerOpen"
+        class="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+        @click="closeDrawer"
+        aria-hidden="true"
+      ></div>
+    </Transition>
+
+    <!-- Sidebar (drawer on mobile / fixed on desktop) -->
+    <aside
+      id="mobile-drawer"
+      class="fixed lg:static top-0 left-0 h-full w-72 max-w-[85vw] lg:w-64 bg-surface-container-low border-r border-white/5 flex flex-col p-6 z-50 lg:z-20 shrink-0 transform transition-transform duration-300 ease-out lg:translate-x-0"
+      :class="isDrawerOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+      aria-label="Primary navigation"
+    >
+      <!-- Logo -->
+      <div class="flex items-center justify-between mb-8">
+        <NuxtLink to="/" class="px-2 group cursor-pointer block" @click="closeDrawer">
+          <span
+            class="text-xl font-black text-primary-container font-headline tracking-tighter block group-hover:scale-105 transition-transform origin-left animate-pulse-soft"
+          >
+            GonkaRouter
+          </span>
+          <p class="text-[9px] font-black text-text-muted tracking-[0.2em] mt-1 uppercase">
+            AI Inference Gateway
+          </p>
+        </NuxtLink>
+        <button
+          @click="closeDrawer"
+          class="lg:hidden p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-white/5 transition-all"
+          aria-label="Close menu"
+        >
+          <LucideX class="w-5 h-5" />
+        </button>
+      </div>
 
       <div class="h-px bg-white/5 mb-8 mx-2"></div>
 
       <!-- Navigation -->
-      <nav class="flex-1 space-y-2">
+      <nav class="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
         <NuxtLink
           v-for="link in navLinks"
           :key="link.to"
           :to="link.to"
+          @click="closeDrawer"
           class="nav-item w-full flex items-center gap-4 px-5 py-3.5 rounded-full font-bold text-[13px] tracking-tight transition-all relative group text-text-muted hover:text-text-main hover:bg-white/5 hover:translate-x-1"
           active-class="!bg-primary-container/10 !text-primary-container"
         >
@@ -41,12 +115,12 @@
       </nav>
 
       <!-- Bottom section -->
-      <div class="mt-auto space-y-6">
+      <div class="mt-auto space-y-6 pt-6">
         <template v-if="!auth.isLoggedIn">
           <div class="flex items-center gap-2">
             <button
               @click="toggleColorMode"
-              class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
+              class="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
               title="Toggle theme"
             >
               <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
@@ -65,14 +139,14 @@
           <div class="flex items-center gap-2">
             <button
               @click="toggleColorMode"
-              class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
+              class="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
               title="Toggle theme"
             >
               <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
               <LucideMoon v-else class="w-5 h-5" />
             </button>
             <button
-              @click="showPaymentModal = true"
+              @click="openDeposit"
               class="flex-1 h-11 kinetic-gradient text-primary-on px-4 rounded-xl font-black text-[13px] tracking-tight flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-container/20 whitespace-nowrap hover:shadow-glow-emerald"
             >
               <LucideWallet class="w-4 h-4" />
@@ -121,7 +195,7 @@
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 overflow-y-auto bg-surface relative h-full">
+    <main class="flex-1 overflow-y-auto bg-surface relative h-full min-w-0">
       <slot />
     </main>
 
@@ -140,7 +214,7 @@
           @click="closeLoginModal()"
         ></div>
         <div
-          class="relative bg-surface-container-low border border-white/5 p-8 rounded-3xl w-full max-w-[420px] shadow-2xl animate-scale-in overflow-hidden"
+          class="relative bg-surface-container-low border border-white/5 p-6 sm:p-8 rounded-3xl w-full max-w-[420px] shadow-2xl animate-scale-in overflow-hidden"
         >
           <div
             class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-dim via-primary-container to-secondary pointer-events-none"
@@ -164,18 +238,18 @@
           <div class="relative z-10">
             <div class="flex justify-center mb-6">
               <div
-                class="w-16 h-16 bg-primary-container rounded-2xl shadow-glow-emerald flex items-center justify-center animate-float"
+                class="w-14 h-14 sm:w-16 sm:h-16 bg-primary-container rounded-2xl shadow-glow-emerald flex items-center justify-center animate-float"
               >
-                <LucideWallet class="w-8 h-8 text-primary-on" />
+                <LucideWallet class="w-7 h-7 sm:w-8 sm:h-8 text-primary-on" />
               </div>
             </div>
             <h2
               id="login-modal-title"
-              class="text-2xl font-black font-headline text-center text-text-main mb-2 tracking-tight"
+              class="text-xl sm:text-2xl font-black font-headline text-center text-text-main mb-2 tracking-tight"
             >
               Connect your wallet
             </h2>
-            <p class="text-text-muted text-[14px] text-center mb-8 font-body">
+            <p class="text-text-muted text-[13px] sm:text-[14px] text-center mb-6 sm:mb-8 font-body">
               Sign in with MetaMask to unlock your balance, API keys and transactions.
             </p>
 
@@ -237,10 +311,11 @@ import {
   LucideLogOut,
   LucideWallet,
   LucideUser,
-  LucideX
+  LucideX,
+  LucideMenu
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
-import { ref, onMounted, nextTick, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import PaymentModal from '~/components/PaymentModal.vue'
 import Toast from '~/components/Toast.vue'
 import { useToast } from '~/composables/useToast'
@@ -249,14 +324,45 @@ import { useLoginModal } from '~/composables/useLoginModal'
 const colorMode = useColorMode()
 const auth = useAuthStore()
 const toast = useToast()
+const route = useRoute()
 const { isOpen: isLoginOpen, open: openLoginModal, close: closeLoginModal } = useLoginModal()
 const isConnecting = ref(false)
 const hasMetaMask = ref(false)
 const cachedMetaMaskProvider = ref(null)
 const showPaymentModal = ref(false)
 const loginPrimaryBtn = ref(null)
+const isDrawerOpen = ref(false)
 
-const openLogin = () => openLoginModal()
+const openLogin = () => {
+  closeDrawer()
+  openLoginModal()
+}
+
+const openDeposit = () => {
+  closeDrawer()
+  showPaymentModal.value = true
+}
+
+const toggleDrawer = () => {
+  isDrawerOpen.value = !isDrawerOpen.value
+}
+
+const closeDrawer = () => {
+  isDrawerOpen.value = false
+}
+
+// Lock body scroll while the drawer is open so the underlying page doesn't
+// scroll behind the overlay on mobile.
+watch(isDrawerOpen, (open) => {
+  if (typeof document === 'undefined') return
+  document.body.style.overflow = open ? 'hidden' : ''
+})
+
+// Close the drawer whenever the route changes so navigating from inside the
+// drawer cleanly returns to the page.
+watch(() => route.fullPath, () => {
+  closeDrawer()
+})
 
 // Move keyboard focus into the dialog when it opens so screen-reader users
 // land on the primary action and Esc/Tab work naturally.
@@ -330,6 +436,14 @@ onMounted(async () => {
   const mmProvider = await discoverProviderByRdns('io.metamask')
   cachedMetaMaskProvider.value = mmProvider || findMetaMaskProviderLegacy()
   hasMetaMask.value = !!cachedMetaMaskProvider.value
+})
+
+// Always restore body scroll on unmount so a stale lock doesn't survive a
+// hot reload or navigation away from this layout.
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = ''
+  }
 })
 
 async function connectMetaMask() {

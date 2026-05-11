@@ -74,7 +74,11 @@ export default defineNuxtConfig({
         }
       ],
       meta: [
-        { name: 'theme-color', content: '#0e0e0e' }
+        { name: 'theme-color', content: '#0e0e0e' },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1, viewport-fit=cover'
+        }
       ]
     },
     pageTransition: { name: 'page', mode: 'out-in' }

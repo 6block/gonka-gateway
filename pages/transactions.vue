@@ -1,8 +1,8 @@
 <template>
-  <div class="p-8 lg:p-12 max-w-6xl mx-auto space-y-8 animate-fade-in">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+  <div class="p-4 sm:p-6 md:p-8 lg:p-12 max-w-6xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
       <div>
-        <h1 class="text-2xl font-black font-headline tracking-tight leading-none">
+        <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">
           Transactions
         </h1>
         <p class="text-text-muted mt-2 font-body text-sm">
@@ -11,7 +11,7 @@
       </div>
       <div
         v-if="!auth.isLoggedIn"
-        class="inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2"
+        class="self-start inline-flex items-center gap-3 bg-surface-container-high border border-white/5 rounded-full px-4 py-2"
       >
         <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
         <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
@@ -29,173 +29,184 @@
     <div
       class="bg-surface-container-high rounded-2xl overflow-hidden border border-white/5"
     >
-      <!-- Toolbar -->
-      <!-- <div
-        class="p-6 border-b border-white/5 flex flex-wrap items-center gap-4"
+      <!-- Shared state placeholders (logged-out / loading / error / empty) -->
+      <div v-if="!auth.isLoggedIn" class="px-6 py-16 sm:py-24 text-center">
+        <div class="flex flex-col items-center justify-center gap-4 text-text-muted">
+          <div
+            class="w-14 h-14 rounded-2xl bg-surface-container-highest border border-white/5 flex items-center justify-center"
+          >
+            <LucideWallet class="w-6 h-6 text-primary-container" />
+          </div>
+          <div class="space-y-1 max-w-sm">
+            <p class="font-headline font-bold text-base tracking-tight text-text-main">
+              Connect to view transactions
+            </p>
+            <p class="text-sm">
+              Your deposit history is private. Connect your wallet to load it.
+            </p>
+          </div>
+          <button
+            @click="openLogin"
+            class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-5 py-2 rounded-full font-black text-[11px] tracking-widest uppercase hover:shadow-glow-emerald transition-all active:scale-95"
+          >
+            <LucideWallet class="w-3.5 h-3.5" />
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-else-if="loading"
+        class="px-6 py-16 sm:py-20 text-center text-text-muted"
+      >
+        <div class="flex flex-col items-center justify-center gap-3">
+          <LucideLoader2 class="w-6 h-6 animate-spin text-primary-container" />
+          <span class="font-medium text-sm">Loading transactions...</span>
+        </div>
+      </div>
+
+      <div v-else-if="error" class="px-6 py-16 sm:py-20 text-center">
+        <div
+          class="inline-flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-medium"
+        >
+          <LucideAlertCircle class="w-4 h-4" />
+          {{ error }}
+        </div>
+      </div>
+
+      <div
+        v-else-if="filteredItems.length === 0"
+        class="px-6 py-16 sm:py-24 text-center"
       >
         <div
-          class="flex items-center gap-3 bg-surface-container-lowest px-4 py-2 rounded-xl border border-white/5 group transition-all hover:border-primary-container/30"
+          class="flex flex-col items-center justify-center text-text-muted gap-4 opacity-60"
         >
-          <LucideCalendar
-            class="w-4 h-4 text-text-muted group-hover:text-primary-container transition-colors"
-          />
-          <input
-            v-model="startDate"
-            type="date"
-            class="bg-transparent text-[10px] font-bold tracking-widest uppercase focus:outline-none text-text-main cursor-pointer date-field"
-          />
-          <span class="text-text-muted/60">—</span>
-          <input
-            v-model="endDate"
-            type="date"
-            class="bg-transparent text-[10px] font-bold tracking-widest uppercase focus:outline-none text-text-main cursor-pointer date-field"
-          />
+          <LucideHistory class="w-10 h-10" />
+          <p class="font-headline font-bold text-lg tracking-tight text-text-main">
+            No transactions found
+          </p>
+          <p class="text-sm text-text-muted">
+            There are no deposits matching your criteria.
+          </p>
         </div>
-        <button
-          v-if="startDate || endDate"
-          @click="clearDateFilter"
-          class="text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary-container px-3 py-2 rounded-xl bg-surface-container-lowest border border-white/5 hover:border-primary-container/30 transition-all"
-        >
-          Clear Filters
-        </button>
-      </div> -->
+      </div>
 
-      <!-- Table -->
-      <div class="w-full overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr
-              class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase border-b border-white/5"
-            >
-              <th class="px-8 py-5 whitespace-nowrap">Transaction Hash</th>
-              <th class="px-8 py-5 whitespace-nowrap">Date &amp; Time</th>
-              <th class="px-8 py-5 whitespace-nowrap">Network</th>
-              <th class="px-8 py-5 whitespace-nowrap">Amount</th>
-              <th class="px-8 py-5 whitespace-nowrap">Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/5">
-            <tr v-if="!auth.isLoggedIn">
-              <td colspan="5" class="px-8 py-24 text-center">
-                <div
-                  class="flex flex-col items-center justify-center gap-4 text-text-muted"
-                >
+      <template v-else>
+        <!-- Desktop table -->
+        <div class="hidden md:block w-full overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr
+                class="text-[9px] font-black text-text-muted tracking-[0.2em] uppercase border-b border-white/5"
+              >
+                <th class="px-8 py-5 whitespace-nowrap">Transaction Hash</th>
+                <th class="px-8 py-5 whitespace-nowrap">Date &amp; Time</th>
+                <th class="px-8 py-5 whitespace-nowrap">Network</th>
+                <th class="px-8 py-5 whitespace-nowrap">Amount</th>
+                <th class="px-8 py-5 whitespace-nowrap">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr
+                v-for="item in filteredItems"
+                :key="item.tx_hash"
+                class="hover:bg-white/5 transition-colors group"
+              >
+                <td class="px-8 py-5 font-mono text-xs text-primary-dim">
+                  <span :title="item.tx_hash">
+                    {{ formatHash(item.tx_hash) }}
+                  </span>
+                </td>
+                <td class="px-8 py-5 text-xs text-text-muted">
+                  <div class="flex flex-col">
+                    <span class="font-medium text-text-main text-[13px]">
+                      {{ formatDate(item.created_at) }}
+                    </span>
+                    <span class="text-[11px] text-text-muted">
+                      {{ formatTimeOnly(item.created_at) }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-8 py-5 text-xs font-bold">
                   <div
-                    class="w-14 h-14 rounded-2xl bg-surface-container-highest border border-white/5 flex items-center justify-center"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-text-muted border border-white/5"
                   >
-                    <LucideWallet class="w-6 h-6 text-primary-container" />
+                    {{ formatChain(item.chain) }}
                   </div>
-                  <div class="space-y-1 max-w-sm">
-                    <p class="font-headline font-bold text-base tracking-tight text-text-main">
-                      Connect to view transactions
-                    </p>
-                    <p class="text-sm">
-                      Your deposit history is private. Connect your wallet to load it.
-                    </p>
-                  </div>
-                  <button
-                    @click="openLogin"
-                    class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-5 py-2 rounded-full font-black text-[11px] tracking-widest uppercase hover:shadow-glow-emerald transition-all active:scale-95"
+                </td>
+                <td class="px-8 py-5 text-xs font-black text-text-main">
+                  ${{ formatAmount(item.amount) }}
+                </td>
+                <td class="px-8 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black tracking-widest border"
+                    :class="statusClasses(item.status)"
                   >
-                    <LucideWallet class="w-3.5 h-3.5" />
-                    Connect Wallet
-                  </button>
-                </div>
-              </td>
-            </tr>
+                    <span
+                      class="w-1.5 h-1.5 rounded-full"
+                      :class="statusDotClasses(item.status)"
+                    ></span>
+                    {{ statusLabel(item.status) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-            <tr v-else-if="loading">
-              <td colspan="5" class="px-8 py-20 text-center text-text-muted">
-                <div class="flex flex-col items-center justify-center gap-3">
-                  <LucideLoader2 class="w-6 h-6 animate-spin text-primary-container" />
-                  <span class="font-medium text-sm">Loading transactions...</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr v-else-if="error">
-              <td colspan="5" class="px-8 py-20 text-center">
-                <div
-                  class="inline-flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-medium"
+        <!-- Mobile card list -->
+        <ul class="md:hidden divide-y divide-white/5">
+          <li
+            v-for="item in filteredItems"
+            :key="item.tx_hash"
+            class="px-4 sm:px-5 py-4 space-y-3"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <p
+                  class="font-mono text-[11px] text-primary-dim truncate"
+                  :title="item.tx_hash"
                 >
-                  <LucideAlertCircle class="w-4 h-4" />
-                  {{ error }}
-                </div>
-              </td>
-            </tr>
-
-            <tr v-else-if="filteredItems.length === 0">
-              <td colspan="5" class="px-8 py-24 text-center">
-                <div
-                  class="flex flex-col items-center justify-center text-text-muted gap-4 opacity-60"
-                >
-                  <LucideHistory class="w-10 h-10" />
-                  <p class="font-headline font-bold text-lg tracking-tight text-text-main">
-                    No transactions found
-                  </p>
-                  <p class="text-sm text-text-muted">
-                    There are no deposits matching your criteria.
-                  </p>
-                </div>
-              </td>
-            </tr>
-
-            <tr
-              v-else
-              v-for="item in filteredItems"
-              :key="item.tx_hash"
-              class="hover:bg-white/5 transition-colors group"
-            >
-              <td class="px-8 py-5 font-mono text-xs text-primary-dim">
-                <span :title="item.tx_hash">
-                  {{
-                    item.tx_hash
-                      ? item.tx_hash.slice(0, 6) + '...' + item.tx_hash.slice(-6)
-                      : '-'
-                  }}
-                </span>
-              </td>
-              <td class="px-8 py-5 text-xs text-text-muted">
-                <div class="flex flex-col">
-                  <span class="font-medium text-text-main text-[13px]">
+                  {{ formatHash(item.tx_hash) }}
+                </p>
+                <p class="mt-1 text-[11px] text-text-muted">
+                  <span class="font-medium text-text-main">
                     {{ formatDate(item.created_at) }}
                   </span>
-                  <span class="text-[11px] text-text-muted">
-                    {{ formatTimeOnly(item.created_at) }}
-                  </span>
-                </div>
-              </td>
-              <td class="px-8 py-5 text-xs font-bold">
-                <div
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-text-muted border border-white/5"
-                >
-                  {{ formatChain(item.chain) }}
-                </div>
-              </td>
-              <td class="px-8 py-5 text-xs font-black text-text-main">
-                ${{ formatAmount(item.amount) }}
-              </td>
-              <td class="px-8 py-5">
+                  <span class="mx-1.5 opacity-50">·</span>
+                  <span>{{ formatTimeOnly(item.created_at) }}</span>
+                </p>
+              </div>
+              <span
+                class="shrink-0 inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black tracking-widest border"
+                :class="statusClasses(item.status)"
+              >
                 <span
-                  class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black tracking-widest border"
-                  :class="statusClasses(item.status)"
-                >
-                  <span
-                    class="w-1.5 h-1.5 rounded-full"
-                    :class="statusDotClasses(item.status)"
-                  ></span>
-                  {{ statusLabel(item.status) }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                  class="w-1.5 h-1.5 rounded-full"
+                  :class="statusDotClasses(item.status)"
+                ></span>
+                {{ statusLabel(item.status) }}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between gap-3">
+              <div
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-highest text-text-muted border border-white/5 text-[11px] font-bold"
+              >
+                {{ formatChain(item.chain) }}
+              </div>
+              <span class="text-sm font-black text-text-main">
+                ${{ formatAmount(item.amount) }}
+              </span>
+            </div>
+          </li>
+        </ul>
+      </template>
 
       <!-- Pagination -->
       <div
         v-if="auth.isLoggedIn && !loading && !error && total > 0"
-        class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/5"
+        class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-5 border-t border-white/5"
       >
         <span class="text-xs text-text-muted">
           Page
@@ -208,6 +219,7 @@
             @click="goToPage(currentPage - 1)"
             :disabled="currentPage <= 1"
             class="p-2 rounded-xl text-text-muted hover:bg-primary-container/10 hover:text-primary-container disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            aria-label="Previous page"
           >
             <LucideChevronLeft class="w-5 h-5" />
           </button>
@@ -216,7 +228,7 @@
             v-for="p in pageNumbers"
             :key="p"
             @click="p !== '…' && goToPage(p)"
-            class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-bold transition-all"
+            class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-xs sm:text-sm font-bold transition-all"
             :class="[
               p === currentPage
                 ? 'bg-primary-container text-primary-on shadow-lg shadow-primary-container/20'
@@ -232,6 +244,7 @@
             @click="goToPage(currentPage + 1)"
             :disabled="currentPage >= totalPages"
             class="p-2 rounded-xl text-text-muted hover:bg-primary-container/10 hover:text-primary-container disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            aria-label="Next page"
           >
             <LucideChevronRight class="w-5 h-5" />
           </button>
@@ -345,6 +358,11 @@ function clearDateFilter() {
 watch([startDate, endDate], () => {
   if (auth.isLoggedIn) fetchDeposits(1)
 })
+
+function formatHash(hash) {
+  if (!hash) return '-'
+  return `${hash.slice(0, 6)}...${hash.slice(-6)}`
+}
 
 function formatDate(iso) {
   if (!iso) return '-'

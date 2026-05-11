@@ -16,7 +16,7 @@
       <div
         ref="dialogRef"
         tabindex="-1"
-        class="relative w-full max-w-md bg-surface-container-low rounded-[2rem] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[95vh] animate-scale-in focus:outline-none"
+        class="relative w-full max-w-md bg-surface-container-low rounded-3xl sm:rounded-[2rem] shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[95vh] animate-scale-in focus:outline-none"
       >
         <!-- Header -->
         <div class="flex items-center justify-between p-5 md:p-6 pb-2 shrink-0">
