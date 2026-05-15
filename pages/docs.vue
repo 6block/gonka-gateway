@@ -23,8 +23,8 @@
           Integration Guide
         </h1>
         <p class="text-text-muted text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl">
-          Drop your GonkaRouter key into Claude SDKs, Cursor IDE, or OpenClaw / Claude Code
-          in under five minutes. Every snippet in this guide is tested end-to-end against
+          Drop your GonkaRouter key into Claude SDKs, Cursor IDE, or OpenClaw in under
+          five minutes. Every snippet in this guide is tested end-to-end against
           <code class="font-mono text-primary-container">{{ apiBase }}</code>.
         </p>
       </header>
@@ -96,9 +96,9 @@
           </p>
           <DocsCodeBlock filename="smoke-test.sh" :code="smokeCurl" />
           <div
-            class="bg-primary-container/5 border border-primary-container/20 rounded-2xl p-4 sm:p-5 space-y-2"
+            class="bg-surface-container-highest/40 border border-white/5 border-l-2 border-l-primary-container/50 rounded-2xl p-4 sm:p-5 space-y-2"
           >
-            <p class="text-[10px] font-black uppercase tracking-widest text-primary-container">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               Expected output (abridged)
             </p>
             <pre class="text-xs sm:text-sm font-mono text-text-muted overflow-x-auto custom-scrollbar">{
@@ -238,9 +238,31 @@
             </h3>
             <p class="text-sm text-text-muted leading-relaxed">
               Cursor speaks the OpenAI Chat Completions API. GonkaRouter exposes
-              <code class="font-mono text-primary-container"> POST /v1/chat/completions</code>
+              <code class="font-mono text-primary-container">POST /v1/chat/completions</code>
               one-to-one with OpenAI, so you can register it as a custom provider and
               use Gonka models from Chat, Composer, and Cmd-K inline edits.
+            </p>
+          </div>
+
+          <!-- Free Plan limitation callout -->
+          <div
+            class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 space-y-2"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400">
+              Heads up — Cursor Free Plan won't route to your gateway
+            </p>
+            <p class="text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+              As of late 2025, <span class="font-bold">Cursor Free</span> blocks
+              <em>Named Models</em>: even if you configure Custom Base URL + API key + a
+              custom model name correctly, Cursor pops up
+              <em>"Named models unavailable. Free plans can only use Auto."</em>
+              and silently routes the request to its own Auto provider — your gateway is
+              never called. The steps below work <span class="font-bold">only on Cursor Pro</span>.
+              On the Free tier, use a free OpenAI-compatible client instead: e.g.
+              <a href="https://continue.dev" target="_blank" rel="noreferrer" class="font-bold underline hover:text-amber-100">Continue.dev</a>,
+              <a href="https://cline.bot" target="_blank" rel="noreferrer" class="font-bold underline hover:text-amber-100">Cline</a>,
+              or <a href="https://aider.chat" target="_blank" rel="noreferrer" class="font-bold underline hover:text-amber-100">Aider</a> —
+              they accept the same Base URL + key with no plan gating.
             </p>
           </div>
 
@@ -256,7 +278,7 @@
             </p>
             <ol class="space-y-4 text-sm text-text-muted leading-relaxed">
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">01</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">01</span>
                 <span>
                   Open <span class="text-text-main font-bold">Cursor → Settings</span>
                   (<code class="font-mono">⌘ ,</code> on macOS,
@@ -265,7 +287,7 @@
                 </span>
               </li>
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">02</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">02</span>
                 <span>
                   Scroll to <span class="text-text-main font-bold">OpenAI API Key</span>.
                   Click <span class="text-text-main font-bold">Override OpenAI Base URL</span>
@@ -273,7 +295,7 @@
                 </span>
               </li>
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">03</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">03</span>
                 <span>
                   Paste your GonkaRouter key into the
                   <span class="text-text-main font-bold">OpenAI API Key</span> field
@@ -282,7 +304,7 @@
                 </span>
               </li>
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">04</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">04</span>
                 <span>
                   In the same <span class="text-text-main font-bold">Models</span> section,
                   click <span class="text-text-main font-bold">+ Add model</span> and enter
@@ -292,7 +314,7 @@
                 </span>
               </li>
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">05</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">05</span>
                 <span>
                   <span class="text-text-main font-bold">Turn off</span> any built-in
                   Anthropic / OpenAI models you do not want Cursor to call through your
@@ -301,7 +323,7 @@
                 </span>
               </li>
               <li class="flex gap-3">
-                <span class="font-black text-primary-container shrink-0 w-7">06</span>
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">06</span>
                 <span>
                   Open the Chat panel (<code class="font-mono">⌘ L</code>), pick your
                   new model from the dropdown, ask <em>"Reply pong"</em>. Done.
@@ -313,12 +335,12 @@
           <DocsCodeBlock filename="exact-values-to-paste.txt" :code="cursorValues" />
 
           <div
-            class="bg-primary-container/5 border border-primary-container/20 rounded-2xl p-4 sm:p-5 space-y-3"
+            class="bg-surface-container-highest/40 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3"
           >
-            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-primary-container">
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-text-muted">
               Cursor-specific tips
             </p>
-            <ul class="space-y-2 text-xs sm:text-sm text-primary-dim leading-relaxed list-disc pl-5">
+            <ul class="space-y-2 text-xs sm:text-sm text-text-muted leading-relaxed list-disc pl-5 marker:text-text-muted/40">
               <li>
                 Cursor sends standard OpenAI Chat Completions — no reasoning toggle,
                 no Anthropic headers required.
@@ -338,19 +360,22 @@
           </div>
         </div>
 
-        <!-- ─────────────── OpenClaw / Claude Code ─────────────── -->
+        <!-- ─────────────── Claude Code CLI ─────────────── -->
         <div
-          v-show="activeTab === 'openclaw'"
+          v-show="activeTab === 'claude-code'"
           class="bg-surface-container-high border border-white/5 rounded-3xl p-5 sm:p-8 space-y-6"
         >
           <div class="space-y-2">
             <h3 class="text-lg sm:text-xl font-black font-headline tracking-tight">
-              OpenClaw &amp; Claude Code CLIs
+              Claude Code CLI (Anthropic official)
             </h3>
             <p class="text-sm text-text-muted leading-relaxed">
-              OpenClaw, Claude Code, and most other Claude Code-derived CLIs honour the
-              same two environment variables. Export them once and every
-              <code class="font-mono">/v1/messages</code> call goes through GonkaRouter.
+              Anthropic's official
+              <code class="font-mono text-primary-container">@anthropic-ai/claude-code</code>
+              CLI honours <code class="font-mono">ANTHROPIC_BASE_URL</code> and
+              <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code> — so you can
+              point it at GonkaRouter with a few env vars and use the full agentic
+              workflow (file edits, tool calls, slash commands) backed by Gonka models.
             </p>
           </div>
 
@@ -362,68 +387,245 @@
           <!-- Install -->
           <div class="space-y-3">
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
-              1. Install the CLI (skip if already installed)
+              1. Install Claude Code
+            </p>
+            <DocsCodeBlock filename="install.sh" :code="claudeCodeInstall" />
+          </div>
+
+          <!-- Isolated HOME -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              2. Launch with an isolated HOME (recommended)
+            </p>
+            <DocsCodeBlock filename="run-claude.sh" :code="claudeCodeRun" />
+            <p class="text-xs text-text-muted leading-relaxed">
+              Use this exact incantation when you want Claude Code to route
+              <span class="font-bold">cleanly through GonkaRouter</span> without
+              touching your existing Anthropic OAuth session.
+            </p>
+          </div>
+
+          <!-- Why each var -->
+          <div
+            class="bg-surface-container-highest/40 border border-white/5 rounded-2xl p-4 sm:p-5 space-y-3"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-text-muted">
+              What each env var does
+            </p>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-text-muted leading-relaxed list-disc pl-5 marker:text-text-muted/40">
+              <li>
+                <code class="font-mono text-text-main">HOME=/tmp/gonka-claude-home</code> —
+                <span class="font-bold text-text-main">isolates the credentials store.</span>
+                Without this, Claude Code reads <code class="font-mono">~/.claude/credentials</code>,
+                finds your existing OAuth session for Anthropic.com, and silently
+                ignores <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>. The throwaway
+                HOME forces it to fall back to the env-var path.
+              </li>
+              <li>
+                <code class="font-mono text-text-main">ANTHROPIC_BASE_URL</code> — domain root, no
+                <code class="font-mono">/v1</code> suffix. The CLI appends
+                <code class="font-mono">/v1/messages</code> itself.
+              </li>
+              <li>
+                <code class="font-mono text-text-main">ANTHROPIC_AUTH_TOKEN</code> — your GonkaRouter
+                key. Sent as <code class="font-mono">x-api-key</code>. Note: it's
+                <code class="font-mono">_AUTH_TOKEN</code>, not
+                <code class="font-mono">_API_KEY</code>.
+              </li>
+              <li>
+                <code class="font-mono text-text-main">ANTHROPIC_MODEL</code> — primary model used for
+                main reasoning. Pin to a Gonka model id (slashes preserved).
+              </li>
+              <li>
+                <code class="font-mono text-text-main">ANTHROPIC_SMALL_FAST_MODEL</code> — model used
+                for sidecar tasks (file summaries, planner checks). Set it to the same
+                Gonka model so every internal call still routes through your gateway.
+              </li>
+              <li>
+                <code class="font-mono text-text-main">DISABLE_PROMPT_CACHING=1</code> — the gateway
+                does not implement Anthropic's prompt-caching headers; disable client
+                caching to avoid <code class="font-mono">cache_control</code> requests
+                that the gateway can't honour.
+              </li>
+            </ul>
+          </div>
+
+          <!-- Persistent path -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              3. (Optional) Wrap it in a shell function so you don't retype every time
+            </p>
+            <DocsCodeBlock filename="~/.zshrc (or ~/.bashrc)" :code="claudeCodeShellFn" />
+          </div>
+
+          <!-- Gotchas -->
+          <div
+            class="bg-amber-500/[0.04] border border-amber-500/20 rounded-2xl p-4 sm:p-5 space-y-3"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400/90 flex items-center gap-2">
+              <LucideTriangleAlert class="w-3.5 h-3.5" />
+              Gotchas
+            </p>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-text-muted leading-relaxed list-disc pl-5 marker:text-amber-500/40">
+              <li>
+                <span class="font-black text-text-main">Already logged into Anthropic?</span> Without
+                the isolated <code class="font-mono">HOME</code> the CLI will keep using
+                OAuth and bill your Anthropic account instead. Verify routing by running
+                <code class="font-mono">/status</code> inside the REPL — it should print
+                <code class="font-mono">{{ apiBase }}</code> as the base URL.
+              </li>
+              <li>
+                <span class="font-black text-text-main">Working directory state.</span> The isolated
+                HOME means a fresh session history every time. To keep history, replace
+                <code class="font-mono">/tmp/gonka-claude-home</code> with a persistent
+                path like <code class="font-mono">~/.gonka-claude-home</code>.
+              </li>
+              <li>
+                <span class="font-black text-text-main">Model id is case-sensitive.</span>
+                <code class="font-mono">moonshotai/Kimi-K2.6</code> works,
+                <code class="font-mono">Kimi-K2.6</code> alone returns
+                <em>model not available for your channel</em>.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ─────────────── OpenClaw ─────────────── -->
+        <div
+          v-show="activeTab === 'openclaw'"
+          class="bg-surface-container-high border border-white/5 rounded-3xl p-5 sm:p-8 space-y-6"
+        >
+          <div class="space-y-2">
+            <h3 class="text-lg sm:text-xl font-black font-headline tracking-tight">
+              OpenClaw
+            </h3>
+            <p class="text-sm text-text-muted leading-relaxed">
+              OpenClaw is a multi-provider agent platform with its own provider catalog —
+              unlike Anthropic's Claude Code, it does <span class="font-bold">not</span>
+              read <code class="font-mono">ANTHROPIC_BASE_URL</code>. You register
+              GonkaRouter as a custom <code class="font-mono">gonka</code> provider in
+              <code class="font-mono">~/.openclaw/openclaw.json</code> and use it via
+              the <code class="font-mono">anthropic-messages</code> adapter. End-to-end
+              tested against
+              <code class="font-mono text-primary-container">{{ apiBase }}</code>.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <DocsInfoCard label="Provider id" value="gonka" />
+            <DocsInfoCard label="API adapter" value="anthropic-messages" />
+          </div>
+
+          <!-- Prereq -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              1. Prerequisite — Node ≥ 22.12
+            </p>
+            <DocsCodeBlock filename="prereq.sh" :code="openclawPrereq" />
+            <p class="text-xs text-text-muted leading-relaxed">
+              OpenClaw requires Node 22 LTS. If <code class="font-mono">node -v</code>
+              shows v20.x you'll get <code class="font-mono">Node.js v22.12+ is required</code>
+              and the CLI refuses to start.
+            </p>
+          </div>
+
+          <!-- Install -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              2. Install OpenClaw
             </p>
             <DocsCodeBlock filename="install.sh" :code="openclawInstall" />
           </div>
 
-          <!-- Shell config -->
+          <!-- Provider config -->
           <div class="space-y-3">
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
-              2. Add to your shell config (persistent)
+              3. Register the <code class="font-mono">gonka</code> provider
             </p>
-            <DocsCodeBlock filename="~/.zshrc (or ~/.bashrc)" :code="openclawEnv" />
+            <DocsCodeBlock filename="gonka-provider.json5" :code="openclawProvider" />
+            <DocsCodeBlock filename="apply.sh" :code="openclawApply" />
             <p class="text-xs text-text-muted leading-relaxed">
-              Reload with <code class="font-mono text-primary-container">source ~/.zshrc</code>
-              (or open a new terminal). Anything launched after this point — VS Code,
-              tmux, a CI runner — picks the values up automatically.
+              The patch validates against OpenClaw's JSON schema before writing, and the
+              previous config is auto-backed up to
+              <code class="font-mono">openclaw.json.bak</code>. The API key is stored
+              redacted in <code class="font-mono">openclaw config get</code> output.
             </p>
           </div>
 
-          <!-- Per-call -->
+          <!-- Daemon -->
           <div class="space-y-3">
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
-              3. Or set per-invocation (no shell-config changes)
+              4. Start the Gateway daemon
+            </p>
+            <DocsCodeBlock filename="daemon.sh" :code="openclawDaemon" />
+            <p class="text-xs text-text-muted leading-relaxed">
+              <code class="font-mono">gateway.mode=local</code> is required — without it
+              the daemon exits with
+              <em>"Gateway start blocked: existing config is missing gateway.mode"</em>.
+            </p>
+          </div>
+
+          <!-- Three usage paths -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              5. Three ways to use it
             </p>
             <DocsCodeBlock filename="run.sh" :code="openclawRun" />
-          </div>
-
-          <!-- Verify -->
-          <div class="space-y-3">
-            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
-              4. Verify routing is active
-            </p>
-            <DocsCodeBlock filename="verify.sh" :code="openclawVerify" />
             <p class="text-xs text-text-muted leading-relaxed">
-              The smoke-test curl uses the exact same env vars the CLI uses, so if it
-              returns 200 the CLI will too.
+              All three modes resolve <code class="font-mono">gonka/&lt;model-id&gt;</code>
+              against your registered provider. The Dashboard's
+              <span class="font-bold">Models</span> panel lists the configured Gonka
+              models in the picker — choose one and chat normally.
             </p>
           </div>
 
+          <!-- Expected output -->
           <div
-            class="bg-primary-container/5 border border-primary-container/20 rounded-2xl p-4 sm:p-5 space-y-3"
+            class="bg-surface-container-highest/40 border border-white/5 border-l-2 border-l-primary-container/50 rounded-2xl p-4 sm:p-5 space-y-2"
           >
-            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-primary-container">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Expected output of step 5's one-shot call
+            </p>
+            <pre class="text-xs sm:text-sm font-mono text-text-muted overflow-x-auto custom-scrollbar">{
+  "ok": true,
+  "capability": "model.run",
+  "transport": "local",
+  "provider": "gonka",
+  "model": "moonshotai/Kimi-K2.6",
+  "outputs": [{"text": "pong", "mediaUrl": null}]
+}</pre>
+          </div>
+
+          <!-- Gotchas -->
+          <div
+            class="bg-amber-500/[0.04] border border-amber-500/20 rounded-2xl p-4 sm:p-5 space-y-3"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400/90 flex items-center gap-2">
+              <LucideTriangleAlert class="w-3.5 h-3.5" />
               Gotchas
             </p>
-            <ul class="space-y-2 text-xs sm:text-sm text-primary-dim leading-relaxed list-disc pl-5">
+            <ul class="space-y-2.5 text-xs sm:text-sm text-text-muted leading-relaxed list-disc pl-5 marker:text-amber-500/40">
               <li>
-                <span class="font-black">Domain root, no <code class="font-mono">/v1</code>.</span>
-                Set <code class="font-mono">ANTHROPIC_BASE_URL={{ apiBase }}</code> —
-                the CLI appends <code class="font-mono">/v1/messages</code> itself. A
-                trailing <code class="font-mono">/v1</code> will produce 404s.
+                <span class="font-black text-text-main">Model id is <code class="font-mono">gonka/&lt;real-id&gt;</code>.</span>
+                The prefix is the provider id you registered, not the underlying
+                <code class="font-mono">anthropic/</code> path. Slashes inside the model
+                id are part of the id and must be preserved verbatim
+                (<code class="font-mono">gonka/moonshotai/Kimi-K2.6</code>).
               </li>
               <li>
-                <span class="font-black">Use <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>, not <code class="font-mono">ANTHROPIC_API_KEY</code></span>
-                — the CLI maps the former to the <code class="font-mono">x-api-key</code>
-                header the gateway expects.
+                <span class="font-black text-text-main">Daemon vs. <code class="font-mono">--local</code>.</span>
+                The <code class="font-mono">--local</code> flag bypasses the Gateway
+                daemon and dials your provider directly from the CLI process — useful
+                for one-off scripts and CI where you don't want a long-running daemon.
+                Omit it and the daemon (port 18789) handles routing.
               </li>
               <li>
-                <span class="font-black">Model selection.</span>
-                Some CLIs hard-code <code class="font-mono">claude-sonnet-*</code> as the
-                default. Pin a Gonka model via the CLI's own setting
-                (<code class="font-mono">--model moonshotai/Kimi-K2.6</code>) or via
-                <code class="font-mono">ANTHROPIC_MODEL</code> if your CLI honours it.
+                <span class="font-black text-text-main">Anthropic's own Claude Code CLI is different.</span>
+                The official <code class="font-mono">@anthropic-ai/claude-code</code> CLI
+                <em>does</em> honour <code class="font-mono">ANTHROPIC_BASE_URL</code> /
+                <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>. If that's what you
+                meant by "OpenClaw", see the Claude SDK tab — the env-var pattern there
+                applies to that CLI too.
               </li>
             </ul>
           </div>
@@ -508,7 +710,8 @@ import {
   LucideBookOpen,
   LucideChevronDown,
   LucideSend,
-  LucideMail
+  LucideMail,
+  LucideTriangleAlert
 } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
@@ -519,7 +722,8 @@ const apiBase = computed(() => config.public.apiBase || 'https://api.gonkascan.c
 const tabs = [
   { id: 'claude', label: 'Claude SDK' },
   { id: 'cursor', label: 'Cursor IDE' },
-  { id: 'openclaw', label: 'OpenClaw / Claude Code' }
+  { id: 'claude-code', label: 'Claude Code' },
+  { id: 'openclaw', label: 'OpenClaw' }
 ]
 const activeTab = ref('claude')
 
@@ -656,42 +860,106 @@ Max output tokens: 4096               # protects against reasoning-token starvat
 `
 )
 
-const openclawInstall = `# OpenClaw (community fork)
-npm install -g openclaw
-
-# Anthropic's official Claude Code (works with the same env vars)
-npm install -g @anthropic-ai/claude-code
+const claudeCodeInstall = `npm install -g @anthropic-ai/claude-code
+claude --version    # → 1.x.x
 `
 
-const openclawEnv = computed(
-  () => `# Base URL is the DOMAIN ROOT — no /v1 suffix.
-export ANTHROPIC_BASE_URL="${apiBase.value}"
-export ANTHROPIC_AUTH_TOKEN="sk-xxxxxx"        # your GonkaRouter key
-export ANTHROPIC_MODEL="moonshotai/Kimi-K2.6"  # honoured by openclaw + claude-code
+const claudeCodeRun = computed(
+  () => `# 1. Create an isolated HOME so Claude Code does NOT pick up your existing
+#    ~/.claude/credentials OAuth session and silently ignore the env vars below.
+mkdir -p /tmp/gonka-claude-home
 
-# Then just launch the CLI normally:
-openclaw          # or:  claude
-`
-)
-
-const openclawRun = computed(
-  () => `ANTHROPIC_BASE_URL="${apiBase.value}" \\
-ANTHROPIC_AUTH_TOKEN="sk-xxxxxx" \\
-ANTHROPIC_MODEL="moonshotai/Kimi-K2.6" \\
-openclaw "Refactor this function for readability"
+# 2. Launch inside your project directory. Every env var matters — see below.
+HOME=/tmp/gonka-claude-home \\
+ANTHROPIC_BASE_URL=${apiBase.value} \\
+ANTHROPIC_AUTH_TOKEN=sk-xxxxxx \\
+ANTHROPIC_MODEL=moonshotai/Kimi-K2.6 \\
+ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6 \\
+DISABLE_PROMPT_CACHING=1 \\
+claude
 `
 )
 
-const openclawVerify = computed(
-  () => `# Reproduces exactly what the CLI sends on the wire.
-curl -s "$ANTHROPIC_BASE_URL/v1/messages" \\
-  -H "x-api-key: $ANTHROPIC_AUTH_TOKEN" \\
-  -H "anthropic-version: 2023-06-01" \\
-  -H "content-type: application/json" \\
-  -d "{\\"model\\":\\"$ANTHROPIC_MODEL\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"ping\\"}]}" \\
-  | head -c 200; echo
+const claudeCodeShellFn = computed(
+  () => `gonka-claude() {
+  HOME=/tmp/gonka-claude-home \\
+  ANTHROPIC_BASE_URL=${apiBase.value} \\
+  ANTHROPIC_AUTH_TOKEN="\${GONKA_API_KEY:?set GONKA_API_KEY in your shell}" \\
+  ANTHROPIC_MODEL=moonshotai/Kimi-K2.6 \\
+  ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6 \\
+  DISABLE_PROMPT_CACHING=1 \\
+  claude "$@"
+}
+
+# then in any project: \`gonka-claude\`
 `
 )
+
+const openclawPrereq = `# OpenClaw requires Node.js ≥ 22.12 (LTS).
+# If you use nvm:
+nvm install 22
+nvm use 22
+nvm alias default 22
+node -v          # → v22.x.x
+`
+
+const openclawInstall = `npm install -g openclaw
+openclaw --version   # → OpenClaw 2026.x.x
+`
+
+const openclawProvider = computed(
+  () => `// Save as /tmp/gonka-provider.json5
+{
+  models: {
+    providers: {
+      gonka: {
+        baseUrl: "${apiBase.value}",
+        apiKey: "sk-xxxxxx",              // your GonkaRouter key
+        auth: "api-key",
+        api: "anthropic-messages",
+        models: [
+          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" },
+          { id: "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",     name: "Qwen3-235B" }
+        ]
+      }
+    }
+  }
+}
+`
+)
+
+const openclawApply = `# Dry-run validates the patch against the JSON schema:
+openclaw config patch --file /tmp/gonka-provider.json5 --dry-run
+
+# Apply for real:
+openclaw config patch --file /tmp/gonka-provider.json5
+
+# Confirm it landed (apiKey shows as __OPENCLAW_REDACTED__ — that's fine):
+openclaw config get models.providers.gonka
+`
+
+const openclawDaemon = `openclaw config set gateway.mode local
+openclaw daemon restart
+
+# Verify the daemon came up cleanly:
+openclaw gateway status
+# → Runtime: running (pid …)
+# → Connectivity probe: ok
+# → Listening: 127.0.0.1:18789
+`
+
+const openclawRun = `# A. One-shot call (best for scripts / CI)
+openclaw infer model run \\
+  --model "gonka/moonshotai/Kimi-K2.6" \\
+  --prompt "Reply with just: pong" \\
+  --json
+
+# B. Interactive terminal UI
+openclaw chat --local
+
+# C. Web Dashboard
+openclaw            # opens http://127.0.0.1:18789/ with an auth-included URL
+`
 
 const faqs = [
   {
@@ -712,7 +980,15 @@ const faqs = [
   },
   {
     q: 'OpenAI SDK or Anthropic SDK — which should I pick?',
-    a: 'Both work; pick by ecosystem fit. <ul class="list-disc pl-5 mt-2 space-y-1"><li><span class="font-bold">OpenAI SDK</span> (<code class="font-mono">/v1/chat/completions</code>) — best for Cursor, LangChain, LlamaIndex, anything OpenAI-shaped.</li><li><span class="font-bold">Anthropic SDK</span> (<code class="font-mono">/v1/messages</code>) — best for Claude Code / OpenClaw, anthropic-sdk-python projects, code that uses <code class="font-mono">tool_use</code> / <code class="font-mono">tool_result</code> blocks.</li></ul>'
+    a: 'Both work; pick by ecosystem fit. <ul class="list-disc pl-5 mt-2 space-y-1"><li><span class="font-bold">OpenAI SDK</span> (<code class="font-mono">/v1/chat/completions</code>) — best for Continue.dev, Cline, Aider, LangChain, LlamaIndex, anything OpenAI-shaped.</li><li><span class="font-bold">Anthropic SDK</span> (<code class="font-mono">/v1/messages</code>) — best for Anthropic Claude Code, OpenClaw\'s <code class="font-mono">anthropic-messages</code> adapter, anthropic-sdk-python / @anthropic-ai/sdk projects, anything using <code class="font-mono">tool_use</code> / <code class="font-mono">tool_result</code> blocks.</li></ul>'
+  },
+  {
+    q: 'Why doesn\'t ANTHROPIC_BASE_URL work with OpenClaw?',
+    a: 'OpenClaw is a multi-provider agent platform with its own provider catalog, not a thin Anthropic CLI wrapper. It does not read <code class="font-mono">ANTHROPIC_BASE_URL</code> / <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>. To route through GonkaRouter, register a custom provider entry in <code class="font-mono">~/.openclaw/openclaw.json</code> with <code class="font-mono">api: "anthropic-messages"</code> and the right <code class="font-mono">baseUrl</code> — see the OpenClaw tab for the exact <code class="font-mono">config patch</code> payload. The env-var pattern <em>does</em> work for Anthropic\'s official <code class="font-mono">@anthropic-ai/claude-code</code> CLI, which is a different tool.'
+  },
+  {
+    q: 'Why does Cursor say "Named models unavailable"?',
+    a: 'Since late 2025, Cursor\'s <span class="font-bold">Free Plan</span> blocks all Named Models — even with Custom OpenAI Base URL + API key + a Custom Model registered correctly, requests are silently rerouted to Cursor\'s "Auto" provider and never reach GonkaRouter. Workarounds: (1) upgrade to Cursor Pro, or (2) use a free OpenAI-compatible client that doesn\'t plan-gate (<a href="https://continue.dev" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Continue.dev</a>, <a href="https://cline.bot" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Cline</a>, <a href="https://aider.chat" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Aider</a>) — they all accept the same Base URL + API key.'
   },
   {
     q: 'How is usage billed?',
