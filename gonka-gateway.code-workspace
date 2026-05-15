@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../gonkas/model-gateway"
+		},
+		{
+			"path": "../gonkas/gonka-router-admin"
 		}
 	],
 	"settings": {}

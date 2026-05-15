@@ -32,6 +32,12 @@
           >
             Models
           </button>
+          <NuxtLink
+            to="/docs"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+          >
+            Docs
+          </NuxtLink>
         </div>
 
         <div class="flex items-center gap-2 sm:gap-3">
@@ -85,6 +91,13 @@
             >
               Models
             </button>
+            <NuxtLink
+              to="/docs"
+              @click="closeMobileMenu"
+              class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
+            >
+              Docs
+            </NuxtLink>
             <NuxtLink
               to="/dashboard"
               @click="closeMobileMenu"
