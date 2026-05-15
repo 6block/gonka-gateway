@@ -45,8 +45,8 @@
           class="bg-surface-container-high border border-white/5 rounded-3xl p-6 sm:p-8 space-y-4"
         >
           <ol class="space-y-2 text-sm sm:text-base text-text-muted leading-relaxed list-decimal pl-5">
-            <li>Open the <NuxtLink to="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard</NuxtLink>, sign in with Google or wallet.</li>
-            <li>Click <span class="text-text-main font-bold">Create API Key</span>, give it a label, copy the value <span class="text-text-main font-bold">immediately</span> — it is shown only once.</li>
+            <li>Open the <NuxtLink to="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard</NuxtLink>, sign in with wallet.</li>
+            <li>Click <span class="text-text-main font-bold">Create API Key</span>, give it a label, copy the value.</li>
             <li>New accounts get <span class="text-primary-container font-bold">$20 / day free credit for 7 days</span>, so you can try every model before topping up.</li>
           </ol>
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -201,7 +201,7 @@
           </div>
 
           <!-- Pitfalls -->
-          <div
+          <!-- <div
             class="bg-primary-container/5 border border-primary-container/20 rounded-2xl p-4 sm:p-5 space-y-3"
           >
             <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-primary-container">
@@ -216,7 +216,7 @@
                 <code class="font-mono">content[0].text == null</code>.
               </li>
             </ul>
-          </div>
+          </div> -->
 
           <!-- Pure curl -->
           <div class="space-y-3">
@@ -238,7 +238,7 @@
             </h3>
             <p class="text-sm text-text-muted leading-relaxed">
               Cursor speaks the OpenAI Chat Completions API. GonkaRouter exposes
-              <code class="font-mono text-primary-container">POST /v1/chat/completions</code>
+              <code class="font-mono text-primary-container"> POST /v1/chat/completions</code>
               one-to-one with OpenAI, so you can register it as a custom provider and
               use Gonka models from Chat, Composer, and Cmd-K inline edits.
             </p>
@@ -716,7 +716,7 @@ const faqs = [
   },
   {
     q: 'How is usage billed?',
-    a: 'Per-token at <span class="font-bold text-primary-container">$0.001 per 1M tokens</span>, debited from your prepaid balance. Open <a href="/transactions" class="text-primary-container font-bold hover:underline">Transactions</a> to see every call, token count, and deduction.'
+    a: 'Per-token at <span class="font-bold text-primary-container">$0.001 per 1M tokens</span>, debited from your prepaid balance. Open <a href="/transactions" class="text-primary-container font-bold hover:underline">Transactions</a> to see every call.'
   },
   {
     q: 'What about new-user credits?',
