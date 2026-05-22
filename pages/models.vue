@@ -250,6 +250,22 @@ import {
 import qwenIcon from '@/assets/img/qwen-icon.png'
 import { useToast } from '~/composables/useToast'
 
+const modelsConfig = useRuntimeConfig()
+const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'Supported AI Models',
+  description:
+    'Browse all AI models available on GonkaRouter — Kimi-K2, Qwen, DeepSeek, and more. One unified API, transparent pricing at $0.001 per 1M tokens.',
+  ogTitle: 'Supported AI Models | GonkaRouter',
+  ogDescription:
+    'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
+  ogUrl: `${modelsSiteUrl}/models`,
+  twitterTitle: 'Supported AI Models | GonkaRouter',
+  twitterDescription:
+    'All AI models available on GonkaRouter through one unified API.'
+})
+useHead({ link: [{ rel: 'canonical', href: `${modelsSiteUrl}/models` }] })
+
 const toast = useToast()
 const config = useRuntimeConfig()
 

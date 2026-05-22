@@ -719,6 +719,21 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const apiBase = computed(() => config.public.apiBase || 'https://api.gonkascan.com')
 
+const siteUrl = config.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'Developer Documentation',
+  description:
+    'Integrate GonkaRouter with Claude SDK, Cursor IDE, OpenAI SDK and more. Quickstart guides, API reference, and code samples for the Gonka Network.',
+  ogTitle: 'Developer Documentation | GonkaRouter',
+  ogDescription:
+    'Integrate GonkaRouter with Claude SDK, Cursor IDE, OpenAI SDK and more. Quickstart, API reference, and samples.',
+  ogUrl: `${siteUrl}/docs`,
+  twitterTitle: 'Developer Documentation | GonkaRouter',
+  twitterDescription:
+    'Integrate GonkaRouter with Claude SDK, Cursor IDE, OpenAI SDK and more.'
+})
+useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/docs` }] })
+
 const tabs = [
   { id: 'claude', label: 'Claude SDK' },
   { id: 'cursor', label: 'Cursor IDE' },

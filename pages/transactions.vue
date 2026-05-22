@@ -268,6 +268,13 @@ import {
 import { useAuthStore } from '~/stores/auth'
 import { useLoginModal } from '~/composables/useLoginModal'
 
+useSeoMeta({
+  title: 'Transactions',
+  description:
+    'View your GonkaRouter API usage history, billing transactions, and credit consumption.',
+  robots: 'noindex,nofollow'
+})
+
 const auth = useAuthStore()
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase

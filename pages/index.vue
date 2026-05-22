@@ -230,6 +230,21 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const baseUrl = computed(() => `${config.public.apiBase}/v1`)
 
+const siteUrl = config.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'AI Model Router on the Gonka Network',
+  description:
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens, with $20 daily credits for 7 days for new users.',
+  ogTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
+  ogDescription:
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens.',
+  ogUrl: siteUrl,
+  twitterTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
+  twitterDescription:
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens.'
+})
+useHead({ link: [{ rel: 'canonical', href: siteUrl }] })
+
 const heroDescription =
   'One API for All AI Models\nDevelopers first\nAt $0.001 per 1M tokens'
 

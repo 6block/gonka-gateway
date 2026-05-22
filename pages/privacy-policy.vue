@@ -257,6 +257,18 @@ import { LucideArrowLeft } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
 
+const privacyConfig = useRuntimeConfig()
+const privacySiteUrl = privacyConfig.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'Privacy Policy',
+  description:
+    'How GonkaRouter collects, uses, and protects your information when you use our AI Model Router on the Gonka Network.',
+  ogTitle: 'Privacy Policy | GonkaRouter',
+  ogDescription: 'How GonkaRouter handles your data.',
+  ogUrl: `${privacySiteUrl}/privacy-policy`
+})
+useHead({ link: [{ rel: 'canonical', href: `${privacySiteUrl}/privacy-policy` }] })
+
 const usageList = [
   'Provide, operate, and maintain GonkaRouter',
   'Process and respond to API requests',

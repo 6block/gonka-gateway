@@ -2,6 +2,12 @@
 const isProd = process.env.NODE_ENV === 'production'
 
 const apiOrigin = process.env.API_BASE || 'https://api.gonkascan.com'
+const siteUrl = process.env.SITE_URL || 'https://router.gonkascan.com'
+const siteName = 'GonkaRouter'
+const siteDescription =
+  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.001 per 1M tokens, with $20 daily credits for 7 days for new users.'
+const ogImage = `${siteUrl}/og-cover.png`
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 
 // CSP allows the API origin for fetch/XHR and Google Fonts for typography.
 // 'unsafe-inline' is required for Nuxt SSR hydration scripts/styles.
@@ -52,7 +58,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'GonkaRouter - AI Model Router on the Gonka Network',
+      title: `${siteName} - AI Model Router on the Gonka Network`,
+      titleTemplate: `%s | ${siteName}`,
+      htmlAttrs: { lang: 'en' },
       link: [
         {
           rel: 'icon',
@@ -78,14 +86,30 @@ export default defineNuxtConfig({
         {
           name: 'viewport',
           content: 'width=device-width, initial-scale=1, viewport-fit=cover'
-        }
+        },
+        { name: 'description', content: siteDescription },
+        { name: 'robots', content: 'index,follow,max-image-preview:large' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: siteName },
+        { property: 'og:title', content: siteName },
+        { property: 'og:description', content: siteDescription },
+        { property: 'og:url', content: siteUrl },
+        { property: 'og:image', content: ogImage },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: siteName },
+        { name: 'twitter:description', content: siteDescription },
+        { name: 'twitter:image', content: ogImage },
+        ...(googleSiteVerification
+          ? [{ name: 'google-site-verification', content: googleSiteVerification }]
+          : [])
       ]
     },
     pageTransition: { name: 'page', mode: 'out-in' }
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'https://api.gonkascan.com'
+      apiBase: process.env.API_BASE || 'https://api.gonkascan.com',
+      siteUrl
     }
   },
   devServer: {

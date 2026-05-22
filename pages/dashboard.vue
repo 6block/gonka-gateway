@@ -371,6 +371,12 @@ import {
   LucideAlertCircle
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
+
+useSeoMeta({
+  title: 'Dashboard',
+  description: 'Manage your GonkaRouter account, API keys, balance, and usage.',
+  robots: 'noindex,nofollow'
+})
 import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 

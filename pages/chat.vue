@@ -234,6 +234,22 @@ import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 import { ref, nextTick, watch } from 'vue'
 
+const seoConfig = useRuntimeConfig()
+const seoSiteUrl = seoConfig.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'Chat',
+  description:
+    'Try GonkaRouter directly in your browser. Chat with multiple AI models through one unified API on the Gonka Network.',
+  ogTitle: 'Chat | GonkaRouter',
+  ogDescription:
+    'Try GonkaRouter directly in your browser. Chat with multiple AI models through one unified API.',
+  ogUrl: `${seoSiteUrl}/chat`,
+  twitterTitle: 'Chat | GonkaRouter',
+  twitterDescription:
+    'Try GonkaRouter directly in your browser. Chat with multiple AI models through one unified API.'
+})
+useHead({ link: [{ rel: 'canonical', href: `${seoSiteUrl}/chat` }] })
+
 const auth = useAuthStore()
 const toast = useToast()
 const { open: openLogin } = useLoginModal()

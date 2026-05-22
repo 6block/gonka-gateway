@@ -1,3 +1,48 @@
+<script setup>
+const appConfig = useRuntimeConfig()
+const appSiteUrl = appConfig.public.siteUrl || 'https://router.gonkascan.com'
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${appSiteUrl}/#organization`,
+      name: 'GonkaRouter',
+      url: appSiteUrl,
+      logo: `${appSiteUrl}/gonkaIcon.png`
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${appSiteUrl}/#website`,
+      url: appSiteUrl,
+      name: 'GonkaRouter',
+      description:
+        'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.001 per 1M tokens.',
+      publisher: { '@id': `${appSiteUrl}/#organization` },
+      inLanguage: 'en'
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'GonkaRouter',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0.001', priceCurrency: 'USD' },
+      url: appSiteUrl
+    }
+  ]
+}
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify(jsonLd)
+    }
+  ]
+})
+</script>
+
 <template>
   <div class="min-h-screen bg-surface text-text-main antialiased font-body">
     <NuxtLayout>

@@ -218,4 +218,16 @@
 import { LucideArrowLeft } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
+
+const tosConfig = useRuntimeConfig()
+const tosSiteUrl = tosConfig.public.siteUrl || 'https://router.gonkascan.com'
+useSeoMeta({
+  title: 'Terms of Service',
+  description:
+    'GonkaRouter Terms of Service governing your use of the AI Model Router on the Gonka Network.',
+  ogTitle: 'Terms of Service | GonkaRouter',
+  ogDescription: 'GonkaRouter Terms of Service.',
+  ogUrl: `${tosSiteUrl}/terms-of-service`
+})
+useHead({ link: [{ rel: 'canonical', href: `${tosSiteUrl}/terms-of-service` }] })
 </script>
