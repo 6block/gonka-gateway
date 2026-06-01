@@ -294,6 +294,22 @@ const KimiIconImg = () =>
     ]
   )
 
+const MiniMaxIconImg = () =>
+  h(
+    'div',
+    {
+      class:
+        'relative w-12 h-12 shrink-0 rounded-xl bg-black flex items-center justify-center border border-white/10',
+      'aria-label': 'MiniMax-M2.7'
+    },
+    [
+      h('span', { class: 'text-white font-black text-2xl font-headline leading-none' }, 'M'),
+      h('span', {
+        class: 'absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-orange-400'
+      })
+    ]
+  )
+
 const models = [
   {
     id: 'qwen3-235b',
@@ -370,6 +386,39 @@ const models = [
       }
     ],
     date: '2026-05-09'
+  },
+  {
+    id: 'minimax-m2-7',
+    name: 'MiniMax-M2.7',
+    apiId: 'MiniMaxAI/MiniMax-M2.7',
+    iconComponent: MiniMaxIconImg,
+    description:
+      'An agent-native model from MiniMax, positioned as their first model to deeply participate in its own evolution. It excels at complex agent harnesses and real-world software engineering — end-to-end project delivery, log analysis, bug troubleshooting, code security, and machine-learning workflows — with strong planning, stable long-chain tool calling, and reasoning, plus high-fidelity office-document editing across Excel, PPT, and Word.',
+    maxOutput: '192K',
+    price: {
+      amount: '$0.001',
+      unit: '1M tokens',
+      note: 'Same rate for input and output tokens'
+    },
+    tags: [
+      { label: 'chat', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
+      {
+        label: 'Function',
+        icon: LucideTerminal,
+        color: 'bg-surface-container-highest text-text-muted border-white/5'
+      },
+      {
+        label: 'Reasoning',
+        icon: LucideZap,
+        color: 'bg-surface-container-highest text-text-muted border-white/5'
+      },
+      {
+        label: 'Cache',
+        icon: LucideDatabase,
+        color: 'bg-primary-container/10 text-primary-container border-primary-container/20'
+      }
+    ],
+    date: '2026-05-29'
   }
 ]
 

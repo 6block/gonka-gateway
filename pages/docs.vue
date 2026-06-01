@@ -983,7 +983,7 @@ const faqs = [
   },
   {
     q: 'Which models can I call?',
-    a: 'The live, machine-readable list is at <code class="font-mono text-primary-container">GET /v1/models</code>. Currently: <ul class="list-disc pl-5 mt-2 space-y-1"><li><code class="font-mono text-primary-container">moonshotai/Kimi-K2.6</code> — long-context reasoning, recommended default.</li><li><code class="font-mono text-primary-container">Qwen/Qwen3-235B-A22B-Instruct-2507-FP8</code> — 235B Mixture-of-Experts, fast TTFT.</li></ul>The human-readable catalogue is at <a href="/models" class="text-primary-container font-bold hover:underline">/models</a>.'
+    a: 'The live, machine-readable list is at <code class="font-mono text-primary-container">GET /v1/models</code>. Currently: <ul class="list-disc pl-5 mt-2 space-y-1"><li><code class="font-mono text-primary-container">moonshotai/Kimi-K2.6</code> — long-context reasoning, recommended default.</li><li><code class="font-mono text-primary-container">Qwen/Qwen3-235B-A22B-Instruct-2507-FP8</code> — 235B Mixture-of-Experts, fast TTFT.</li><li><code class="font-mono text-primary-container">MiniMaxAI/MiniMax-M2.7</code> — agentic coding and tool-use specialist.</li></ul>The human-readable catalogue is at <a href="/models" class="text-primary-container font-bold hover:underline">/models</a>.'
   },
   {
     q: 'Why does my response come back with text: null?',

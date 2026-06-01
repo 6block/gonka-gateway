@@ -24,7 +24,7 @@
             <span
               class="font-label text-xs tracking-widest uppercase text-secondary font-bold"
             >
-              Now Supporting Kimi-K2.6
+              Now Supporting MiniMax-M2.7
             </span>
           </div>
         </div>
@@ -262,6 +262,13 @@ const features = [
 ]
 
 const featuredModels = [
+  {
+    id: 'minimax',
+    label: 'MiniMax-M2.7',
+    apiId: 'MiniMaxAI/MiniMax-M2.7',
+    tagline:
+      'Optimized MiniMax-M2.7: A self-evolving agent model built for elite coding and complex agent harnesses — end-to-end software engineering and stable long-chain tool calling on the Gonka pipeline.'
+  },
   {
     id: 'kimi',
     label: 'Kimi-K2.6',
