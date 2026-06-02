@@ -230,7 +230,7 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const baseUrl = computed(() => `${config.public.apiBase}/v1`)
 
-const siteUrl = config.public.siteUrl || 'https://router.gonkascan.com'
+const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'AI Model Router on the Gonka Network',
   description:

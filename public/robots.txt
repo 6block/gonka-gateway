@@ -14,4 +14,4 @@ Disallow: /transactions
 # User-agent: ClaudeBot
 # Disallow: /
 
-Sitemap: https://router.gonkascan.com/sitemap.xml
+Sitemap: https://gonkarouter.io/sitemap.xml

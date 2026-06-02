@@ -258,7 +258,7 @@ import { LucideArrowLeft } from 'lucide-vue-next'
 definePageMeta({ layout: 'landing' })
 
 const privacyConfig = useRuntimeConfig()
-const privacySiteUrl = privacyConfig.public.siteUrl || 'https://router.gonkascan.com'
+const privacySiteUrl = privacyConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Privacy Policy',
   description:

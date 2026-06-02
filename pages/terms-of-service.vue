@@ -220,7 +220,7 @@ import { LucideArrowLeft } from 'lucide-vue-next'
 definePageMeta({ layout: 'landing' })
 
 const tosConfig = useRuntimeConfig()
-const tosSiteUrl = tosConfig.public.siteUrl || 'https://router.gonkascan.com'
+const tosSiteUrl = tosConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Terms of Service',
   description:

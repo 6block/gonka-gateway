@@ -251,7 +251,7 @@ import qwenIcon from '@/assets/img/qwen-icon.png'
 import { useToast } from '~/composables/useToast'
 
 const modelsConfig = useRuntimeConfig()
-const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://router.gonkascan.com'
+const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Supported AI Models',
   description:
@@ -421,6 +421,33 @@ const models = [
     date: '2026-05-29'
   }
 ]
+
+// ItemList schema backed by the visible model cards. Each model is exposed as a
+// SoftwareApplication with its transparent per-token Offer, enabling rich results.
+useStructuredData({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'AI models supported by GonkaRouter',
+  numberOfItems: models.length,
+  itemListElement: models.map((m, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'SoftwareApplication',
+      name: m.name,
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Any',
+      description: m.description,
+      url: `${modelsSiteUrl}/models`,
+      offers: {
+        '@type': 'Offer',
+        price: '0.001',
+        priceCurrency: 'USD',
+        description: `${m.price.amount} per ${m.price.unit}`
+      }
+    }
+  }))
+})
 
 const activeModel = computed(
   () => models.find((m) => m.id === selectedModelId.value) ?? null

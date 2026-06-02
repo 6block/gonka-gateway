@@ -719,7 +719,7 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const apiBase = computed(() => config.public.apiBase || 'https://api.gonkascan.com')
 
-const siteUrl = config.public.siteUrl || 'https://router.gonkascan.com'
+const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Developer Documentation',
   description:
@@ -733,6 +733,26 @@ useSeoMeta({
     'Integrate GonkaRouter with Claude SDK, Cursor IDE, OpenAI SDK and more.'
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/docs` }] })
+
+// TechArticle + breadcrumb for the documentation page — both backed by the
+// visible docs content and the site hierarchy (Home › Docs).
+useStructuredData([
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: 'GonkaRouter Developer Documentation',
+    description:
+      'Integrate GonkaRouter with Claude SDK, Cursor IDE, OpenAI SDK and more. Quickstart guides, API reference, and code samples for the Gonka Network.',
+    inLanguage: 'en',
+    url: `${siteUrl}/docs`,
+    author: { '@type': 'Organization', name: 'GonkaRouter', url: siteUrl },
+    publisher: { '@id': `${siteUrl}/#organization` }
+  },
+  breadcrumbList([
+    { name: 'Home', url: `${siteUrl}/` },
+    { name: 'Docs', url: `${siteUrl}/docs` }
+  ])
+])
 
 const tabs = [
   { id: 'claude', label: 'Claude SDK' },

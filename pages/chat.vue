@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col p-3 sm:p-4 lg:p-8 max-w-5xl mx-auto animate-fade-in relative w-full">
     <div class="flex justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4 flex-wrap">
       <div class="min-w-0">
-        <h2 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">Chat</h2>
+        <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">Chat</h1>
         <p class="text-text-muted mt-1.5 sm:mt-2 font-body text-xs sm:text-sm">
           Interact with frontier open-source models
         </p>
@@ -235,7 +235,7 @@ import { useLoginModal } from '~/composables/useLoginModal'
 import { ref, nextTick, watch } from 'vue'
 
 const seoConfig = useRuntimeConfig()
-const seoSiteUrl = seoConfig.public.siteUrl || 'https://router.gonkascan.com'
+const seoSiteUrl = seoConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Chat',
   description:

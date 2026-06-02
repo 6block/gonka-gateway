@@ -2,7 +2,7 @@
 const isProd = process.env.NODE_ENV === 'production'
 
 const apiOrigin = process.env.API_BASE || 'https://api.gonkascan.com'
-const siteUrl = process.env.SITE_URL || 'https://router.gonkascan.com'
+const siteUrl = process.env.SITE_URL || 'https://gonkarouter.io'
 const siteName = 'GonkaRouter'
 const siteDescription =
   'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.001 per 1M tokens, with $20 daily credits for 7 days for new users.'
@@ -78,7 +78,11 @@ export default defineNuxtConfig({
         },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap'
+          // Weights are pruned to those actually used in markup (audited via
+          // font-* utility usage): Inter 300/400/500/700, Plus Jakarta 700/800,
+          // JetBrains Mono 400/500. Dropping unused weights (e.g. Inter 600)
+          // shrinks the render-blocking font CSS and the downloaded font files.
+          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap'
         }
       ],
       meta: [

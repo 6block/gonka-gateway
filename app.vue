@@ -1,6 +1,6 @@
 <script setup>
 const appConfig = useRuntimeConfig()
-const appSiteUrl = appConfig.public.siteUrl || 'https://router.gonkascan.com'
+const appSiteUrl = appConfig.public.siteUrl || 'https://gonkarouter.io'
 
 const jsonLd = {
   '@context': 'https://schema.org',
