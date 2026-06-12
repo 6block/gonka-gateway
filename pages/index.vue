@@ -212,6 +212,137 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
         </div>
       </div>
     </section>
+
+    <!-- FAQ Section -->
+    <section class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-10 sm:mb-14">
+          <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed max-w-2xl mx-auto">
+            The most common integration notes from the GonkaRouter documentation, condensed for quick scanning before you open the full guide.
+          </p>
+        </div>
+
+        <div class="divide-y divide-white/5">
+          <div v-for="(item, index) in displayedFaqs" :key="index">
+            <button
+              @click="toggleFaq(index)"
+              class="w-full flex items-center justify-between gap-6 py-5 text-left group"
+              :aria-expanded="homeFaqOpen === index"
+            >
+              <span class="font-body font-semibold text-sm sm:text-base text-text-main group-hover:text-primary-container transition-colors leading-snug">
+                {{ item.q }}
+              </span>
+              <span
+                class="shrink-0 text-text-muted font-bold text-base transition-transform duration-200"
+                :class="homeFaqOpen === index ? 'rotate-90 text-primary-container' : ''"
+              >&gt;</span>
+            </button>
+            <Transition name="faq-slide">
+              <div v-if="homeFaqOpen === index" class="pb-5 overflow-hidden">
+                <p class="text-text-muted text-sm font-body leading-relaxed" v-html="item.a"></p>
+              </div>
+            </Transition>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-4 mt-10">
+          <button
+            @click="showAllFaqs = !showAllFaqs; if (!showAllFaqs) homeFaqOpen = null"
+            class="inline-flex items-center gap-2 bg-surface-container-high ghost-border text-text-main px-6 py-3 rounded-full font-headline font-bold text-sm transition-all hover:bg-white/5 hover:-translate-y-0.5"
+          >
+            <span v-if="!showAllFaqs">Show more FAQs +</span>
+            <span v-else>Show fewer FAQs ^</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Section — only shown when API returns posts -->
+    <section v-if="allBlogPosts.length > 0" class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-end justify-between mb-10 sm:mb-14">
+          <div>
+            <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-text-muted mb-2 sm:mb-3">
+              Latest Updates
+            </p>
+            <h2 class="font-headline text-3xl sm:text-5xl md:text-6xl font-black text-text-main tracking-tighter">
+              News Blog
+            </h2>
+          </div>
+          <NuxtLink
+            to="/blog"
+            class="text-primary-container font-headline font-black text-sm hover:underline whitespace-nowrap mb-1.5"
+          >
+            See More →
+          </NuxtLink>
+        </div>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+          <NuxtLink
+            v-for="post in displayedBlogPosts"
+            :key="post.slug"
+            :to="`/blog/${post.slug}`"
+            class="group block"
+          >
+            <!-- Card visual -->
+            <div class="relative h-40 rounded-2xl overflow-hidden mb-4" :style="{ background: post.bgGradient }">
+              <div
+                class="absolute left-6 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-2xl"
+                :style="{ background: post.glowColor }"
+              ></div>
+              <div class="absolute inset-0 flex items-end justify-center gap-1.5 pb-6">
+                <div
+                  v-for="(h, i) in post.bars"
+                  :key="i"
+                  class="rounded-full opacity-70"
+                  :style="{ width: '13px', height: h + 'px', background: post.barColor }"
+                ></div>
+              </div>
+              <div class="absolute top-4 left-4">
+                <span
+                  class="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
+                  :class="blogTagStyle(post.tag)"
+                >{{ post.tag }}</span>
+              </div>
+            </div>
+            <!-- Post meta -->
+            <p class="text-[10px] text-text-muted font-body mb-2 uppercase tracking-widest">{{ post.date }}</p>
+            <h3 class="font-headline font-black text-base sm:text-lg text-text-main tracking-tight group-hover:text-primary-container transition-colors line-clamp-2 mb-2">
+              {{ post.title }}
+            </h3>
+            <p class="text-text-muted text-xs sm:text-sm font-body leading-relaxed line-clamp-2">
+              {{ post.excerpt }}
+            </p>
+          </NuxtLink>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-center gap-5 mt-10 sm:mt-14">
+          <button
+            @click="blogPage = Math.max(0, blogPage - 1)"
+            :disabled="blogPage === 0"
+            class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-text-muted hover:text-text-main hover:border-white/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
+          >
+            &lt;
+          </button>
+          <span class="font-headline font-black text-sm text-text-muted tracking-tight tabular-nums">
+            {{ String(blogPage + 1).padStart(2, '0') }} / {{ String(totalBlogPages).padStart(2, '0') }}
+          </span>
+          <button
+            @click="blogPage = Math.min(totalBlogPages - 1, blogPage + 1)"
+            :disabled="blogPage >= totalBlogPages - 1"
+            class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-text-muted hover:text-text-main hover:border-white/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm"
+          >
+            &gt;
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -224,6 +355,87 @@ import {
   LucideDatabase,
   LucideTerminal
 } from 'lucide-vue-next'
+
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const homeFaqs = [
+  {
+    q: 'What is GonkaRouter?',
+    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including Kimi-K2.6, Qwen3-235B, MiniMax-M2.7, and more — with transparent per-token pricing and no monthly subscriptions.'
+  },
+  {
+    q: 'Is GonkaRouter an OpenRouter alternative?',
+    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments, lower per-token rates starting at <strong class="text-text-main">$0.001 per 1M tokens</strong>, and $20 daily free credits for the first 7 days for new users.'
+  },
+  {
+    q: 'How is GonkaRouter different from OpenRouter?',
+    a: `A flat $0.001 per 1M tokens for both input and output — no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users receive $20 in daily credits for the first 7 days.`
+  },
+  {
+    q: 'How does GonkaRouter pricing work?',
+    a: 'GonkaRouter charges a flat rate of <strong class="text-text-main">$0.001 per 1 million tokens</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges. New users get $20 in daily free credits for 7 days. After that, you top up your balance and are billed only for what you consume.'
+  },
+  {
+    q: 'Which AI models does GonkaRouter support?',
+    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, and <strong class="text-text-main">Qwen3-235B-A22B-Instruct</strong>, with more models being added regularly. All models share the same $0.001/1M token rate and are accessible through one unified API endpoint.'
+  },
+  {
+    q: 'Is the API compatible with OpenAI SDKs?',
+    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkascan.com/v1</code> and setting your GonkaRouter API key.'
+  },
+  {
+    q: 'Do I need a crypto wallet to use GonkaRouter?',
+    a: 'To access your API keys and manage your balance you\'ll need to connect a MetaMask wallet (or any EIP-6963 compatible wallet). The wallet is used for identity and payments on the Gonka Network. You can still browse the Chat and Models pages as a guest without connecting a wallet.'
+  },
+  {
+    q: 'How do I get started?',
+    a: 'Getting started takes less than a minute: connect your wallet on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive $20 in daily free credits for 7 days — no payment setup required to start.'
+  }
+]
+
+const INITIAL_FAQ_COUNT = 5
+const homeFaqOpen = ref(null)
+const showAllFaqs = ref(false)
+const displayedFaqs = computed(() =>
+  showAllFaqs.value ? homeFaqs : homeFaqs.slice(0, INITIAL_FAQ_COUNT)
+)
+const toggleFaq = (index) => {
+  homeFaqOpen.value = homeFaqOpen.value === index ? null : index
+}
+
+// ─── Blog ─────────────────────────────────────────────────────────────────────
+const TAG_VISUAL = {
+  Guide:       { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(16,185,129,0.3) 0%, transparent 55%), #0a0e14', glowColor: '#10B981', barColor: '#34D399' },
+  IDE:         { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(59,130,246,0.3) 0%, transparent 55%), #0a0e14', glowColor: '#3B82F6', barColor: '#60A5FA' },
+  Agents:      { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(124,58,237,0.3) 0%, transparent 55%), #0a0e14', glowColor: '#7C3AED', barColor: '#A78BFA' },
+  Product:     { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(6,182,212,0.3) 0%, transparent 55%), #0a0e14',  glowColor: '#06B6D4', barColor: '#22D3EE' },
+  Engineering: { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(56,189,248,0.3) 0%, transparent 55%), #0a0e14', glowColor: '#38BDF8', barColor: '#7DD3FC' },
+}
+const DEFAULT_VISUAL = { bgGradient: 'radial-gradient(circle at 25% 60%, rgba(99,102,241,0.3) 0%, transparent 55%), #0a0e14', glowColor: '#6366F1', barColor: '#818CF8' }
+
+const genBars = (slug) => {
+  const seed = (slug || 'x').split('').reduce((s, c) => s + c.charCodeAt(0), 0)
+  return Array.from({ length: 7 }, (_, i) => 22 + ((seed * (i + 3) * 17 + i * 23) % 54))
+}
+
+const allBlogPosts = ref([])
+
+const POSTS_PER_PAGE = 3
+const blogPage = ref(0)
+const totalBlogPages = computed(() => Math.ceil(allBlogPosts.value.length / POSTS_PER_PAGE))
+const displayedBlogPosts = computed(() =>
+  allBlogPosts.value.slice(blogPage.value * POSTS_PER_PAGE, (blogPage.value + 1) * POSTS_PER_PAGE)
+)
+
+const blogTagStyle = (tag) => {
+  const map = {
+    Guide:       'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+    IDE:         'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+    Agents:      'bg-violet-500/20 text-violet-400 border border-violet-500/30',
+    Product:     'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30',
+    Engineering: 'bg-sky-500/20 text-sky-400 border border-sky-500/30',
+  }
+  return map[tag] ?? 'bg-white/5 text-text-muted border border-white/10'
+}
 
 definePageMeta({ layout: 'landing' })
 
@@ -297,17 +509,42 @@ function scrollToModels() {
 // Particles must be generated client-only — Math.random() during SSR vs.
 // hydration would produce a Vue hydration mismatch warning.
 const particles = ref([])
-onMounted(() => {
+onMounted(async () => {
   particles.value = Array.from({ length: 6 }, (_, i) => ({
     id: i,
     style: `left:${Math.random() * 100}%; top:${Math.random() * 100}%; animation-delay:${
       Math.random() * 10
     }s; animation-duration:${10 + Math.random() * 20}s;`
   }))
+
+  // Load blog posts from API and enrich with visual metadata
+  const { fetchPosts } = useBlogPosts()
+  const posts = await fetchPosts()
+  allBlogPosts.value = posts.map((p) => ({
+    ...p,
+    ...(TAG_VISUAL[p.tag] ?? DEFAULT_VISUAL),
+    bars: genBars(p.slug),
+  }))
 })
 </script>
 
 <style scoped>
+.faq-slide-enter-active,
+.faq-slide-leave-active {
+  transition: opacity 0.2s ease, max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+.faq-slide-enter-from,
+.faq-slide-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+.faq-slide-enter-to,
+.faq-slide-leave-from {
+  opacity: 1;
+  max-height: 400px;
+}
+
 .particle {
   animation-name: particleFloat;
   animation-timing-function: linear;

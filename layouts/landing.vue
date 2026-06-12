@@ -19,7 +19,7 @@
           </span>
         </NuxtLink>
 
-        <div class="hidden md:flex items-center gap-10">
+        <div class="hidden md:flex items-center gap-8">
           <button
             @click="scrollTo('features')"
             class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
@@ -37,6 +37,18 @@
             class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
           >
             Docs
+          </NuxtLink>
+          <NuxtLink
+            to="/blog"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+          >
+            Blog
+          </NuxtLink>
+          <NuxtLink
+            to="/feedback"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+          >
+            Feedback
           </NuxtLink>
         </div>
 
@@ -99,6 +111,20 @@
               Docs
             </NuxtLink>
             <NuxtLink
+              to="/blog"
+              @click="closeMobileMenu"
+              class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
+            >
+              Blog
+            </NuxtLink>
+            <NuxtLink
+              to="/feedback"
+              @click="closeMobileMenu"
+              class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
+            >
+              Feedback
+            </NuxtLink>
+            <NuxtLink
               to="/dashboard"
               @click="closeMobileMenu"
               class="block w-full text-center kinetic-gradient text-primary-on px-5 py-3 rounded-xl font-headline font-bold text-sm transition-all active:scale-95 hover:shadow-glow-emerald mt-2"
@@ -116,25 +142,65 @@
     </main>
 
     <!-- Footer -->
-    <footer class="w-full pt-20 sm:pt-32 pb-12 sm:pb-16 bg-surface border-t border-white/5">
-      <div
-        class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-10 text-center md:text-left"
-      >
-        <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-          <div class="flex flex-col md:flex-row items-center md:items-baseline gap-2 md:gap-4">
-            <span
-              class="text-2xl font-black text-primary-container font-headline tracking-tighter"
-            >
-              GonkaRouter
-            </span>
-            <span class="text-xs font-bold text-text-muted tracking-tight">
+    <footer class="w-full bg-surface border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 pt-16 sm:pt-20 pb-8 sm:pb-10">
+        <!-- Top grid -->
+        <div class="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-10 md:gap-12 pb-12 sm:pb-14 border-b border-white/5">
+          <!-- Brand -->
+          <div class="col-span-2 md:col-span-1">
+            <span class="text-xl font-black text-primary-container font-headline tracking-tighter">GonkaRouter</span>
+            <p class="text-text-muted text-xs mt-2 mb-5 font-body leading-relaxed">
               AI Model Router on the Gonka Network
-            </span>
+            </p>
+            <a
+              href="mailto:contact@gonka-router.com"
+              class="inline-flex items-center gap-2 text-text-muted hover:text-primary-container text-xs transition-colors bg-white/5 px-3 py-1.5 rounded-full border border-white/5"
+            >
+              <LucideMail class="w-3.5 h-3.5 shrink-0" />
+              contact@gonka-router.com
+            </a>
+          </div>
+
+          <!-- MENU -->
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Menu</p>
+            <nav class="flex flex-col gap-3">
+              <NuxtLink to="/" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Home</NuxtLink>
+              <NuxtLink to="/#features" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Features</NuxtLink>
+              <NuxtLink to="/docs" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Docs</NuxtLink>
+              <NuxtLink to="/blog" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Blog</NuxtLink>
+              <NuxtLink to="/feedback" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Feedback</NuxtLink>
+              <NuxtLink to="/pricing" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Pricing</NuxtLink>
+            </nav>
+          </div>
+
+          <!-- SERVICE -->
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Service</p>
+            <nav class="flex flex-col gap-3">
+              <NuxtLink to="/dashboard" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Dashboard</NuxtLink>
+              <NuxtLink to="/chat" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Chat</NuxtLink>
+              <NuxtLink to="/models" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Models</NuxtLink>
+              <NuxtLink to="/transactions" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Transactions</NuxtLink>
+            </nav>
+          </div>
+
+          <!-- LEGAL -->
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Legal</p>
+            <nav class="flex flex-col gap-3">
+              <NuxtLink to="/privacy-policy" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Privacy Policy</NuxtLink>
+              <NuxtLink to="/terms-of-service" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Terms of Service</NuxtLink>
+            </nav>
           </div>
         </div>
 
-        <div class="flex flex-col items-center md:items-end gap-5">
-          <div class="flex items-center gap-6">
+        <!-- Bottom bar -->
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-[11px] text-text-muted font-body order-2 sm:order-1">
+            Copyright 2026 GonkaRouter. Built for the Gonka Network.
+          </p>
+          <div class="flex items-center gap-5 order-1 sm:order-2">
             <a
               href="https://x.com/gonka_cn?s=21"
               target="_blank"
@@ -142,10 +208,8 @@
               class="text-text-muted hover:text-primary-container transition-all hover:scale-110"
               aria-label="X (Twitter)"
             >
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                />
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
             </a>
             <a
@@ -155,32 +219,8 @@
               class="text-text-muted hover:text-primary-container transition-all hover:scale-110"
               aria-label="Telegram"
             >
-              <LucideSend class="w-5 h-5" />
+              <LucideSend class="w-4 h-4" />
             </a>
-          </div>
-
-          <a
-            href="mailto:contact@gonka-router.com"
-            class="text-text-muted hover:text-primary-container transition-all inline-flex items-center gap-2 text-xs sm:text-sm font-medium bg-white/5 px-3 sm:px-4 py-1.5 rounded-full border border-white/5 max-w-full truncate"
-          >
-            <LucideMail class="w-4 h-4 opacity-60 shrink-0" />
-            <span class="truncate">contact@gonka-router.com</span>
-          </a>
-
-          <div class="flex items-center gap-4 sm:gap-6 text-xs font-bold text-text-muted">
-            <NuxtLink
-              to="/privacy-policy"
-              class="hover:text-primary-container transition-colors"
-            >
-              Privacy Policy
-            </NuxtLink>
-            <div class="w-1 h-1 rounded-full bg-white/10"></div>
-            <NuxtLink
-              to="/terms-of-service"
-              class="hover:text-primary-container transition-colors"
-            >
-              Terms of Service
-            </NuxtLink>
           </div>
         </div>
       </div>
@@ -194,6 +234,7 @@ import { LucideSun, LucideMoon, LucideSend, LucideMail, LucideMenu, LucideX } fr
 
 const colorMode = useColorMode()
 const route = useRoute()
+const router = useRouter()
 const scrollProgress = ref(0)
 const isMobileMenuOpen = ref(false)
 
@@ -233,7 +274,19 @@ const handleScroll = () => {
   scrollProgress.value = Math.max(0, Math.min(1, raw))
 }
 
-const scrollTo = (id) => {
+const scrollTo = async (id) => {
+  // On a non-home route the target section isn't in the DOM, so navigate home
+  // first, then scroll once the home page has rendered.
+  if (route.path !== '/') {
+    await router.push({ path: '/', hash: `#${id}` })
+    await nextTick()
+    // Give the home page (with async sections) a moment to mount before scrolling.
+    setTimeout(() => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }, 350)
+    return
+  }
   const el = document.getElementById(id)
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }

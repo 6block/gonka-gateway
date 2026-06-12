@@ -645,28 +645,20 @@
           </h2>
         </div>
 
-        <div class="space-y-3">
-          <details
-            v-for="(item, idx) in faqs"
-            :key="idx"
-            class="group bg-surface-container-high border border-white/5 rounded-2xl overflow-hidden transition-all hover:border-primary-container/30"
-          >
-            <summary
-              class="flex items-center justify-between gap-4 p-5 sm:p-6 cursor-pointer list-none"
-            >
-              <span class="font-black font-headline text-sm sm:text-base tracking-tight text-text-main">
-                {{ item.q }}
-              </span>
-              <LucideChevronDown
-                class="w-5 h-5 text-text-muted shrink-0 transition-transform group-open:rotate-180"
-              />
-            </summary>
-            <div
-              class="px-5 sm:px-6 pb-5 sm:pb-6 text-sm text-text-muted leading-relaxed space-y-3"
-              v-html="item.a"
-            ></div>
-          </details>
-        </div>
+        <NuxtLink
+          to="/faq#developer"
+          class="group flex items-center justify-between gap-6 bg-surface-container-high border border-white/5 hover:border-primary-container/30 rounded-2xl p-6 sm:p-8 transition-all"
+        >
+          <div>
+            <p class="font-black font-headline text-base text-text-main mb-1 group-hover:text-primary-container transition-colors">
+              Developer FAQ
+            </p>
+            <p class="text-sm text-text-muted font-body leading-relaxed">
+              Error codes, SDK selection, streaming, tool calling, Cursor & Claude Code integration — all developer Q&As in one place.
+            </p>
+          </div>
+          <span class="text-2xl font-black text-text-muted group-hover:text-primary-container transition-colors shrink-0">→</span>
+        </NuxtLink>
       </section>
 
       <!-- Contact -->
@@ -698,6 +690,199 @@
           </a>
         </div>
       </section>
+
+      <!-- Report an Issue -->
+      <section id="report-issue" class="space-y-5 sm:space-y-6">
+        <div class="flex items-center gap-4">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-primary-container text-primary-on flex items-center justify-center font-black font-headline text-base sm:text-lg">
+            5
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight">
+            Report an Issue
+          </h2>
+        </div>
+
+        <p class="text-sm text-text-muted font-body leading-relaxed">
+          Ran into a bug, unexpected error, or something that doesn't work as documented? Submit it here — our team reviews every report.
+        </p>
+
+        <!-- Form -->
+        <form @submit.prevent="submitFeedback" class="space-y-4" novalidate>
+          <!-- Issue type -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+              Issue Type <span class="text-red-400">*</span>
+            </label>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="t in issueTypes"
+                :key="t.value"
+                type="button"
+                @click="feedback.type = t.value"
+                class="px-4 py-2 rounded-full text-xs font-black border transition-all"
+                :class="feedback.type === t.value
+                  ? 'bg-primary-container/15 border-primary-container text-primary-container'
+                  : 'bg-surface-container-high border-white/5 text-text-muted hover:border-white/10'"
+              >
+                {{ t.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+              Issue Summary <span class="text-red-400">*</span>
+            </label>
+            <input
+              v-model="feedback.title"
+              type="text"
+              placeholder="e.g. 401 error when using Anthropic SDK with correct key"
+              maxlength="120"
+              class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
+            />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+              Description <span class="text-red-400">*</span>
+            </label>
+            <textarea
+              v-model="feedback.description"
+              rows="5"
+              placeholder="Describe the problem in detail — what you tried, what you expected, what happened instead. Include the model ID, SDK version, and any relevant error messages."
+              maxlength="2000"
+              class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors resize-none custom-scrollbar"
+            ></textarea>
+            <p class="text-[11px] text-text-muted mt-1.5 text-right">{{ feedback.description.length }}/2000</p>
+          </div>
+
+          <!-- Screenshot upload -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+              Screenshot <span class="text-text-muted font-normal normal-case tracking-normal">(optional, max 5 MB)</span>
+            </label>
+            <div
+              class="relative border border-dashed border-white/10 rounded-xl p-6 text-center hover:border-primary-container/30 transition-colors cursor-pointer group"
+              :class="{ 'border-primary-container/40 bg-primary-container/5': feedback.screenshot }"
+              @click="triggerFileInput"
+              @dragover.prevent
+              @drop.prevent="handleDrop"
+            >
+              <input
+                ref="fileInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="handleFileChange"
+              />
+              <template v-if="!feedback.screenshot">
+                <LucideImagePlus class="w-8 h-8 text-text-muted mx-auto mb-2 group-hover:text-primary-container transition-colors" />
+                <p class="text-sm font-body text-text-muted">
+                  Drag & drop or <span class="text-primary-container font-bold">browse</span>
+                </p>
+                <p class="text-[11px] text-text-muted mt-1">PNG, JPG, GIF, WebP</p>
+              </template>
+              <template v-else>
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <img
+                      :src="feedback.screenshotPreview"
+                      class="w-12 h-12 rounded-lg object-cover shrink-0 border border-white/10"
+                      alt="Screenshot preview"
+                    />
+                    <div class="min-w-0 text-left">
+                      <p class="text-sm font-black text-text-main truncate">{{ feedback.screenshot.name }}</p>
+                      <p class="text-[11px] text-text-muted">{{ formatFileSize(feedback.screenshot.size) }}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    @click.stop="removeScreenshot"
+                    class="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-400/10 transition-all shrink-0"
+                    aria-label="Remove screenshot"
+                  >
+                    <LucideX class="w-4 h-4" />
+                  </button>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Contact info -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+                Email or Telegram <span class="text-text-muted font-normal normal-case tracking-normal">(so we can follow up)</span>
+              </label>
+              <input
+                v-model="feedback.contact"
+                type="text"
+                placeholder="you@example.com  or  @yourhandle"
+                class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
+                Wallet Address <span class="text-text-muted font-normal normal-case tracking-normal">(optional, helps us check logs)</span>
+              </label>
+              <input
+                v-model="feedback.wallet"
+                type="text"
+                placeholder="0x..."
+                class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
+              />
+            </div>
+          </div>
+
+          <!-- Error message -->
+          <p v-if="feedbackError" class="text-sm text-red-400 font-body flex items-center gap-2">
+            <LucideTriangleAlert class="w-4 h-4 shrink-0" />
+            {{ feedbackError }}
+          </p>
+
+          <!-- Submit -->
+          <div class="flex items-center justify-between pt-2 flex-wrap gap-3">
+            <p class="text-[11px] text-text-muted font-body">
+              Reports are reviewed by the GonkaRouter team within 24 hours.
+            </p>
+            <button
+              type="submit"
+              :disabled="feedbackStatus === 'submitting'"
+              class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-3 rounded-full font-headline font-black text-sm transition-all hover:shadow-glow-emerald active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <LucideLoader2 v-if="feedbackStatus === 'submitting'" class="w-4 h-4 animate-spin" />
+              <LucideSendHorizontal v-else class="w-4 h-4" />
+              {{ feedbackStatus === 'submitting' ? 'Submitting…' : 'Submit Report' }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Success state -->
+        <Transition name="modal-fade">
+          <div
+            v-if="feedbackStatus === 'success'"
+            class="flex items-start gap-4 bg-primary-container/10 border border-primary-container/20 rounded-2xl p-6"
+          >
+            <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center shrink-0">
+              <LucideCheck class="w-4 h-4 text-primary-on" />
+            </div>
+            <div>
+              <p class="font-black font-headline text-text-main mb-1">Report received — thank you!</p>
+              <p class="text-sm text-text-muted font-body leading-relaxed">
+                We'll review it and follow up if you left a contact. You can submit another report below.
+              </p>
+              <button
+                @click="resetFeedback"
+                class="mt-3 text-xs font-black text-primary-container hover:underline"
+              >
+                Submit another report →
+              </button>
+            </div>
+          </div>
+        </Transition>
+      </section>
     </div>
   </div>
 </template>
@@ -711,7 +896,12 @@ import {
   LucideChevronDown,
   LucideSend,
   LucideMail,
-  LucideTriangleAlert
+  LucideTriangleAlert,
+  LucideImagePlus,
+  LucideX,
+  LucideLoader2,
+  LucideSendHorizontal,
+  LucideCheck
 } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
@@ -996,62 +1186,87 @@ openclaw chat --local
 openclaw            # opens http://127.0.0.1:18789/ with an auth-included URL
 `
 
-const faqs = [
-  {
-    q: 'Where do I find my API key?',
-    a: 'Sign in at <a href="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard</a> and open the API Keys panel. Each key is shown only once at creation — store it in a secret manager or <code class="font-mono">.env</code> file and never commit it to git.'
-  },
-  {
-    q: 'Which models can I call?',
-    a: 'The live, machine-readable list is at <code class="font-mono text-primary-container">GET /v1/models</code>. Currently: <ul class="list-disc pl-5 mt-2 space-y-1"><li><code class="font-mono text-primary-container">moonshotai/Kimi-K2.6</code> — long-context reasoning, recommended default.</li><li><code class="font-mono text-primary-container">Qwen/Qwen3-235B-A22B-Instruct-2507-FP8</code> — 235B Mixture-of-Experts, fast TTFT.</li><li><code class="font-mono text-primary-container">MiniMaxAI/MiniMax-M2.7</code> — agentic coding and tool-use specialist.</li></ul>The human-readable catalogue is at <a href="/models" class="text-primary-container font-bold hover:underline">/models</a>.'
-  },
-  {
-    q: 'Why does my response come back with text: null?',
-    a: 'You set <code class="font-mono">max_tokens</code> too low. Kimi-K2.6 spends some tokens on internal reasoning before any visible text is emitted; with e.g. <code class="font-mono">max_tokens=64</code> reasoning can consume the entire budget and leave <code class="font-mono">content[0].text</code> empty (you will also see <code class="font-mono">stop_reason: "max_tokens"</code>). <span class="font-bold">Use <code class="font-mono">max_tokens ≥ 1024</code></span> as a safe default.'
-  },
-  {
-    q: 'Does Anthropic streaming work?',
-    a: 'Yes — fully spec-compliant. <code class="font-mono">/v1/messages</code> with <code class="font-mono">"stream": true</code>, the low-level <code class="font-mono">create(stream=True)</code>, and the idiomatic <code class="font-mono">client.messages.stream(...)</code> context manager all work. SSE events emitted: <code class="font-mono">message_start</code> → <code class="font-mono">content_block_start</code> → <code class="font-mono">content_block_delta</code>* → <code class="font-mono">content_block_stop</code> → <code class="font-mono">message_delta</code> → <code class="font-mono">message_stop</code>.'
-  },
-  {
-    q: 'OpenAI SDK or Anthropic SDK — which should I pick?',
-    a: 'Both work; pick by ecosystem fit. <ul class="list-disc pl-5 mt-2 space-y-1"><li><span class="font-bold">OpenAI SDK</span> (<code class="font-mono">/v1/chat/completions</code>) — best for Continue.dev, Cline, Aider, LangChain, LlamaIndex, anything OpenAI-shaped.</li><li><span class="font-bold">Anthropic SDK</span> (<code class="font-mono">/v1/messages</code>) — best for Anthropic Claude Code, OpenClaw\'s <code class="font-mono">anthropic-messages</code> adapter, anthropic-sdk-python / @anthropic-ai/sdk projects, anything using <code class="font-mono">tool_use</code> / <code class="font-mono">tool_result</code> blocks.</li></ul>'
-  },
-  {
-    q: 'Why doesn\'t ANTHROPIC_BASE_URL work with OpenClaw?',
-    a: 'OpenClaw is a multi-provider agent platform with its own provider catalog, not a thin Anthropic CLI wrapper. It does not read <code class="font-mono">ANTHROPIC_BASE_URL</code> / <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>. To route through GonkaRouter, register a custom provider entry in <code class="font-mono">~/.openclaw/openclaw.json</code> with <code class="font-mono">api: "anthropic-messages"</code> and the right <code class="font-mono">baseUrl</code> — see the OpenClaw tab for the exact <code class="font-mono">config patch</code> payload. The env-var pattern <em>does</em> work for Anthropic\'s official <code class="font-mono">@anthropic-ai/claude-code</code> CLI, which is a different tool.'
-  },
-  {
-    q: 'Why does Cursor say "Named models unavailable"?',
-    a: 'Since late 2025, Cursor\'s <span class="font-bold">Free Plan</span> blocks all Named Models — even with Custom OpenAI Base URL + API key + a Custom Model registered correctly, requests are silently rerouted to Cursor\'s "Auto" provider and never reach GonkaRouter. Workarounds: (1) upgrade to Cursor Pro, or (2) use a free OpenAI-compatible client that doesn\'t plan-gate (<a href="https://continue.dev" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Continue.dev</a>, <a href="https://cline.bot" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Cline</a>, <a href="https://aider.chat" target="_blank" rel="noreferrer" class="text-primary-container font-bold hover:underline">Aider</a>) — they all accept the same Base URL + API key.'
-  },
-  {
-    q: 'How is usage billed?',
-    a: 'Per-token at <span class="font-bold text-primary-container">$0.001 per 1M tokens</span>, debited from your prepaid balance. Open <a href="/transactions" class="text-primary-container font-bold hover:underline">Transactions</a> to see every call.'
-  },
-  {
-    q: 'What about new-user credits?',
-    a: 'Every new account receives <span class="font-bold text-primary-container">$20 daily credits for 7 days</span>. Unused daily credits expire at end of day — top up before day 7 if you want a smooth handoff to paid usage.'
-  },
-  {
-    q: 'I get 401 / authentication_error.',
-    a: '<ul class="list-disc pl-5 space-y-1"><li>Confirm the key is still active in <a href="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard</a>.</li><li>OpenAI clients must send <code class="font-mono">Authorization: Bearer sk-…</code>. Anthropic clients send <code class="font-mono">x-api-key: sk-…</code>. The gateway accepts both, but make sure your SDK is configured for one of them.</li><li>For Claude Code-style CLIs, the env var is <code class="font-mono">ANTHROPIC_AUTH_TOKEN</code>, not <code class="font-mono">ANTHROPIC_API_KEY</code>.</li></ul>'
-  },
-  {
-    q: 'I get 403 / "balance is zero, please deposit first".',
-    a: 'Your prepaid balance is empty and the daily trial credits have run out. Open <a href="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard → Top Up</a> to add credit; the same key resumes working as soon as the balance is positive.'
-  },
-  {
-    q: 'I get 400 / "model not available for your channel".',
-    a: 'You requested a model ID that is not enabled on your account. Hit <code class="font-mono">GET /v1/models</code> with your key to see what you can actually call. Common cause: a typo in the slash or case (<code class="font-mono">moonshotai/Kimi-K2.6</code>, not <code class="font-mono">Kimi-K2.6</code>).'
-  },
-  {
-    q: 'Can I use this from a browser?',
-    a: 'No. API keys must never live in client-side code. Proxy every call through your own backend so the secret never leaves your servers.'
-  },
-  {
-    q: 'Is tool / function calling supported?',
-    a: 'Yes on both surfaces. OpenAI <code class="font-mono">tools</code> / <code class="font-mono">tool_choice</code> work natively on <code class="font-mono">/v1/chat/completions</code>. On <code class="font-mono">/v1/messages</code>, Anthropic <code class="font-mono">tool_use</code> / <code class="font-mono">tool_result</code> blocks are translated to OpenAI tool calls upstream and back, so the official Anthropic SDK works without changes.'
-  }
+// ─── Feedback form ────────────────────────────────────────────────────────────
+
+const issueTypes = [
+  { value: 'bug', label: '🐛 Bug' },
+  { value: 'api_error', label: '⚠️ API Error' },
+  { value: 'docs', label: '📄 Docs Issue' },
+  { value: 'feature', label: '💡 Feature Request' },
+  { value: 'other', label: '💬 Other' }
 ]
+
+const defaultFeedback = () => ({
+  type: 'bug',
+  title: '',
+  description: '',
+  contact: '',
+  wallet: '',
+  screenshot: null,
+  screenshotPreview: null
+})
+
+const feedback = ref(defaultFeedback())
+const feedbackStatus = ref('idle') // idle | submitting | success | error
+const feedbackError = ref('')
+const fileInputRef = ref(null)
+
+const triggerFileInput = () => fileInputRef.value?.click()
+
+const processFile = (file) => {
+  if (!file) return
+  if (!file.type.startsWith('image/')) {
+    feedbackError.value = 'Only image files are accepted.'
+    return
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    feedbackError.value = 'Screenshot must be under 5 MB.'
+    return
+  }
+  feedbackError.value = ''
+  feedback.value.screenshot = file
+  const reader = new FileReader()
+  reader.onload = (e) => { feedback.value.screenshotPreview = e.target.result }
+  reader.readAsDataURL(file)
+}
+
+const handleFileChange = (e) => processFile(e.target.files?.[0])
+const handleDrop = (e) => processFile(e.dataTransfer.files?.[0])
+const removeScreenshot = () => {
+  feedback.value.screenshot = null
+  feedback.value.screenshotPreview = null
+  if (fileInputRef.value) fileInputRef.value.value = ''
+}
+
+const formatFileSize = (bytes) => {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+const submitFeedback = async () => {
+  feedbackError.value = ''
+  if (!feedback.value.title.trim()) {
+    feedbackError.value = 'Please enter an issue summary.'
+    return
+  }
+  if (!feedback.value.description.trim()) {
+    feedbackError.value = 'Please describe the issue.'
+    return
+  }
+
+  feedbackStatus.value = 'submitting'
+
+  // TODO: replace with real API call when backend endpoint is ready.
+  // For now simulate a short delay so the UI is reviewable.
+  await new Promise(r => setTimeout(r, 1200))
+
+  feedbackStatus.value = 'success'
+}
+
+const resetFeedback = () => {
+  feedback.value = defaultFeedback()
+  feedbackStatus.value = 'idle'
+  feedbackError.value = ''
+}
 </script>

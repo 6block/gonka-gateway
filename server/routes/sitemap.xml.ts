@@ -11,10 +11,19 @@ interface SitemapEntry {
 // Bump the relevant date when a page's content meaningfully changes —
 // do NOT use a per-request timestamp, which signals constant churn to crawlers.
 const PUBLIC_ROUTES: ReadonlyArray<Omit<SitemapEntry, 'loc'> & { path: string }> = [
-  { path: '/', changefreq: 'weekly', priority: '1.0', lastmod: '2026-06-01' },
-  { path: '/chat', changefreq: 'weekly', priority: '0.8', lastmod: '2026-06-01' },
+  { path: '/', changefreq: 'weekly', priority: '1.0', lastmod: '2026-06-05' },
+  { path: '/pricing', changefreq: 'monthly', priority: '0.9', lastmod: '2026-06-05' },
   { path: '/docs', changefreq: 'weekly', priority: '0.9', lastmod: '2026-06-01' },
   { path: '/models', changefreq: 'weekly', priority: '0.9', lastmod: '2026-06-01' },
+  { path: '/feedback', changefreq: 'weekly', priority: '0.8', lastmod: '2026-06-05' },
+  { path: '/blog', changefreq: 'weekly', priority: '0.8', lastmod: '2026-06-09' },
+  { path: '/blog/claude-sdk-gonkarouter-setup', changefreq: 'monthly', priority: '0.7', lastmod: '2026-06-09' },
+  { path: '/blog/cursor-gonkarouter-named-model', changefreq: 'monthly', priority: '0.7', lastmod: '2026-06-08' },
+  { path: '/blog/openclaw-anthropic-messages', changefreq: 'monthly', priority: '0.7', lastmod: '2026-06-06' },
+  { path: '/blog/kimi-k2-vs-qwen3', changefreq: 'monthly', priority: '0.7', lastmod: '2026-06-04' },
+  { path: '/blog/minimax-m27-agent-harness', changefreq: 'monthly', priority: '0.7', lastmod: '2026-06-03' },
+  { path: '/blog/langchain-gonkarouter', changefreq: 'monthly', priority: '0.7', lastmod: '2026-05-30' },
+  { path: '/chat', changefreq: 'weekly', priority: '0.7', lastmod: '2026-06-01' },
   { path: '/privacy-policy', changefreq: 'yearly', priority: '0.3', lastmod: '2026-05-22' },
   { path: '/terms-of-service', changefreq: 'yearly', priority: '0.3', lastmod: '2026-05-22' }
 ]

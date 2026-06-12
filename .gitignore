@@ -10,3 +10,4 @@ nuxt.d.ts
 prisma/*.db
 prisma/dev.db
 .claude
+.playwright-mcp
