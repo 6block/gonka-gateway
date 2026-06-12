@@ -94,7 +94,7 @@
               <template v-else-if="isKeyLoading">Loading…</template>
               <template v-else-if="!apiKey">-</template>
               <template v-else-if="isRevealing">Revealing…</template>
-              <template v-else-if="!showKey">{{ apiKey }}</template>
+              <template v-else-if="!showKey">**************</template>
               <template v-else>{{ apiKeyFull || apiKey }}</template>
             </code>
             <div class="flex gap-0.5">
