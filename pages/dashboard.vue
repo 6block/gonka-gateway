@@ -93,15 +93,17 @@
               <template v-if="!auth.isLoggedIn">-</template>
               <template v-else-if="isKeyLoading">Loading…</template>
               <template v-else-if="!apiKey">-</template>
-              <template v-else-if="!showKey">**************</template>
-              <template v-else>{{ apiKey }}</template>
+              <template v-else-if="isRevealing">Revealing…</template>
+              <template v-else-if="!showKey">{{ apiKey }}</template>
+              <template v-else>{{ apiKeyFull || apiKey }}</template>
             </code>
             <div class="flex gap-0.5">
               <button
                 v-if="auth.isLoggedIn && apiKey"
-                @click="showKey = !showKey"
-                class="p-1.5 rounded-lg transition-all hover:text-primary-container hover:bg-white/5"
-                :title="showKey ? 'Hide' : 'Show'"
+                @click="onToggleShowKey"
+                :disabled="isRevealing"
+                class="p-1.5 rounded-lg transition-all hover:text-primary-container hover:bg-white/5 disabled:opacity-50 disabled:cursor-wait"
+                :title="showKey ? 'Hide' : 'Show full key'"
               >
                 <LucideEyeOff v-if="showKey" class="w-4 h-4" />
                 <LucideEye v-else class="w-4 h-4" />
@@ -216,7 +218,7 @@
               <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X POST {{ config.public.apiBase }}/v1/chat/completions \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
-  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span> \
+  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKeyFull && showKey ? apiKeyFull : 'sk-xxxxxx' }}"</span> \
   -d <span class="text-tertiary">'{
     "model": "moonshotai/Kimi-K2.6",
     "messages": [{"role": "user", "content": "Hello!"}]
@@ -308,7 +310,7 @@
               <div class="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto custom-scrollbar">
                 <pre class="text-secondary"><code><span class="text-primary-dim">curl</span> -X GET {{ config.public.apiBase }}/v1/models \
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
-  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKey && showKey ? apiKey : 'sk-xxxxxx' }}"</span></code></pre>
+  -H <span class="text-tertiary">"Authorization: Bearer {{ apiKeyFull && showKey ? apiKeyFull : 'sk-xxxxxx' }}"</span></code></pre>
               </div>
             </div>
           </div>
@@ -388,8 +390,17 @@ const { open: openLogin } = useLoginModal()
 const loading = ref(false)
 const error = ref(null)
 
+// apiKey holds the masked preview that /api/keys returns by default
+// (e.g. "sk-7QO5v…HH00h"). apiKeyFull holds the full plaintext, populated
+// only after the user explicitly clicks "Show" or "Copy", which triggers
+// a separate POST /api/keys/:id/reveal call. The split keeps full secrets
+// off the wire on every dashboard load — they leave the server only on
+// an explicit user action.
 const apiKey = ref('')
+const apiKeyId = ref(null)
+const apiKeyFull = ref('')
 const isKeyLoading = ref(false)
+const isRevealing = ref(false)
 const keyError = ref(null)
 const copied = ref(false)
 const showKey = ref(false)
@@ -461,8 +472,10 @@ function formatInt(val) {
 
 async function copyApiKey() {
   if (!apiKey.value) return
+  const full = await ensureRevealed()
+  if (!full) return
   try {
-    await navigator.clipboard.writeText(apiKey.value)
+    await navigator.clipboard.writeText(full)
     copied.value = true
     toast.success('API Key copied to clipboard')
     setTimeout(() => {
@@ -484,9 +497,10 @@ async function copyBaseUrl() {
 }
 
 // Mirror the same masking the rendered cURL blocks use: never put the live
-// key on the clipboard while the user has it hidden.
+// key on the clipboard while the user has it hidden, and never embed the
+// masked preview either — only the full plaintext is a usable secret.
 function maskedKey() {
-  return apiKey.value && showKey.value ? apiKey.value : '$API_KEY'
+  return apiKeyFull.value && showKey.value ? apiKeyFull.value : '$API_KEY'
 }
 
 async function copyCurl() {
@@ -518,17 +532,21 @@ async function fetchApiKey() {
   if (!auth.token) return
   isKeyLoading.value = true
   keyError.value = null
+  apiKeyFull.value = ''
+  showKey.value = false
   try {
     const data = await $fetch(`${config.public.apiBase}/api/keys`, {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
-    const key = data?.items?.[0]?.key
-    apiKey.value = key || ''
-    if (!key) {
+    const first = data?.items?.[0]
+    apiKey.value = first?.key_preview || ''
+    apiKeyId.value = first?.id ?? null
+    if (!apiKey.value) {
       keyError.value = 'No API key found on this account.'
     }
   } catch (e) {
     apiKey.value = ''
+    apiKeyId.value = null
     if (e?.response?.status === 401) {
       auth.logout()
     } else {
@@ -539,6 +557,46 @@ async function fetchApiKey() {
   } finally {
     isKeyLoading.value = false
   }
+}
+
+// Fetch the full plaintext key from the reveal endpoint, cache it on the
+// component so subsequent show/copy actions are instant, and surface UI
+// errors clearly. Returns the plaintext, or '' on failure.
+async function ensureRevealed() {
+  if (apiKeyFull.value) return apiKeyFull.value
+  if (!apiKeyId.value || !auth.token) return ''
+  isRevealing.value = true
+  try {
+    const data = await $fetch(
+      `${config.public.apiBase}/api/keys/${apiKeyId.value}/reveal`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${auth.token}` }
+      }
+    )
+    apiKeyFull.value = data?.key || ''
+    return apiKeyFull.value
+  } catch (e) {
+    if (e?.response?.status === 401) {
+      auth.logout()
+    } else {
+      toast.error('Failed to reveal API key')
+    }
+    console.error('Reveal API key error:', e)
+    return ''
+  } finally {
+    isRevealing.value = false
+  }
+}
+
+async function onToggleShowKey() {
+  if (!apiKeyFull.value) {
+    const full = await ensureRevealed()
+    if (!full) return
+    showKey.value = true
+    return
+  }
+  showKey.value = !showKey.value
 }
 
 async function fetchBalance() {
@@ -616,6 +674,8 @@ watch(
         monthly_token_used: 0
       }
       apiKey.value = ''
+      apiKeyId.value = null
+      apiKeyFull.value = ''
       showKey.value = false
       error.value = null
       keyError.value = null
