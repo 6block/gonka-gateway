@@ -318,7 +318,7 @@ function errText(e: unknown): string {
           </div>
 
           <!-- Pay directly from the connected wallet -->
-          <div class="space-y-2 rounded-xl border border-white/5 bg-surface-container-high p-4">
+          <!-- <div class="space-y-2 rounded-xl border border-white/5 bg-surface-container-high p-4">
             <p class="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">
               Or pay from your wallet
             </p>
@@ -341,7 +341,7 @@ function errText(e: unknown): string {
                 Send
               </button>
             </div>
-          </div>
+          </div> -->
 
           <div
             class="flex items-center justify-center gap-1.5 pt-1 text-[9px] font-bold uppercase tracking-widest text-text-muted"
