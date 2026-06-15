@@ -18,7 +18,7 @@ const jsonLd = {
       url: appSiteUrl,
       name: 'GonkaRouter',
       description:
-        'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.001 per 1M tokens.',
+        'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.',
       publisher: { '@id': `${appSiteUrl}/#organization` },
       inLanguage: 'en'
     },
@@ -27,7 +27,7 @@ const jsonLd = {
       name: 'GonkaRouter',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Any',
-      offers: { '@type': 'Offer', price: '0.001', priceCurrency: 'USD' },
+      offers: { '@type': 'Offer', price: '0.0004', priceCurrency: 'USD' },
       url: appSiteUrl
     }
   ]
@@ -48,6 +48,13 @@ useHead({
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
+    <!-- Global login modal (Google + email OTP), shared by every layout -->
+    <AuthLoginModal />
+    <!-- Forced account upgrade for legacy wallet users (bind an email) -->
+    <AuthUpgradeModal />
+    <!-- Global toasts so notifications surface on landing pages too -->
+    <Toast />
   </div>
 </template>
 

@@ -32,16 +32,8 @@
           @click="openLogin"
           class="h-9 kinetic-gradient text-primary-on px-3 rounded-lg font-black text-[11px] tracking-tight flex items-center gap-1.5 shadow-lg shadow-primary-container/20"
         >
-          <LucideWallet class="w-3.5 h-3.5" />
-          Connect
-        </button>
-        <button
-          v-else
-          @click="showPaymentModal = true"
-          class="h-9 kinetic-gradient text-primary-on px-3 rounded-lg font-black text-[11px] tracking-tight flex items-center gap-1.5 shadow-lg shadow-primary-container/20"
-        >
-          <LucideWallet class="w-3.5 h-3.5" />
-          Deposit
+          <LucideLogIn class="w-3.5 h-3.5" />
+          Sign In
         </button>
         <button
           @click="toggleDrawer"
@@ -106,10 +98,7 @@
           class="nav-item w-full flex items-center gap-4 px-5 py-3.5 rounded-full font-bold text-[13px] tracking-tight transition-all relative group text-text-muted hover:text-text-main hover:bg-white/5 hover:translate-x-1"
           active-class="!bg-primary-container/10 !text-primary-container"
         >
-          <component
-            :is="link.icon"
-            class="w-5 h-5 transition-colors"
-          />
+          <component :is="link.icon" class="w-5 h-5 transition-colors" />
           <span>{{ link.label }}</span>
         </NuxtLink>
       </nav>
@@ -130,35 +119,25 @@
               @click="openLogin"
               class="flex-1 h-11 kinetic-gradient text-primary-on px-4 rounded-xl font-black text-[13px] tracking-tight flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-container/20 whitespace-nowrap hover:shadow-glow-emerald"
             >
-              <LucideWallet class="w-4 h-4" />
-              Connect Wallet
+              <LucideLogIn class="w-4 h-4" />
+              Sign In
             </button>
           </div>
         </template>
         <template v-else>
-          <div class="flex items-center gap-2">
-            <button
-              @click="toggleColorMode"
-              class="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
-              title="Toggle theme"
-            >
-              <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
-              <LucideMoon v-else class="w-5 h-5" />
-            </button>
-            <button
-              @click="openDeposit"
-              class="flex-1 h-11 kinetic-gradient text-primary-on px-4 rounded-xl font-black text-[13px] tracking-tight flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-container/20 whitespace-nowrap hover:shadow-glow-emerald"
-            >
-              <LucideWallet class="w-4 h-4" />
-              Deposit
-            </button>
-          </div>
-
           <div
             class="flex items-center justify-between bg-surface-container-high p-3 rounded-2xl border border-white/5"
           >
-            <div class="flex items-center gap-2.5 mr-4 min-w-0">
+            <div class="flex items-center gap-2.5 mr-3 min-w-0">
+              <img
+                v-if="auth.user?.avatarUrl"
+                :src="auth.user.avatarUrl"
+                alt=""
+                referrerpolicy="no-referrer"
+                class="w-8 h-8 rounded-full border border-white/10 object-cover shrink-0"
+              />
               <div
+                v-else
                 class="w-8 h-8 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center text-text-muted shrink-0"
               >
                 <LucideUser class="w-4 h-4" />
@@ -166,29 +145,29 @@
               <div class="min-w-0">
                 <p
                   class="text-[12px] font-black font-headline text-text-main tracking-tight truncate"
-                  :title="auth.user?.address"
+                  :title="auth.displayName"
                 >
-                  {{ formatAddress(auth.user?.address) }}
+                  {{ auth.displayName }}
                 </p>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                  <span
-                    class="w-1.5 h-1.5 bg-primary-container rounded-full animate-pulse"
-                  ></span>
+                  <span class="w-1.5 h-1.5 bg-primary-container rounded-full animate-pulse"></span>
                   <p
                     class="text-[9px] font-black text-primary-container tracking-[0.1em] uppercase leading-none"
                   >
-                    Connected
+                    Signed in
                   </p>
                 </div>
               </div>
             </div>
-            <button
-              @click="logout"
-              class="p-2 text-text-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all shrink-0"
-              title="Disconnect"
-            >
-              <LucideLogOut class="w-4 h-4" />
-            </button>
+            <div class="flex items-center gap-0.5 shrink-0">
+              <button
+                @click="logout"
+                class="p-2 text-text-muted hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                title="Sign out"
+              >
+                <LucideLogOut class="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </template>
       </div>
@@ -199,103 +178,6 @@
       <slot />
     </main>
 
-    <!-- Login modal (on-demand) -->
-    <Transition name="modal-fade">
-      <div
-        v-if="isLoginOpen && !auth.isLoggedIn"
-        class="fixed inset-0 z-[90] flex items-center justify-center p-4"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="login-modal-title"
-        @keydown.esc="closeLoginModal()"
-      >
-        <div
-          class="absolute inset-0 bg-black/60 backdrop-blur-xl"
-          @click="closeLoginModal()"
-        ></div>
-        <div
-          class="relative bg-surface-container-low border border-white/5 p-6 sm:p-8 rounded-3xl w-full max-w-[420px] shadow-2xl animate-scale-in overflow-hidden"
-        >
-          <div
-            class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-dim via-primary-container to-secondary pointer-events-none"
-          ></div>
-          <div
-            class="absolute -top-24 -right-24 w-48 h-48 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"
-          ></div>
-          <div
-            class="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"
-          ></div>
-
-          <button
-            @click="closeLoginModal()"
-            class="absolute top-4 right-4 p-2 rounded-full text-text-muted hover:text-text-main hover:bg-white/5 transition-all z-20"
-            aria-label="Close login dialog"
-            title="Close"
-          >
-            <LucideX class="w-4 h-4" />
-          </button>
-
-          <div class="relative z-10">
-            <div class="flex justify-center mb-6">
-              <div
-                class="w-14 h-14 sm:w-16 sm:h-16 bg-primary-container rounded-2xl shadow-glow-emerald flex items-center justify-center animate-float"
-              >
-                <LucideWallet class="w-7 h-7 sm:w-8 sm:h-8 text-primary-on" />
-              </div>
-            </div>
-            <h2
-              id="login-modal-title"
-              class="text-xl sm:text-2xl font-black font-headline text-center text-text-main mb-2 tracking-tight"
-            >
-              Connect your wallet
-            </h2>
-            <p class="text-text-muted text-[13px] sm:text-[14px] text-center mb-6 sm:mb-8 font-body">
-              Sign in with MetaMask to unlock your balance, API keys and transactions.
-            </p>
-
-            <button
-              ref="loginPrimaryBtn"
-              @click="connectMetaMask"
-              :disabled="!!isConnecting"
-              class="relative w-full overflow-hidden kinetic-gradient text-primary-on font-black py-3.5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 flex justify-center items-center gap-2 shadow-glow-emerald"
-            >
-              <LucideLoader2 v-if="isConnecting" class="w-5 h-5 animate-spin" />
-              <template v-else>
-                <svg
-                  class="w-5 h-5 flex-shrink-0"
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M28.016 4.30612L16.2731 23.3642C16.1415 23.5781 15.8584 23.5781 15.7268 23.3642L3.98393 4.30612C3.83401 4.0628 4.02677 3.75 4.31206 3.75H27.6879C27.9732 4.0628 28.1659 4.0628 28.016 4.30612Z"
-                    fill="#F6851B"
-                    stroke="#F6851B"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <span>{{ hasMetaMask ? 'Connect MetaMask' : 'Install MetaMask' }}</span>
-              </template>
-            </button>
-
-            <button
-              @click="closeLoginModal()"
-              class="block w-full text-center text-[11px] uppercase tracking-widest text-text-muted font-black mt-6 hover:text-primary-container transition-colors"
-            >
-              Continue as guest
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
-    <!-- Payment modal -->
-    <PaymentModal :is-open="showPaymentModal" @close="showPaymentModal = false" />
-
-    <!-- Toasts -->
-    <Toast />
   </div>
 </template>
 
@@ -305,19 +187,17 @@ import {
   LucideMessageCircle,
   LucideHistory,
   LucideCpu,
-  LucideLoader2,
   LucideSun,
   LucideMoon,
   LucideLogOut,
-  LucideWallet,
+  LucideLogIn,
+  LucideCreditCard,
   LucideUser,
   LucideX,
   LucideMenu
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
-import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
-import PaymentModal from '~/components/PaymentModal.vue'
-import Toast from '~/components/Toast.vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 
@@ -325,22 +205,12 @@ const colorMode = useColorMode()
 const auth = useAuthStore()
 const toast = useToast()
 const route = useRoute()
-const { isOpen: isLoginOpen, open: openLoginModal, close: closeLoginModal } = useLoginModal()
-const isConnecting = ref(false)
-const hasMetaMask = ref(false)
-const cachedMetaMaskProvider = ref(null)
-const showPaymentModal = ref(false)
-const loginPrimaryBtn = ref(null)
+const { open: openLoginModal } = useLoginModal()
 const isDrawerOpen = ref(false)
 
 const openLogin = () => {
   closeDrawer()
   openLoginModal()
-}
-
-const openDeposit = () => {
-  closeDrawer()
-  showPaymentModal.value = true
 }
 
 const toggleDrawer = () => {
@@ -358,26 +228,17 @@ watch(isDrawerOpen, (open) => {
   document.body.style.overflow = open ? 'hidden' : ''
 })
 
-// Close the drawer whenever the route changes so navigating from inside the
-// drawer cleanly returns to the page.
-watch(() => route.fullPath, () => {
-  closeDrawer()
-})
-
-// Move keyboard focus into the dialog when it opens so screen-reader users
-// land on the primary action and Esc/Tab work naturally.
-watch(isLoginOpen, (open) => {
-  if (open) {
-    nextTick(() => {
-      loginPrimaryBtn.value?.focus()
-    })
-  }
-})
+// Close the drawer whenever the route changes.
+watch(
+  () => route.fullPath,
+  () => closeDrawer()
+)
 
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LucideLayoutDashboard },
   { to: '/chat', label: 'Chat', icon: LucideMessageCircle },
   { to: '/models', label: 'Models', icon: LucideCpu },
+  { to: '/deposit', label: 'Deposit', icon: LucideCreditCard },
   { to: '/transactions', label: 'Transactions', icon: LucideHistory }
 ]
 
@@ -385,125 +246,21 @@ const toggleColorMode = () => {
   colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
 }
 
-function formatAddress(addr) {
-  if (!addr) return '...'
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-}
-
-function discoverProviderByRdns(targetRdns, timeoutMs = 300) {
-  return new Promise((resolve) => {
-    if (typeof window === 'undefined') return resolve(null)
-    let done = false
-    const timer = setTimeout(() => {
-      done = true
-      resolve(null)
-    }, timeoutMs)
-    const handler = (event) => {
-      const { info, provider } = event.detail || {}
-      if (info?.rdns === targetRdns && !done) {
-        done = true
-        clearTimeout(timer)
-        window.removeEventListener('eip6963:announceProvider', handler)
-        resolve(provider)
-      }
-    }
-    window.addEventListener('eip6963:announceProvider', handler)
-    window.dispatchEvent(new Event('eip6963:requestProvider'))
-  })
-}
-
-function isRealMetaMaskProvider(p) {
-  if (!p || !p.isMetaMask) return false
-  if (p.isOkxWallet || p.isFoxWallet) return false
-  if (typeof window !== 'undefined' && window.foxwallet && window.foxwallet.ethereum === p)
-    return false
-  return true
-}
-
-function findMetaMaskProviderLegacy() {
-  if (typeof window === 'undefined') return null
-  const eth = window.ethereum
-  if (!eth) return null
-  if (eth.providers && Array.isArray(eth.providers)) {
-    const mm = eth.providers.find(isRealMetaMaskProvider)
-    if (mm) return mm
-  }
-  if (isRealMetaMaskProvider(eth)) return eth
-  return null
-}
-
-onMounted(async () => {
-  const mmProvider = await discoverProviderByRdns('io.metamask')
-  cachedMetaMaskProvider.value = mmProvider || findMetaMaskProviderLegacy()
-  hasMetaMask.value = !!cachedMetaMaskProvider.value
+// Refresh email/avatar/balance from the backend on load when a cookie token
+// survived a reload but the in-memory profile is stale.
+onMounted(() => {
+  if (auth.isLoggedIn) auth.fetchUserInfo()
 })
 
-// Always restore body scroll on unmount so a stale lock doesn't survive a
-// hot reload or navigation away from this layout.
 onBeforeUnmount(() => {
   if (typeof document !== 'undefined') {
     document.body.style.overflow = ''
   }
 })
 
-async function connectMetaMask() {
-  if (typeof window === 'undefined') return
-
-  const provider =
-    cachedMetaMaskProvider.value ||
-    (await discoverProviderByRdns('io.metamask')) ||
-    findMetaMaskProviderLegacy()
-
-  if (!provider) {
-    toast.error('MetaMask not detected. Please install the MetaMask extension first.')
-    setTimeout(() => {
-      window.open('https://metamask.io/download/', '_blank')
-    }, 2000)
-    return
-  }
-
-  isConnecting.value = true
-  try {
-    let accounts
-    try {
-      accounts = await provider.request({ method: 'eth_requestAccounts' })
-    } catch (e) {
-      if (e && e.code === -32603) {
-        if (import.meta.dev) console.warn('eth_requestAccounts failed with -32603, trying legacy enable()...', e)
-        if (typeof provider.enable === 'function') {
-          accounts = await provider.enable()
-        } else {
-          throw new Error(
-            'MetaMask internal error and the legacy enable() method is not supported. Please refresh the page and try connecting again.'
-          )
-        }
-      } else {
-        throw e
-      }
-    }
-
-    if (accounts && accounts.length > 0) {
-      await auth.login(accounts[0], provider)
-      toast.success('Successfully connected!')
-      closeLoginModal()
-    } else {
-      throw new Error('No accounts returned from wallet.')
-    }
-  } catch (err) {
-    if (import.meta.dev) console.error('MetaMask connection error:', err)
-    if (err && err.code === 4001) {
-      toast.info('Connection request cancelled.')
-    } else {
-      toast.error(`Failed to connect: ${err.message || 'Unknown error'}`)
-    }
-  } finally {
-    isConnecting.value = false
-  }
-}
-
 function logout() {
   auth.logout()
-  toast.info('Logged out')
+  toast.info('Signed out')
 }
 </script>
 

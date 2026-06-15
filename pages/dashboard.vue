@@ -121,10 +121,10 @@
                 v-else-if="!auth.isLoggedIn"
                 @click="openLogin"
                 class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-primary-container hover:bg-primary-container/10 transition-all"
-                title="Connect wallet to view"
+                title="Sign in to view"
               >
-                <LucideWallet class="w-3 h-3" />
-                Connect
+                <LucideLogIn class="w-3 h-3" />
+                Sign In
               </button>
             </div>
           </div>
@@ -362,6 +362,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import {
   LucideWallet,
+  LucideLogIn,
   LucideZap,
   LucideTerminal,
   LucideShield,

@@ -40,8 +40,8 @@
           class="inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/20 px-5 py-2 rounded-full mb-12 animate-scale-in"
         >
           <LucideZap class="w-4 h-4 text-primary-container" />
-          <span class="text-xs sm:text-sm font-bold tracking-wide text-primary-container">
-            New users get $20 daily credits for 7 days after sign-up
+          <span class="text-xs sm:text-sm font-bold tracking-wide text-primary-container uppercase">
+            New users get $20 credits
           </span>
         </div>
 
@@ -364,19 +364,19 @@ const homeFaqs = [
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
-    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments, lower per-token rates starting at <strong class="text-text-main">$0.001 per 1M tokens</strong>, and $20 daily free credits for the first 7 days for new users.'
+    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments, lower per-token rates starting at <strong class="text-text-main">$0.0004 per 1M tokens</strong>, and a one-time $20 free credit for new users.'
   },
   {
     q: 'How is GonkaRouter different from OpenRouter?',
-    a: `A flat $0.001 per 1M tokens for both input and output — no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users receive $20 in daily credits for the first 7 days.`
+    a: `A flat $0.0004 per 1M tokens for both input and output — no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get $20 credits.`
   },
   {
     q: 'How does GonkaRouter pricing work?',
-    a: 'GonkaRouter charges a flat rate of <strong class="text-text-main">$0.001 per 1 million tokens</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges. New users get $20 in daily free credits for 7 days. After that, you top up your balance and are billed only for what you consume.'
+    a: 'GonkaRouter charges a flat rate of <strong class="text-text-main">$0.0004 per 1 million tokens</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges. New users get $20 credits. After that, you top up your balance and are billed only for what you consume.'
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, and <strong class="text-text-main">Qwen3-235B-A22B-Instruct</strong>, with more models being added regularly. All models share the same $0.001/1M token rate and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, and <strong class="text-text-main">Qwen3-235B-A22B-Instruct</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
@@ -384,11 +384,11 @@ const homeFaqs = [
   },
   {
     q: 'Do I need a crypto wallet to use GonkaRouter?',
-    a: 'To access your API keys and manage your balance you\'ll need to connect a MetaMask wallet (or any EIP-6963 compatible wallet). The wallet is used for identity and payments on the Gonka Network. You can still browse the Chat and Models pages as a guest without connecting a wallet.'
+    a: 'No. Sign in with your email or Google account — no wallet required. A crypto wallet is only needed if you want to top up your balance with USDT (BEP-20) on the Gonka Network. You can also browse the Chat and Models pages as a guest.'
   },
   {
     q: 'How do I get started?',
-    a: 'Getting started takes less than a minute: connect your wallet on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive $20 in daily free credits for 7 days — no payment setup required to start.'
+    a: 'Getting started takes less than a minute: sign in with email or Google on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive a one-time $20 free credit — no payment setup required to start.'
   }
 ]
 
@@ -446,19 +446,19 @@ const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'AI Model Router on the Gonka Network',
   description:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens, with $20 daily credits for 7 days for new users.',
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens, with a one-time $20 free credit for new users.',
   ogTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
   ogDescription:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens.',
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.',
   ogUrl: siteUrl,
   twitterTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
   twitterDescription:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.001 per 1M tokens.'
+    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.'
 })
 useHead({ link: [{ rel: 'canonical', href: siteUrl }] })
 
 const heroDescription =
-  'One API for All AI Models\nDevelopers first\nAt $0.001 per 1M tokens'
+  'One API for All AI Models\nDevelopers first\nAt $0.0004 per 1M tokens'
 
 const whyItems = [
   { title: 'Cost-Effective Pricing', icon: LucideZap },

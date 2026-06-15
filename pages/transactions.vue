@@ -39,18 +39,18 @@
           </div>
           <div class="space-y-1 max-w-sm">
             <p class="font-headline font-bold text-base tracking-tight text-text-main">
-              Connect to view transactions
+              Sign in to view transactions
             </p>
             <p class="text-sm">
-              Your deposit history is private. Connect your wallet to load it.
+              Your deposit history is private. Sign in to load it.
             </p>
           </div>
           <button
             @click="openLogin"
             class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-5 py-2 rounded-full font-black text-[11px] tracking-widest uppercase hover:shadow-glow-emerald transition-all active:scale-95"
           >
-            <LucideWallet class="w-3.5 h-3.5" />
-            Connect Wallet
+            <LucideLogIn class="w-3.5 h-3.5" />
+            Sign In
           </button>
         </div>
       </div>
@@ -263,7 +263,8 @@ import {
   LucideChevronRight,
   LucideAlertCircle,
   LucideHistory,
-  LucideWallet
+  LucideWallet,
+  LucideLogIn
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { useLoginModal } from '~/composables/useLoginModal'

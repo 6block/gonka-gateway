@@ -47,7 +47,7 @@
               Initiate a session to evaluate reasoning depth and network latency.
             </template>
             <template v-else>
-              Connect your wallet to send messages. You can still browse the interface
+              Sign in to send messages. You can still browse the interface
               as a guest.
             </template>
           </p>
@@ -57,8 +57,8 @@
           @click="openLogin"
           class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-2.5 rounded-full font-black text-xs tracking-tight hover:shadow-glow-emerald transition-all active:scale-95"
         >
-          <LucideWallet class="w-4 h-4" />
-          Connect Wallet
+          <LucideLogIn class="w-4 h-4" />
+          Sign In
         </button>
       </div>
 
@@ -166,7 +166,7 @@
             @input="adjustTextareaHeight"
             ref="textareaRef"
             :placeholder="
-              auth.isLoggedIn ? 'Type a message...' : 'Connect wallet to chat'
+              auth.isLoggedIn ? 'Type a message...' : 'Sign in to chat'
             "
             :disabled="!auth.isLoggedIn"
             class="w-full bg-transparent border-none px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[52px] sm:min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
@@ -190,10 +190,10 @@
               type="button"
               @click="openLogin"
               class="px-3 py-2 kinetic-gradient text-primary-on rounded-xl text-[11px] font-black tracking-widest uppercase flex items-center gap-1.5 hover:shadow-glow-emerald active:scale-95 transition-all"
-              title="Connect wallet"
+              title="Sign in"
             >
-              <LucideWallet class="w-3.5 h-3.5" />
-              Connect
+              <LucideLogIn class="w-3.5 h-3.5" />
+              Sign In
             </button>
           </div>
         </div>
@@ -227,7 +227,8 @@ import {
   LucideMessageCircle,
   LucideUser,
   LucideBot,
-  LucideWallet
+  LucideWallet,
+  LucideLogIn
 } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/useToast'

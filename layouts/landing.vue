@@ -63,6 +63,28 @@
             <LucideMoon v-else class="w-5 h-5" />
           </button>
 
+          <button
+            v-if="!auth.isLoggedIn"
+            @click="openLogin"
+            class="hidden sm:inline-flex items-center px-5 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
+          >
+            Sign In
+          </button>
+          <NuxtLink
+            v-else
+            to="/dashboard"
+            class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
+          >
+            <img
+              v-if="auth.user?.avatarUrl"
+              :src="auth.user.avatarUrl"
+              referrerpolicy="no-referrer"
+              class="w-5 h-5 rounded-full"
+              alt=""
+            />
+            <span class="max-w-[140px] truncate">{{ auth.displayName }}</span>
+          </NuxtLink>
+
           <NuxtLink
             to="/dashboard"
             class="hidden sm:inline-flex kinetic-gradient text-primary-on px-5 sm:px-6 py-2 rounded-full font-headline font-bold text-xs sm:text-sm transition-all active:scale-95 hover:shadow-glow-emerald whitespace-nowrap"
@@ -124,6 +146,13 @@
             >
               Feedback
             </NuxtLink>
+            <button
+              v-if="!auth.isLoggedIn"
+              @click="openLogin"
+              class="block w-full text-center text-text-main bg-surface-container-high border border-white/10 px-5 py-3 rounded-xl font-headline font-bold text-sm transition-all hover:bg-white/10 mt-2"
+            >
+              Sign In
+            </button>
             <NuxtLink
               to="/dashboard"
               @click="closeMobileMenu"
@@ -231,12 +260,21 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { LucideSun, LucideMoon, LucideSend, LucideMail, LucideMenu, LucideX } from 'lucide-vue-next'
+import { useAuthStore } from '~/stores/auth'
+import { useLoginModal } from '~/composables/useLoginModal'
 
 const colorMode = useColorMode()
 const route = useRoute()
 const router = useRouter()
+const auth = useAuthStore()
+const { open: openLoginModal } = useLoginModal()
 const scrollProgress = ref(0)
 const isMobileMenuOpen = ref(false)
+
+const openLogin = () => {
+  closeMobileMenu()
+  openLoginModal()
+}
 
 const toggleColorMode = () => {
   colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
@@ -297,6 +335,8 @@ watch(() => route.fullPath, () => closeMobileMenu())
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
   handleScroll()
+  // Refresh the cached profile so the logged-in chip shows the latest email/avatar.
+  if (auth.isLoggedIn) auth.fetchUserInfo()
 })
 
 onBeforeUnmount(() => {

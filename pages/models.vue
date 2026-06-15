@@ -255,7 +255,7 @@ const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Supported AI Models',
   description:
-    'Browse all AI models available on GonkaRouter — Kimi-K2, Qwen, DeepSeek, and more. One unified API, transparent pricing at $0.001 per 1M tokens.',
+    'Browse all AI models available on GonkaRouter — Kimi-K2, Qwen, DeepSeek, and more. One unified API, transparent pricing at $0.0004 per 1M tokens.',
   ogTitle: 'Supported AI Models | GonkaRouter',
   ogDescription:
     'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
@@ -320,7 +320,7 @@ const models = [
       'A large-scale, instruction-tuned Mixture-of-Experts language model optimized for high-quality general-purpose text generation, strong reasoning ability, and long-context understanding, with efficient FP8 deployment.',
     maxOutput: '262K',
     price: {
-      amount: '$0.001',
+      amount: '$0.0004',
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -353,7 +353,7 @@ const models = [
       'A large language model developed by Moonshot AI, designed for advanced reasoning, long-context understanding, and code-intensive tasks. It significantly improves performance in software engineering, document processing, and multi-step task execution, while supporting very long context windows and agent-like capabilities for complex workflow automation.',
     maxOutput: '262K',
     price: {
-      amount: '$0.001',
+      amount: '$0.0004',
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -396,7 +396,7 @@ const models = [
       'An agent-native model from MiniMax, positioned as their first model to deeply participate in its own evolution. It excels at complex agent harnesses and real-world software engineering — end-to-end project delivery, log analysis, bug troubleshooting, code security, and machine-learning workflows — with strong planning, stable long-chain tool calling, and reasoning, plus high-fidelity office-document editing across Excel, PPT, and Word.',
     maxOutput: '192K',
     price: {
-      amount: '$0.001',
+      amount: '$0.0004',
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -441,7 +441,7 @@ useStructuredData({
       url: `${modelsSiteUrl}/models`,
       offers: {
         '@type': 'Offer',
-        price: '0.001',
+        price: '0.0004',
         priceCurrency: 'USD',
         description: `${m.price.amount} per ${m.price.unit}`
       }

@@ -28,7 +28,7 @@
           <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
           <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">Flat Token Rate</p>
           <div class="flex items-baseline gap-2 mb-3">
-            <span class="text-5xl sm:text-6xl font-black font-headline tracking-tighter text-text-main">$0.001</span>
+            <span class="text-5xl sm:text-6xl font-black font-headline tracking-tighter text-text-main">$0.0004</span>
             <span class="text-text-muted font-body text-sm">/ 1M tokens</span>
           </div>
           <p class="text-text-muted text-sm font-body mb-8 leading-relaxed">
@@ -47,13 +47,13 @@
           <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">New Users</p>
           <div class="flex items-baseline gap-1 mb-3">
             <span class="text-4xl font-black font-headline tracking-tighter text-text-main">$20</span>
-            <span class="text-text-muted font-body text-sm">/ day</span>
+            <span class="text-text-muted font-body text-sm">one-time</span>
           </div>
           <p class="text-text-muted text-sm font-body mb-6 leading-relaxed flex-1">
-            Free daily credits for your first 7 days. No credit card required to start.
+            A one-time $20 free credit to get started. No credit card required.
           </p>
           <div class="bg-surface-container-high rounded-2xl p-4 text-xs font-body text-text-muted leading-relaxed">
-            After 7 days, top up your balance with crypto on the Gonka Network and pay only for what you use.
+            Top up your balance with crypto on the Gonka Network and pay only for what you use.
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
       <h2 class="text-2xl sm:text-3xl font-black font-headline tracking-tight text-text-main mb-2">
         Available models
       </h2>
-      <p class="text-text-muted text-sm mb-8">All models at the same rate — $0.001 / 1M tokens.</p>
+      <p class="text-text-muted text-sm mb-8">All models at the same rate — $0.0004 / 1M tokens.</p>
       <div class="border border-white/5 rounded-2xl overflow-hidden">
         <table class="w-full text-sm font-body">
           <thead>
@@ -107,11 +107,11 @@
               </td>
               <td class="px-6 py-4 text-text-muted hidden sm:table-cell">{{ model.ctx }}</td>
               <td class="px-6 py-4 text-right">
-                <span class="text-primary-container font-black">$0.001</span>
+                <span class="text-primary-container font-black">$0.0004</span>
                 <span class="text-text-muted text-[11px]">/1M</span>
               </td>
               <td class="px-6 py-4 text-right">
-                <span class="text-primary-container font-black">$0.001</span>
+                <span class="text-primary-container font-black">$0.0004</span>
                 <span class="text-text-muted text-[11px]">/1M</span>
               </td>
             </tr>
@@ -163,16 +163,16 @@ const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 
 useSeoMeta({
-  title: 'Pricing — $0.001 per 1M tokens',
+  title: 'Pricing — $0.0004 per 1M tokens',
   description:
-    'GonkaRouter charges a flat $0.001 per 1M tokens for all models — input and output. No monthly fees, no per-model markups. New users get $20 daily free credits for 7 days.',
+    'GonkaRouter charges a flat $0.0004 per 1M tokens for all models — input and output. No monthly fees, no per-model markups. New users get $20 credits.',
   ogTitle: 'Pricing | GonkaRouter',
   ogDescription:
-    'Flat $0.001 per 1M tokens across all models. No subscriptions. $20 daily free credits for new users.',
+    'Flat $0.0004 per 1M tokens across all models. No subscriptions. A one-time $20 free credit for new users.',
   ogUrl: `${siteUrl}/pricing`,
   twitterTitle: 'Pricing | GonkaRouter',
   twitterDescription:
-    'Flat $0.001 per 1M tokens. No monthly fees. $20 daily credits for 7 days.'
+    'Flat $0.0004 per 1M tokens. No monthly fees. A one-time $20 free credit for new users.'
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/pricing` }] })
 
@@ -182,7 +182,7 @@ useStructuredData([
     '@type': 'WebPage',
     name: 'GonkaRouter Pricing',
     description:
-      'GonkaRouter charges a flat $0.001 per 1M tokens for all AI models, with no monthly fees and $20 daily free credits for new users.',
+      'GonkaRouter charges a flat $0.0004 per 1M tokens for all AI models, with no monthly fees and a one-time $20 free credit for new users.',
     url: `${siteUrl}/pricing`
   },
   breadcrumbList([
@@ -197,19 +197,19 @@ const rateFeatures = [
   'No monthly subscription or base fee',
   'Pay only for tokens consumed',
   'Crypto-native payments on the Gonka Network',
-  '$20 daily free credits for the first 7 days'
+  'One-time $20 free credit for new users'
 ]
 
 const steps = [
   {
     icon: LucideWallet,
-    title: 'Connect & get credits',
-    desc: 'Connect your MetaMask wallet. New accounts automatically receive $20 in daily free credits for 7 days.'
+    title: 'Sign in & get credits',
+    desc: 'Sign in with email or Google. New accounts automatically receive a one-time $20 free credit.'
   },
   {
     icon: LucideZap,
     title: 'Use the API',
-    desc: 'Make API calls using any OpenAI-compatible SDK. Each request deducts from your balance at $0.001 per 1M tokens.'
+    desc: 'Make API calls using any OpenAI-compatible SDK. Each request deducts from your balance at $0.0004 per 1M tokens.'
   },
   {
     icon: LucideBarChart2,

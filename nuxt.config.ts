@@ -5,23 +5,27 @@ const apiOrigin = process.env.API_BASE || 'https://api.gonkascan.com'
 const siteUrl = process.env.SITE_URL || 'https://gonkarouter.io'
 const siteName = 'GonkaRouter'
 const siteDescription =
-  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.001 per 1M tokens, with $20 daily credits for 7 days for new users.'
+  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.0004 per 1M tokens, with a one-time $20 free credit for new users.'
 const ogImage = `${siteUrl}/og-cover.png`
 const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 
 // CSP allows the API origin for fetch/XHR and Google Fonts for typography.
 // 'unsafe-inline' is required for Nuxt SSR hydration scripts/styles.
+// accounts.google.com → Google Identity Services (Sign in with Google).
+// challenges.cloudflare.com → Cloudflare Turnstile human verification.
+// Both load a script and render an iframe, so they need script-src + frame-src.
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://challenges.cloudflare.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
-  `connect-src 'self' ${apiOrigin}${isProd ? '' : ' ws: wss:'}`
+  "frame-src https://accounts.google.com https://challenges.cloudflare.com",
+  `connect-src 'self' ${apiOrigin} https://accounts.google.com https://challenges.cloudflare.com${isProd ? '' : ' ws: wss:'}`
 ].join('; ')
 
 const securityHeaders: Record<string, string> = {
@@ -113,7 +117,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.API_BASE || 'https://api.gonkascan.com',
-      siteUrl
+      siteUrl,
+      // Google Sign-In client ID (public) and Cloudflare Turnstile site key
+      // (public). Empty by default → the corresponding UI degrades gracefully
+      // (Google button hidden, Turnstile skipped) so dev works without them.
+      // Override at runtime via NUXT_PUBLIC_GOOGLE_CLIENT_ID / NUXT_PUBLIC_TURNSTILE_SITE_KEY.
+      googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || ''
     }
   },
   devServer: {
