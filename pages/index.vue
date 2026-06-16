@@ -94,7 +94,7 @@
             >
               <component :is="item.icon" class="w-5 h-5 lg:w-6 lg:h-6" />
             </div>
-            <h3 class="font-headline font-black text-base sm:text-lg lg:text-xl text-text-main leading-tight">
+            <h3 class="font-headline font-black text-base sm:text-lg lg:text-lg text-text-main leading-tight">
               {{ item.title }}
             </h3>
           </div>
