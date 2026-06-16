@@ -83,27 +83,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-text-muted mb-2">Topic</label>
-                <div class="relative">
-                  <select
-                    v-model="form.topic"
-                    class="field field-select"
-                    :class="errors.topic ? 'field-error' : 'field-base'"
-                  >
-                    <option value="" disabled>Select topic</option>
-                    <option v-for="t in topics" :key="t" :value="t">{{ t }}</option>
-                  </select>
-                  <LucideChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-                </div>
+                <UiSelect
+                  v-model="form.topic"
+                  :options="topics"
+                  placeholder="Select topic"
+                  :has-error="!!errors.topic"
+                />
                 <p v-if="errors.topic" class="field-err-msg">{{ errors.topic }}</p>
               </div>
               <div>
                 <label class="block text-[10px] font-black uppercase tracking-widest text-text-muted mb-2">Model</label>
-                <div class="relative">
-                  <select v-model="form.model" class="field field-select field-base">
-                    <option v-for="m in models" :key="m" :value="m">{{ m }}</option>
-                  </select>
-                  <LucideChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
-                </div>
+                <UiSelect v-model="form.model" :options="models" />
               </div>
             </div>
 
@@ -129,7 +119,7 @@
                 v-if="!screenshotPreview"
                 @dragover.prevent
                 @drop.prevent="onDrop"
-                class="flex items-center gap-4 border border-white/8 bg-surface-container-high/60 rounded-xl p-4"
+                class="flex items-center gap-4 border border-[#ffffff0d] bg-surface-container-high/60 rounded-xl p-4"
               >
                 <div class="w-11 h-11 shrink-0 rounded-xl bg-primary-container/15 border border-primary-container/20 flex items-center justify-center">
                   <LucideImage class="w-5 h-5 text-primary-container" />
@@ -219,7 +209,7 @@
                 :href="s.url"
                 target="_blank"
                 rel="noreferrer"
-                class="group rounded-2xl border border-white/8 bg-surface-container-high/40 p-3 hover:border-primary-container/40 transition-all"
+                class="group rounded-2xl border border-[#ffffff0d]  bg-surface-container-high/40 p-3 hover:border-primary-container/40 transition-all"
               >
                 <div class="rounded-xl bg-white p-2.5 flex items-center justify-center">
                   <ClientOnly>
@@ -253,7 +243,6 @@ import { ref, reactive, h } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import {
   LucideArrowLeft,
-  LucideChevronDown,
   LucideCheck,
   LucideLoader2,
   LucideX,
@@ -397,13 +386,13 @@ const removeScreenshot = () => {
 
 <style scoped>
 .field {
-  @apply w-full bg-surface-container-high rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted focus:outline-none focus:ring-1 transition-all;
+  @apply w-full bg-surface-container-high rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted focus:outline-none focus:ring-1 transition-colors;
 }
 .field-base {
-  @apply border border-white/5 hover:border-white/10 focus:ring-primary-container/30;
+  @apply border border-white/5 hover:border-white/10 focus:border-primary-container/40 focus:ring-primary-container/30;
 }
 .field-error {
-  @apply border border-red-500/50 focus:ring-red-500/30;
+  @apply border border-red-500/50 focus:border-red-500/60 focus:ring-red-500/30;
 }
 .field-select {
   @apply appearance-none pr-9 cursor-pointer;

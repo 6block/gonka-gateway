@@ -72,7 +72,7 @@
     <!-- Why Choose -->
     <section
       id="features"
-      class="pt-10 sm:pt-12 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
+      class="pt-12 sm:pt-16 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
     >
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-8 sm:mb-12">
@@ -83,18 +83,18 @@
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
           <div
             v-for="item in whyItems"
             :key="item.title"
-            class="bg-surface-container-high p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] border border-white/5 hover:border-primary-container/30 transition-all group hover:-translate-y-1.5 duration-300"
+            class="bg-surface-container-high p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] border border-white/5 hover:border-primary-container/30 transition-all group hover:-translate-y-1.5 duration-300"
           >
             <div
-              class="w-11 h-11 sm:w-12 sm:h-12 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-4 sm:mb-6 group-hover:scale-110 transition-transform"
+              class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-primary-container/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-primary-container mb-3 sm:mb-4 lg:mb-6 group-hover:scale-110 transition-transform"
             >
-              <component :is="item.icon" class="w-5 h-5 sm:w-6 sm:h-6" />
+              <component :is="item.icon" class="w-5 h-5 lg:w-6 lg:h-6" />
             </div>
-            <h3 class="font-headline font-black text-lg sm:text-xl text-text-main leading-tight">
+            <h3 class="font-headline font-black text-base sm:text-lg lg:text-xl text-text-main leading-tight">
               {{ item.title }}
             </h3>
           </div>
@@ -105,7 +105,7 @@
     <!-- Featured Model -->
     <section
       id="models"
-      class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
+      class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
     >
       <div class="max-w-5xl mx-auto text-center relative z-10">
         <!-- Model toggle -->
@@ -135,15 +135,15 @@
         </div>
 
         <h2
-          class="font-headline text-3xl sm:text-5xl md:text-6xl font-black text-text-main mb-6 sm:mb-8 tracking-tight"
+          class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main mb-6 sm:mb-8 tracking-tight"
         >
           Featured Model: {{ activeFeatured.label }}
         </h2>
-        <p class="font-body text-text-muted text-base sm:text-xl mb-12 sm:mb-20 max-w-3xl mx-auto font-light leading-relaxed">
+        <p class="font-body text-text-muted text-base sm:text-xl mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed">
           {{ activeFeatured.tagline }}
         </p>
 
-        <div class="flex flex-col gap-10 sm:gap-16 items-center">
+        <div class="flex flex-col gap-8 sm:gap-12 items-center">
           <div class="flex flex-wrap justify-center gap-3 sm:gap-6">
             <div
               v-for="feature in features"
@@ -214,7 +214,7 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
     </section>
 
     <!-- FAQ Section -->
-    <section class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface">
+    <section class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface">
       <div class="max-w-3xl mx-auto">
         <div class="text-center mb-10 sm:mb-14">
           <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-4">
@@ -232,7 +232,7 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
               class="w-full flex items-center justify-between gap-6 py-5 text-left group"
               :aria-expanded="homeFaqOpen === index"
             >
-              <span class="font-body font-semibold text-sm sm:text-base text-text-main group-hover:text-primary-container transition-colors leading-snug">
+              <span class="font-body font-semibold text-base sm:text-lg text-text-main group-hover:text-primary-container transition-colors leading-snug">
                 {{ item.q }}
               </span>
               <span
@@ -242,7 +242,7 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
             </button>
             <Transition name="faq-slide">
               <div v-if="homeFaqOpen === index" class="pb-5 overflow-hidden">
-                <p class="text-text-muted text-sm font-body leading-relaxed" v-html="item.a"></p>
+                <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed" v-html="item.a"></p>
               </div>
             </Transition>
           </div>
@@ -261,7 +261,7 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
     </section>
 
     <!-- Blog Section — only shown when API returns posts -->
-    <section v-if="allBlogPosts.length > 0" class="asymmetric-padding px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden">
+    <section v-if="allBlogPosts.length > 0" class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden">
       <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="flex items-end justify-between mb-10 sm:mb-14">
@@ -269,7 +269,7 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
             <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-text-muted mb-2 sm:mb-3">
               Latest Updates
             </p>
-            <h2 class="font-headline text-3xl sm:text-5xl md:text-6xl font-black text-text-main tracking-tighter">
+            <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight">
               News Blog
             </h2>
           </div>
