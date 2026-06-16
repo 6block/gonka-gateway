@@ -254,10 +254,19 @@ import {
 
 definePageMeta({ layout: 'landing' })
 
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
+
 useSeoMeta({
   title: 'Send Feedback — GonkaRouter',
-  robots: 'noindex,nofollow'
+  description:
+    'Share feedback, report issues, or contact the GonkaRouter team. We read every message and use it to improve the AI model router on the Gonka network.',
+  ogTitle: 'Send Feedback | GonkaRouter',
+  ogDescription:
+    'Share feedback, report an issue, or contact the GonkaRouter team.',
+  ogUrl: `${siteUrl}/feedback`
 })
+useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/feedback` }] })
 
 const CONTACT_EMAIL = 'contact@gonka-router.com'
 

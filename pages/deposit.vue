@@ -18,7 +18,7 @@ import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 
 definePageMeta({ layout: 'default' })
-useHead({ title: 'Deposit' })
+useSeoMeta({ title: 'Deposit', robots: 'noindex,nofollow' })
 
 const auth = useAuthStore()
 const toast = useToast()
