@@ -699,36 +699,6 @@
           </div>
         </div>
       </section>
-
-      <!-- Contact -->
-      <section
-        class="bg-primary-container/5 border border-primary-container/10 rounded-3xl p-6 sm:p-10 text-center space-y-4"
-      >
-        <h3 class="text-xl sm:text-2xl font-black font-headline tracking-tight">
-          Still stuck?
-        </h3>
-        <p class="text-sm sm:text-base text-text-muted max-w-xl mx-auto">
-          Reach the team on Telegram or send a message — we usually reply within a few hours.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2">
-          <a
-            href="https://t.me/gonka_cn"
-            target="_blank"
-            rel="noreferrer"
-            class="inline-flex items-center justify-center gap-2 bg-surface-container-highest text-text-main ghost-border px-6 py-3 rounded-full font-headline font-bold text-sm hover:bg-surface-container-high transition-all"
-          >
-            <LucideSend class="w-4 h-4" />
-            Telegram
-          </a>
-          <a
-            href="mailto:contact@gonka-router.com"
-            class="inline-flex items-center justify-center gap-2 kinetic-gradient text-primary-on px-6 py-3 rounded-full font-headline font-bold text-sm transition-all active:scale-95 hover:shadow-glow-emerald"
-          >
-            <LucideMail class="w-4 h-4" />
-            contact@gonka-router.com
-          </a>
-        </div>
-      </section>
     </div>
   </div>
 </template>
