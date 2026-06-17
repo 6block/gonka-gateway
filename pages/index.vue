@@ -225,23 +225,32 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
           </p>
         </div>
 
-        <div class="divide-y divide-white/5">
-          <div v-for="(item, index) in displayedFaqs" :key="index">
+        <div class="space-y-3 sm:space-y-4">
+          <div
+            v-for="(item, index) in displayedFaqs"
+            :key="index"
+            class="rounded-2xl border transition-all duration-200"
+            :class="homeFaqOpen === index
+              ? 'border-primary-container/70 bg-surface-container-high'
+              : 'border-white/5 bg-surface-container-high/60 hover:bg-surface-container-high'"
+          >
             <button
               @click="toggleFaq(index)"
-              class="w-full flex items-center justify-between gap-6 py-5 text-left group"
+              class="w-full flex items-center justify-between gap-6 px-5 sm:px-6 py-5 text-left"
               :aria-expanded="homeFaqOpen === index"
             >
-              <span class="font-body font-semibold text-base sm:text-lg text-text-main group-hover:text-primary-container transition-colors leading-snug">
+              <span class="font-body font-semibold text-base sm:text-lg leading-snug text-text-main">
                 {{ item.q }}
               </span>
               <span
-                class="shrink-0 text-text-muted font-bold text-base transition-transform duration-200"
-                :class="homeFaqOpen === index ? 'rotate-90 text-primary-container' : ''"
+                class="shrink-0 flex items-center justify-center w-8 h-8 rounded-full border font-bold text-sm transition-all duration-200"
+                :class="homeFaqOpen === index
+                  ? 'rotate-90 border-primary-container/70 text-primary-container'
+                  : 'border-white/10 text-text-muted'"
               >&gt;</span>
             </button>
             <Transition name="faq-slide">
-              <div v-if="homeFaqOpen === index" class="pb-5 overflow-hidden">
+              <div v-if="homeFaqOpen === index" class="px-5 sm:px-6 pb-5 overflow-hidden">
                 <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed" v-html="item.a"></p>
               </div>
             </Transition>

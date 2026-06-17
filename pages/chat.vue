@@ -103,9 +103,7 @@
             <div
               v-if="msg.content"
               class="whitespace-pre-wrap font-body max-w-full overflow-x-auto custom-scrollbar"
-            >
-              {{ msg.content }}
-            </div>
+            >{{ msg.role === 'assistant' ? msg.content.trimStart() : msg.content }}</div>
             <div
               v-else-if="
                 isLoading && i === messages.length - 1 && msg.role === 'assistant'

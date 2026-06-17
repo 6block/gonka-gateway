@@ -266,11 +266,11 @@ onUnmounted(stopTimer)
 
           <p class="mt-6 text-center text-[12px] leading-relaxed text-text-muted">
             By continuing, you agree to the
-            <NuxtLink to="/terms-of-service" class="font-bold text-text-main underline hover:text-primary-container"
+            <NuxtLink to="/terms-of-service" target="_blank" rel="noopener noreferrer" class="font-bold text-text-main underline hover:text-primary-container"
               >Terms of Service</NuxtLink
             >
             and
-            <NuxtLink to="/privacy-policy" class="font-bold text-text-main underline hover:text-primary-container"
+            <NuxtLink to="/privacy-policy" target="_blank" rel="noopener noreferrer" class="font-bold text-text-main underline hover:text-primary-container"
               >Privacy Policy</NuxtLink
             >.
           </p>

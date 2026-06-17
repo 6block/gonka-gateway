@@ -194,12 +194,12 @@
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Menu</p>
             <nav class="flex flex-col gap-3">
-              <NuxtLink to="/" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Home</NuxtLink>
-              <NuxtLink to="/#features" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Features</NuxtLink>
-              <NuxtLink to="/docs" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Docs</NuxtLink>
-              <NuxtLink to="/blog" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Blog</NuxtLink>
-              <NuxtLink to="/feedback" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Feedback</NuxtLink>
-              <NuxtLink to="/pricing" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Pricing</NuxtLink>
+              <NuxtLink to="/" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Home</NuxtLink>
+              <NuxtLink to="/#features" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Features</NuxtLink>
+              <NuxtLink to="/docs" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Docs</NuxtLink>
+              <NuxtLink to="/blog" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Blog</NuxtLink>
+              <NuxtLink to="/feedback" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Feedback</NuxtLink>
+              <NuxtLink to="/pricing" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Pricing</NuxtLink>
             </nav>
           </div>
 
@@ -207,10 +207,10 @@
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Service</p>
             <nav class="flex flex-col gap-3">
-              <NuxtLink to="/dashboard" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Dashboard</NuxtLink>
-              <NuxtLink to="/chat" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Chat</NuxtLink>
-              <NuxtLink to="/models" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Models</NuxtLink>
-              <NuxtLink to="/transactions" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Transactions</NuxtLink>
+              <NuxtLink to="/dashboard" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Dashboard</NuxtLink>
+              <NuxtLink to="/chat" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Chat</NuxtLink>
+              <NuxtLink to="/models" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Models</NuxtLink>
+              <NuxtLink to="/transactions" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Transactions</NuxtLink>
             </nav>
           </div>
 
@@ -218,8 +218,8 @@
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Legal</p>
             <nav class="flex flex-col gap-3">
-              <NuxtLink to="/privacy-policy" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Privacy Policy</NuxtLink>
-              <NuxtLink to="/terms-of-service" class="text-xs font-bold text-text-muted hover:text-text-main transition-colors">Terms of Service</NuxtLink>
+              <NuxtLink to="/privacy-policy" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Privacy Policy</NuxtLink>
+              <NuxtLink to="/terms-of-service" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Terms of Service</NuxtLink>
             </nav>
           </div>
         </div>
