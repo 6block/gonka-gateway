@@ -632,7 +632,7 @@
         </div>
       </section>
 
-      <!-- FAQ -->
+      <!-- Limits & Specifications -->
       <section class="space-y-5 sm:space-y-6">
         <div class="flex items-center gap-4">
           <div
@@ -641,24 +641,63 @@
             4
           </div>
           <h2 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight">
-            Frequently Asked Questions
+            Limits &amp; Specifications
           </h2>
         </div>
-
-        <NuxtLink
-          to="/faq#developer"
-          class="group flex items-center justify-between gap-6 bg-surface-container-high border border-white/5 hover:border-primary-container/30 rounded-2xl p-6 sm:p-8 transition-all"
+        <div
+          class="bg-surface-container-high border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6"
         >
-          <div>
-            <p class="font-black font-headline text-base text-text-main mb-1 group-hover:text-primary-container transition-colors">
-              Developer FAQ
-            </p>
-            <p class="text-sm text-text-muted font-body leading-relaxed">
-              Error codes, SDK selection, streaming, tool calling, Cursor & Claude Code integration — all developer Q&As in one place.
-            </p>
+          <p class="text-sm sm:text-base text-text-muted leading-relaxed">
+            Production-verified limits, last checked 2026-06-17. Subject to change as
+            the upstream capacity scales — we update this section in place rather than
+            rev a new endpoint.
+          </p>
+
+          <!-- Rate Limits -->
+          <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Rate Limits (global shared pool)
+            </h3>
+            <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
+              <li>Burst capacity: <span class="text-text-main font-bold">≥ 100 concurrent requests</span></li>
+              <li>Sustainable throughput: <span class="text-text-main font-bold">&lt; 200 req/min</span> (≈ 2–3 RPS per client recommended)</li>
+              <li>Sustained <span class="text-text-main font-bold">&gt; 300 req/min</span> will start returning <code class="font-mono text-primary-container">429</code></li>
+              <li><code class="font-mono">429</code> responses <span class="text-text-main font-bold">do not consume your balance</span> — back off 30–60s and retry</li>
+            </ul>
           </div>
-          <span class="text-2xl font-black text-text-muted group-hover:text-primary-container transition-colors shrink-0">→</span>
-        </NuxtLink>
+
+          <!-- Streaming Timeouts -->
+          <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Streaming Timeouts
+            </h3>
+            <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
+              <li>Hard cap: <span class="text-text-main font-bold">10 minutes</span> wall-clock per request</li>
+              <li>Idle cap: <span class="text-text-main font-bold">90 seconds</span> — no new chunk in 90s closes the upstream connection</li>
+            </ul>
+          </div>
+
+          <!-- Context Windows -->
+          <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Context Windows
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">Qwen3-235B-A22B-Instruct-2507-FP8</p>
+                <code class="text-sm font-mono text-primary-container">256K tokens</code>
+              </div>
+              <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">moonshotai/Kimi-K2.6</p>
+                <code class="text-sm font-mono text-primary-container">256K tokens</code>
+              </div>
+              <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
+                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">MiniMaxAI/MiniMax-M2.7</p>
+                <code class="text-sm font-mono text-primary-container">200K tokens</code>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Contact -->
@@ -690,199 +729,6 @@
           </a>
         </div>
       </section>
-
-      <!-- Report an Issue -->
-      <section id="report-issue" class="space-y-5 sm:space-y-6">
-        <div class="flex items-center gap-4">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-primary-container text-primary-on flex items-center justify-center font-black font-headline text-base sm:text-lg">
-            5
-          </div>
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight">
-            Report an Issue
-          </h2>
-        </div>
-
-        <p class="text-sm text-text-muted font-body leading-relaxed">
-          Ran into a bug, unexpected error, or something that doesn't work as documented? Submit it here — our team reviews every report.
-        </p>
-
-        <!-- Form -->
-        <form @submit.prevent="submitFeedback" class="space-y-4" novalidate>
-          <!-- Issue type -->
-          <div>
-            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-              Issue Type <span class="text-red-400">*</span>
-            </label>
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="t in issueTypes"
-                :key="t.value"
-                type="button"
-                @click="feedback.type = t.value"
-                class="px-4 py-2 rounded-full text-xs font-black border transition-all"
-                :class="feedback.type === t.value
-                  ? 'bg-primary-container/15 border-primary-container text-primary-container'
-                  : 'bg-surface-container-high border-white/5 text-text-muted hover:border-white/10'"
-              >
-                {{ t.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Title -->
-          <div>
-            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-              Issue Summary <span class="text-red-400">*</span>
-            </label>
-            <input
-              v-model="feedback.title"
-              type="text"
-              placeholder="e.g. 401 error when using Anthropic SDK with correct key"
-              maxlength="120"
-              class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
-            />
-          </div>
-
-          <!-- Description -->
-          <div>
-            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-              Description <span class="text-red-400">*</span>
-            </label>
-            <textarea
-              v-model="feedback.description"
-              rows="5"
-              placeholder="Describe the problem in detail — what you tried, what you expected, what happened instead. Include the model ID, SDK version, and any relevant error messages."
-              maxlength="2000"
-              class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors resize-none custom-scrollbar"
-            ></textarea>
-            <p class="text-[11px] text-text-muted mt-1.5 text-right">{{ feedback.description.length }}/2000</p>
-          </div>
-
-          <!-- Screenshot upload -->
-          <div>
-            <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-              Screenshot <span class="text-text-muted font-normal normal-case tracking-normal">(optional, max 5 MB)</span>
-            </label>
-            <div
-              class="relative border border-dashed border-white/10 rounded-xl p-6 text-center hover:border-primary-container/30 transition-colors cursor-pointer group"
-              :class="{ 'border-primary-container/40 bg-primary-container/5': feedback.screenshot }"
-              @click="triggerFileInput"
-              @dragover.prevent
-              @drop.prevent="handleDrop"
-            >
-              <input
-                ref="fileInputRef"
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="handleFileChange"
-              />
-              <template v-if="!feedback.screenshot">
-                <LucideImagePlus class="w-8 h-8 text-text-muted mx-auto mb-2 group-hover:text-primary-container transition-colors" />
-                <p class="text-sm font-body text-text-muted">
-                  Drag & drop or <span class="text-primary-container font-bold">browse</span>
-                </p>
-                <p class="text-[11px] text-text-muted mt-1">PNG, JPG, GIF, WebP</p>
-              </template>
-              <template v-else>
-                <div class="flex items-center justify-between gap-3">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <img
-                      :src="feedback.screenshotPreview"
-                      class="w-12 h-12 rounded-lg object-cover shrink-0 border border-white/10"
-                      alt="Screenshot preview"
-                    />
-                    <div class="min-w-0 text-left">
-                      <p class="text-sm font-black text-text-main truncate">{{ feedback.screenshot.name }}</p>
-                      <p class="text-[11px] text-text-muted">{{ formatFileSize(feedback.screenshot.size) }}</p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    @click.stop="removeScreenshot"
-                    class="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-400/10 transition-all shrink-0"
-                    aria-label="Remove screenshot"
-                  >
-                    <LucideX class="w-4 h-4" />
-                  </button>
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <!-- Contact info -->
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-                Email or Telegram <span class="text-text-muted font-normal normal-case tracking-normal">(so we can follow up)</span>
-              </label>
-              <input
-                v-model="feedback.contact"
-                type="text"
-                placeholder="you@example.com  or  @yourhandle"
-                class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
-              />
-            </div>
-            <div>
-              <label class="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">
-                Wallet Address <span class="text-text-muted font-normal normal-case tracking-normal">(optional, helps us check logs)</span>
-              </label>
-              <input
-                v-model="feedback.wallet"
-                type="text"
-                placeholder="0x..."
-                class="w-full bg-surface-container-high border border-white/5 rounded-xl px-4 py-3 text-sm font-body text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-primary-container/40 transition-colors"
-              />
-            </div>
-          </div>
-
-          <!-- Error message -->
-          <p v-if="feedbackError" class="text-sm text-red-400 font-body flex items-center gap-2">
-            <LucideTriangleAlert class="w-4 h-4 shrink-0" />
-            {{ feedbackError }}
-          </p>
-
-          <!-- Submit -->
-          <div class="flex items-center justify-between pt-2 flex-wrap gap-3">
-            <p class="text-[11px] text-text-muted font-body">
-              Reports are reviewed by the GonkaRouter team within 24 hours.
-            </p>
-            <button
-              type="submit"
-              :disabled="feedbackStatus === 'submitting'"
-              class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-3 rounded-full font-headline font-black text-sm transition-all hover:shadow-glow-emerald active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              <LucideLoader2 v-if="feedbackStatus === 'submitting'" class="w-4 h-4 animate-spin" />
-              <LucideSendHorizontal v-else class="w-4 h-4" />
-              {{ feedbackStatus === 'submitting' ? 'Submitting…' : 'Submit Report' }}
-            </button>
-          </div>
-        </form>
-
-        <!-- Success state -->
-        <Transition name="modal-fade">
-          <div
-            v-if="feedbackStatus === 'success'"
-            class="flex items-start gap-4 bg-primary-container/10 border border-primary-container/20 rounded-2xl p-6"
-          >
-            <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center shrink-0">
-              <LucideCheck class="w-4 h-4 text-primary-on" />
-            </div>
-            <div>
-              <p class="font-black font-headline text-text-main mb-1">Report received — thank you!</p>
-              <p class="text-sm text-text-muted font-body leading-relaxed">
-                We'll review it and follow up if you left a contact. You can submit another report below.
-              </p>
-              <button
-                @click="resetFeedback"
-                class="mt-3 text-xs font-black text-primary-container hover:underline"
-              >
-                Submit another report →
-              </button>
-            </div>
-          </div>
-        </Transition>
-      </section>
     </div>
   </div>
 </template>
@@ -893,15 +739,9 @@ import {
   LucideArrowLeft,
   LucideKey,
   LucideBookOpen,
-  LucideChevronDown,
   LucideSend,
   LucideMail,
-  LucideTriangleAlert,
-  LucideImagePlus,
-  LucideX,
-  LucideLoader2,
-  LucideSendHorizontal,
-  LucideCheck
+  LucideTriangleAlert
 } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
@@ -1185,88 +1025,4 @@ openclaw chat --local
 # C. Web Dashboard
 openclaw            # opens http://127.0.0.1:18789/ with an auth-included URL
 `
-
-// ─── Feedback form ────────────────────────────────────────────────────────────
-
-const issueTypes = [
-  { value: 'bug', label: '🐛 Bug' },
-  { value: 'api_error', label: '⚠️ API Error' },
-  { value: 'docs', label: '📄 Docs Issue' },
-  { value: 'feature', label: '💡 Feature Request' },
-  { value: 'other', label: '💬 Other' }
-]
-
-const defaultFeedback = () => ({
-  type: 'bug',
-  title: '',
-  description: '',
-  contact: '',
-  wallet: '',
-  screenshot: null,
-  screenshotPreview: null
-})
-
-const feedback = ref(defaultFeedback())
-const feedbackStatus = ref('idle') // idle | submitting | success | error
-const feedbackError = ref('')
-const fileInputRef = ref(null)
-
-const triggerFileInput = () => fileInputRef.value?.click()
-
-const processFile = (file) => {
-  if (!file) return
-  if (!file.type.startsWith('image/')) {
-    feedbackError.value = 'Only image files are accepted.'
-    return
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    feedbackError.value = 'Screenshot must be under 5 MB.'
-    return
-  }
-  feedbackError.value = ''
-  feedback.value.screenshot = file
-  const reader = new FileReader()
-  reader.onload = (e) => { feedback.value.screenshotPreview = e.target.result }
-  reader.readAsDataURL(file)
-}
-
-const handleFileChange = (e) => processFile(e.target.files?.[0])
-const handleDrop = (e) => processFile(e.dataTransfer.files?.[0])
-const removeScreenshot = () => {
-  feedback.value.screenshot = null
-  feedback.value.screenshotPreview = null
-  if (fileInputRef.value) fileInputRef.value.value = ''
-}
-
-const formatFileSize = (bytes) => {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-const submitFeedback = async () => {
-  feedbackError.value = ''
-  if (!feedback.value.title.trim()) {
-    feedbackError.value = 'Please enter an issue summary.'
-    return
-  }
-  if (!feedback.value.description.trim()) {
-    feedbackError.value = 'Please describe the issue.'
-    return
-  }
-
-  feedbackStatus.value = 'submitting'
-
-  // TODO: replace with real API call when backend endpoint is ready.
-  // For now simulate a short delay so the UI is reviewable.
-  await new Promise(r => setTimeout(r, 1200))
-
-  feedbackStatus.value = 'success'
-}
-
-const resetFeedback = () => {
-  feedback.value = defaultFeedback()
-  feedbackStatus.value = 'idle'
-  feedbackError.value = ''
-}
 </script>
