@@ -117,24 +117,23 @@ export const useAuthStore = defineStore('auth', () => {
   // ---- Google login — front end only obtains the Google ID token; the
   // backend verifies it and issues our platform JWT. The Google profile is
   // decoded locally purely for display, mirroring the qtum implementation. ----
-  async function loginWithGoogle(credential: string) {
+  async function loginWithGoogle(accessToken: string) {
     if (!import.meta.client) {
       throw new Error('loginWithGoogle() must be called from the browser')
     }
 
     const data = await $fetch<any>(`${apiBase()}/auth/google-login`, {
       method: 'POST',
-      body: { id_token: credential, channel: CHANNEL }
+      body: { access_token: accessToken, channel: CHANNEL }
     })
     if (!data || !data.token) throw new Error('No token returned')
 
-    const profile = decodeJwtPayload(credential)
     token.value = data.token
     user.value = {
       id: data.user?.id,
-      email: data.user?.email ?? profile?.email ?? '',
-      name: data.user?.name ?? profile?.name ?? '',
-      avatarUrl: profile?.picture ?? '',
+      email: data.user?.email ?? '',
+      name: data.user?.name ?? '',
+      avatarUrl: data.user?.avatar_url ?? '',
       authMethod: 'google'
     }
   }
@@ -226,23 +225,3 @@ export const useAuthStore = defineStore('auth', () => {
     logout
   }
 })
-
-// decodeJwtPayload safely base64url-decodes a JWT's payload segment. Used only
-// to read Google profile fields (email/name/picture) for display — never for
-// authentication, which is the backend's job.
-function decodeJwtPayload(jwt: string): any {
-  try {
-    const part = jwt.split('.')[1]
-    if (!part) return null
-    const b64 = part.replace(/-/g, '+').replace(/_/g, '/')
-    const json = decodeURIComponent(
-      atob(b64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    )
-    return JSON.parse(json)
-  } catch {
-    return null
-  }
-}

@@ -160,9 +160,9 @@ async function signInWithWallet() {
 }
 
 // ---- Google ----
-async function onGoogleCredential(credential: string) {
+async function onGoogleToken(accessToken: string) {
   try {
-    await auth.loginWithGoogle(credential)
+    await auth.loginWithGoogle(accessToken)
     toast.success('Signed in')
     close()
   } catch (e: unknown) {
@@ -230,7 +230,7 @@ onUnmounted(stopTimer)
 
           <!-- Google -->
           <template v-if="hasGoogle">
-            <AuthGoogleSignInButton @credential="onGoogleCredential" />
+            <AuthGoogleSignInButton @token="onGoogleToken" />
             <div class="my-5 flex items-center gap-4">
               <span class="h-px flex-1 bg-white/10"></span>
               <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted"
