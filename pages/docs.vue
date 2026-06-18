@@ -648,7 +648,7 @@
           class="bg-surface-container-high border border-white/5 rounded-3xl p-6 sm:p-8 space-y-6"
         >
           <p class="text-sm sm:text-base text-text-muted leading-relaxed">
-            Production-verified limits, last checked 2026-06-17. Subject to change as
+            Production-verified limits, last checked 2026-06-19. Subject to change as
             the upstream capacity scales — we update this section in place rather than
             rev a new endpoint.
           </p>
@@ -659,9 +659,9 @@
               Rate Limits (global shared pool)
             </h3>
             <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
-              <li>Burst capacity: <span class="text-text-main font-bold">≥ 100 concurrent requests</span></li>
-              <li>Sustainable throughput: <span class="text-text-main font-bold">&lt; 200 req/min</span> (≈ 2–3 RPS per client recommended)</li>
-              <li>Sustained <span class="text-text-main font-bold">&gt; 300 req/min</span> will start returning <code class="font-mono text-primary-container">429</code></li>
+              <li>Burst capacity: <span class="text-text-main font-bold">≥ 200 concurrent requests</span></li>
+              <li>Sustainable throughput: <span class="text-text-main font-bold">≤ 1000 req/min</span> (≈ 10–15 RPS per client recommended)</li>
+              <li>Sustained <span class="text-text-main font-bold">&gt; 1500 req/min</span> will start returning <code class="font-mono text-primary-container">429</code></li>
               <li><code class="font-mono">429</code> responses <span class="text-text-main font-bold">do not consume your balance</span> — back off 30–60s and retry</li>
             </ul>
           </div>
