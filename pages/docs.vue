@@ -660,7 +660,7 @@
             </h3>
             <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
               <li>Burst capacity: <span class="text-text-main font-bold">≥ 200 concurrent requests</span></li>
-              <li>Sustainable throughput: <span class="text-text-main font-bold">≤ 1000 req/min</span> (≈ 10–15 RPS per client recommended)</li>
+              <li>Sustainable throughput: <span class="text-text-main font-bold">≤ 1000 req/min</span></li>
               <li>Sustained <span class="text-text-main font-bold">&gt; 1500 req/min</span> will start returning <code class="font-mono text-primary-container">429</code></li>
               <li><code class="font-mono">429</code> responses <span class="text-text-main font-bold">do not consume your balance</span> — back off 30–60s and retry</li>
             </ul>
