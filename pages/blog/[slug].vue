@@ -324,4 +324,25 @@ const tagStyle = (tag: string) => {
   margin: 1.5rem 0;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
+/* Figures — preserved when the editor allows them through.
+   Our paste normalizer flattens external <figure> to <img> + .image-caption
+   so this rule is mainly a safety net for content authored elsewhere. */
+.prose :deep(figure) {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.prose :deep(figure img) {
+  margin: 0 auto;
+  display: block;
+}
+.prose :deep(figcaption),
+.prose :deep(.image-caption) {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+}
 </style>
