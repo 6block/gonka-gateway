@@ -298,20 +298,32 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
             :to="`/blog/${post.slug}`"
             class="group block"
           >
-            <!-- Card visual -->
-            <div class="relative h-40 rounded-2xl overflow-hidden mb-4" :style="{ background: post.bgGradient }">
-              <div
-                class="absolute left-6 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-2xl"
-                :style="{ background: post.glowColor }"
-              ></div>
-              <div class="absolute inset-0 flex items-end justify-center gap-1.5 pb-6">
+            <!-- Card visual — real cover when present, generated gradient otherwise -->
+            <div
+              class="relative h-40 rounded-2xl overflow-hidden mb-4"
+              :style="post.cover ? undefined : { background: post.bgGradient }"
+            >
+              <img
+                v-if="post.cover"
+                :src="post.cover"
+                :alt="post.title"
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <template v-else>
                 <div
-                  v-for="(h, i) in post.bars"
-                  :key="i"
-                  class="rounded-full opacity-70"
-                  :style="{ width: '13px', height: h + 'px', background: post.barColor }"
+                  class="absolute left-6 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-2xl"
+                  :style="{ background: post.glowColor }"
                 ></div>
-              </div>
+                <div class="absolute inset-0 flex items-end justify-center gap-1.5 pb-6">
+                  <div
+                    v-for="(h, i) in post.bars"
+                    :key="i"
+                    class="rounded-full opacity-70"
+                    :style="{ width: '13px', height: h + 'px', background: post.barColor }"
+                  ></div>
+                </div>
+              </template>
               <div class="absolute top-4 left-4">
                 <span
                   class="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
