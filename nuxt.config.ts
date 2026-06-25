@@ -14,6 +14,10 @@ const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 // accounts.google.com → Google Identity Services (Sign in with Google).
 // challenges.cloudflare.com → Cloudflare Turnstile human verification.
 // Both load a script and render an iframe, so they need script-src + frame-src.
+// youtube.com / youtu.be / player.bilibili.com → blog post embedded players,
+// authored via the admin "嵌入" toolbar button. frame-src only — these hosts
+// do not run any of our scripts, just render their own iframe content.
+// media-src — uploaded mp4/webm from our OSS bucket (preview/play in <video>).
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -24,7 +28,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
-  "frame-src https://accounts.google.com https://challenges.cloudflare.com",
+  "media-src 'self' blob: https:",
+  "frame-src https://accounts.google.com https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com https://player.bilibili.com",
   `connect-src 'self' ${apiOrigin} https://accounts.google.com https://challenges.cloudflare.com${isProd ? '' : ' ws: wss:'}`
 ].join('; ')
 
