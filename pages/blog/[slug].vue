@@ -325,17 +325,6 @@ const tagStyle = (tag: string) => {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Video — uploaded mp4/webm/mov served from our OSS bucket. */
-.prose :deep(video) {
-  display: block;
-  width: 100%;
-  max-height: 540px;
-  border-radius: 10px;
-  background: #000;
-  margin: 1.5rem 0;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
 /* Embedded YouTube / Bilibili players. The editor wraps the iframe in
    <div class="embed-wrapper"> with a 16:9 aspect-ratio so the public side
    doesn't depend on host-provided dimensions. */
