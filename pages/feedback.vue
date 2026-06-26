@@ -286,8 +286,10 @@ const socials = [
 const topics = ['API issue', 'Model behavior', 'Docs issue', 'Billing issue', 'Feature request', 'Other']
 const models = [
   'MiniMaxAI/MiniMax-M2.7',
-  'moonshotai/Kimi-K2.6',
-  'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
+  // TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B hidden while upstream Gonka takes
+  // them offline for adjustment. Restore when they are back online.
+  // 'moonshotai/Kimi-K2.6',
+  // 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
   'Not model specific'
 ]
 

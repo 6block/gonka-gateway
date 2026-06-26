@@ -260,9 +260,11 @@ const textareaRef = ref(null)
 const config = useRuntimeConfig()
 
 const availableModels = [
-  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7' },
-  { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6' },
-  { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
+  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7' }
+  // TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B hidden while upstream Gonka takes
+  // them offline for adjustment. Restore when they are back online.
+  // { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6' },
+  // { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
 ]
 const selectedModel = ref(availableModels[0].id)
 

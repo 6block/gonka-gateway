@@ -165,7 +165,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DocsInfoCard label="Endpoint" :value="`${apiBase}/v1/messages`" />
-            <DocsInfoCard label="Recommended Model" value="moonshotai/Kimi-K2.6" />
+            <DocsInfoCard label="Recommended Model" value="MiniMaxAI/MiniMax-M2.7" />
           </div>
 
           <!-- Install -->
@@ -682,15 +682,9 @@
             <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               Context Windows
             </h3>
+            <!-- TEMP 2026-06-25: Qwen3-235B / Kimi-K2.6 cards hidden while upstream
+                 Gonka takes them offline for adjustment. Restore when back online. -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
-                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">Qwen3-235B-A22B-Instruct-2507-FP8</p>
-                <code class="text-sm font-mono text-primary-container">256K tokens</code>
-              </div>
-              <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
-                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">moonshotai/Kimi-K2.6</p>
-                <code class="text-sm font-mono text-primary-container">256K tokens</code>
-              </div>
               <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
                 <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">MiniMaxAI/MiniMax-M2.7</p>
                 <code class="text-sm font-mono text-primary-container">200K tokens</code>

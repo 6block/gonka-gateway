@@ -310,9 +310,13 @@ const MiniMaxIconImg = () =>
     ]
   )
 
-const models = [
+// TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B carry `hidden: true` while upstream
+// Gonka takes them offline for adjustment. The full card data is kept intact;
+// to restore a model simply remove its `hidden: true` line.
+const allModels = [
   {
     id: 'qwen3-235b',
+    hidden: true,
     name: 'Qwen3-235B-A22B-Instruct-2507-FP8',
     apiId: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
     iconComponent: QwenIconImg,
@@ -346,6 +350,7 @@ const models = [
   },
   {
     id: 'kimi-k2-6',
+    hidden: true,
     name: 'Kimi-K2.6',
     apiId: 'moonshotai/Kimi-K2.6',
     iconComponent: KimiIconImg,
@@ -421,6 +426,9 @@ const models = [
     date: '2026-05-29'
   }
 ]
+
+// Only non-hidden models are surfaced anywhere (cards, structured data, modal).
+const models = allModels.filter((m) => !m.hidden)
 
 // ItemList schema backed by the visible model cards. Each model is exposed as a
 // SoftwareApplication with its transparent per-token Offer, enabling rich results.
