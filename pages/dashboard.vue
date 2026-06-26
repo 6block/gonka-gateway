@@ -220,7 +220,7 @@
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKeyFull && showKey ? apiKeyFull : 'sk-xxxxxx' }}"</span> \
   -d <span class="text-tertiary">'{
-    "model": "moonshotai/Kimi-K2.6",
+    "model": "MiniMaxAI/MiniMax-M2.7",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'</span></code></pre>
               </div>
@@ -340,11 +340,7 @@
   <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"list"</span>,
   <span class="text-primary-dim">"data"</span>: [
     {
-      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"</span>,
-      <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
-    },
-    {
-      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"moonshotai/Kimi-K2.6"</span>,
+      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"MiniMaxAI/MiniMax-M2.7"</span>,
       <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
     }
   ]
