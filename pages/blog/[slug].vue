@@ -22,17 +22,79 @@
 
           <div class="post-meta">
             <span class="post-tag" :class="tagStyle(post.tag)">{{ post.tag }}</span>
-            <span class="post-date">{{ post.date }}</span>
+            <span class="post-date">
+              <span class="date-label">{{ isUpdated ? 'Updated' : 'Published' }}</span>
+              <time :datetime="isUpdated ? modifiedISO : publishedISO">{{ displayDate }}</time>
+            </span>
           </div>
 
           <h1 class="post-title">{{ post.title }}</h1>
           <p class="post-excerpt">{{ post.excerpt }}</p>
+
+          <!-- Author -->
+          <div class="post-author">
+            <img class="author-avatar" :src="author.avatar" :alt="author.name" width="40" height="40" />
+            <div class="author-meta">
+              <a
+                v-if="author.linkedin"
+                :href="author.linkedin"
+                target="_blank"
+                rel="author noopener"
+                class="author-name"
+              >{{ author.name }}</a>
+              <span v-else class="author-name">{{ author.name }}</span>
+              <span class="author-bio">{{ author.bio }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Article body -->
       <article class="post-body">
+        <!-- Table of contents -->
+        <nav v-if="toc.length >= 2" class="post-toc" aria-label="Table of contents">
+          <p class="toc-title">On this page</p>
+          <ul>
+            <li v-for="item in toc" :key="item.id" :class="`toc-l${item.level}`">
+              <a :href="`#${item.id}`">{{ item.text }}</a>
+            </li>
+          </ul>
+        </nav>
+
         <div class="prose" v-html="renderedContent" />
+
+        <!-- Author card (footer, reinforces authority) -->
+        <div class="author-card">
+          <img class="author-card-avatar" :src="author.avatar" :alt="author.name" width="56" height="56" />
+          <div class="author-card-body">
+            <p class="author-card-name">{{ author.name }}</p>
+            <p class="author-card-bio">{{ author.bio }}</p>
+            <a
+              v-if="author.linkedin"
+              :href="author.linkedin"
+              target="_blank"
+              rel="author noopener"
+              class="author-card-link"
+            >LinkedIn ↗</a>
+          </div>
+        </div>
+
+        <!-- Related posts (internal links) -->
+        <section v-if="relatedPosts.length" class="related-blogs" aria-label="Related posts">
+          <h2 class="related-title">Related posts</h2>
+          <div class="related-grid">
+            <NuxtLink
+              v-for="rp in relatedPosts"
+              :key="rp.slug"
+              :to="`/blog/${rp.slug}`"
+              class="related-card"
+            >
+              <span class="related-card-tag" :class="tagStyle(rp.tag)">{{ rp.tag }}</span>
+              <span class="related-card-title">{{ rp.title }}</span>
+              <span class="related-card-excerpt">{{ rp.excerpt }}</span>
+            </NuxtLink>
+          </div>
+        </section>
 
         <!-- Footer nav -->
         <div class="post-foot">
@@ -46,6 +108,7 @@
 <script setup lang="ts">
 import { marked } from 'marked'
 import { LucideArrowLeft } from 'lucide-vue-next'
+import { BLOG_AUTHOR, authorSameAs } from '~/composables/useBlogAuthor'
 
 definePageMeta({ layout: 'landing' })
 
@@ -58,20 +121,78 @@ const slug = route.params.slug as string
 const config = useRuntimeConfig()
 const siteUrl = (config.public.siteUrl as string) || 'https://gonkarouter.io'
 
-const { fetchPost } = useBlogPosts()
+const { fetchPost, fetchPosts } = useBlogPosts()
 const post = await fetchPost(slug)
+
+// Related posts: same tag, most recent, excluding the current post (max 3).
+// Falls back to other recent posts if too few share the tag, so the section
+// is never empty on a site with enough content.
+const relatedPosts = ref<any[]>([])
+if (post) {
+  const all = await fetchPosts()
+  const others = all.filter((p) => p.slug !== slug)
+  const sameTag = others.filter((p) => p.tag && p.tag === post.tag)
+  const rest = others.filter((p) => !(p.tag && p.tag === post.tag))
+  relatedPosts.value = [...sameTag, ...rest].slice(0, 3)
+}
+
+// Date handling per the SEO guide:
+//   - Prefer updated_at; fall back to created_at.
+//   - Expose published + modified in BOTH meta tags and JSON-LD.
+//   - Show a single visible date (the "most relevant" = updated if present).
+const publishedISO = computed(() => toISO(post?.created_at) || toISO(post?.date))
+const modifiedISO = computed(() => toISO(post?.updated_at) || publishedISO.value)
+// "有更新时间取更新时间，没有更新时间才取发布时间"
+const displayDate = computed(() => {
+  const iso = post?.updated_at || post?.created_at
+  return iso ? formatDate(iso) : (post?.date ?? '')
+})
+const isUpdated = computed(
+  () => !!post?.updated_at && !!post?.created_at && !sameDay(post.updated_at, post.created_at),
+)
+
+function toISO(v?: string): string {
+  if (!v) return ''
+  const d = new Date(v)
+  return Number.isNaN(d.getTime()) ? '' : d.toISOString()
+}
+function formatDate(v: string): string {
+  const d = new Date(v)
+  if (Number.isNaN(d.getTime())) return v
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+function sameDay(a: string, b: string): boolean {
+  const da = new Date(a), db = new Date(b)
+  return da.toDateString() === db.toDateString()
+}
+
+// Clamp the meta description to the 140–160 char sweet spot the guide asks
+// for: trim trailing whitespace, cap at 160, cut on a word boundary.
+function clampDescription(s: string, max = 160): string {
+  const t = (s || '').replace(/\s+/g, ' ').trim()
+  if (t.length <= max) return t
+  const cut = t.slice(0, max)
+  const lastSpace = cut.lastIndexOf(' ')
+  return (lastSpace > max - 30 ? cut.slice(0, lastSpace) : cut).trim() + '…'
+}
+const metaDescription = computed(() => clampDescription(post?.excerpt ?? ''))
 
 if (post) {
   useSeoMeta({
     title: `${post.title} — GonkaRouter Blog`,
-    description: post.excerpt,
+    description: metaDescription.value,
     ogTitle: post.title,
-    ogDescription: post.excerpt,
+    ogDescription: metaDescription.value,
+    ogType: 'article',
     ogUrl: `${siteUrl}/blog/${slug}`,
     ogImage: post.cover || `${siteUrl}/og-default.png`,
     twitterTitle: post.title,
-    twitterDescription: post.excerpt,
+    twitterDescription: metaDescription.value,
     twitterImage: post.cover || `${siteUrl}/og-default.png`,
+    // article:* time tags — both published and modified, per guide page 2/3.
+    articlePublishedTime: publishedISO.value,
+    articleModifiedTime: modifiedISO.value,
+    articleAuthor: BLOG_AUTHOR.name,
   })
   useHead({
     link: [{ rel: 'canonical', href: `${siteUrl}/blog/${slug}` }],
@@ -81,17 +202,20 @@ if (post) {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
       headline: post.title,
-      description: post.excerpt,
+      description: metaDescription.value,
       url: `${siteUrl}/blog/${slug}`,
-      datePublished: post.created_at ?? post.date,
-      dateModified: post.updated_at ?? post.created_at ?? post.date,
+      datePublished: publishedISO.value,
+      dateModified: modifiedISO.value,
       image: post.cover || `${siteUrl}/og-default.png`,
       author: {
-        '@type': 'Organization',
-        name: 'GonkaRouter',
-        url: siteUrl,
+        '@type': 'Person',
+        name: BLOG_AUTHOR.name,
+        description: BLOG_AUTHOR.bio,
+        url: BLOG_AUTHOR.linkedin || siteUrl,
+        sameAs: authorSameAs(BLOG_AUTHOR),
       },
       publisher: { '@id': `${siteUrl}/#organization` },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/blog/${slug}` },
     },
     breadcrumbList([
       { name: 'Home', url: `${siteUrl}/` },
@@ -101,9 +225,57 @@ if (post) {
   ])
 }
 
+const author = BLOG_AUTHOR
+
+// ── Content rendering + table of contents ──────────────────────────────────
+// We post-process the rendered HTML to (a) guarantee every <img> has an alt,
+// and (b) inject id anchors on H2/H3 so the TOC can link to them.
+interface TocItem { id: string; text: string; level: number }
+const toc = ref<TocItem[]>([])
+
+function slugifyHeading(text: string, used: Set<string>): string {
+  let base = text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '')
+  if (!base) base = 'section'
+  let id = base, n = 2
+  while (used.has(id)) { id = `${base}-${n++}` }
+  used.add(id)
+  return id
+}
+
 const renderedContent = computed(() => {
   if (!post?.content) return ''
-  return isHtml(post.content) ? post.content : marked.parse(post.content) as string
+  let html = isHtml(post.content) ? post.content : (marked.parse(post.content) as string)
+
+  // Server-safe DOM parsing isn't available during SSR, so process with
+  // regex: this runs identically on server and client and avoids hydration
+  // mismatches. Both transforms are idempotent.
+  const used = new Set<string>()
+  const items: TocItem[] = []
+
+  // 1. Add ids to h2/h3 and collect TOC entries.
+  html = html.replace(/<(h2|h3)([^>]*)>([\s\S]*?)<\/\1>/gi, (full, tag, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, '').trim()
+    if (!text) return full
+    // Reuse an existing id if the heading already has one.
+    const existing = /\sid=["']([^"']+)["']/i.exec(attrs)
+    const id = existing ? existing[1] : slugifyHeading(text, used)
+    items.push({ id, text, level: tag.toLowerCase() === 'h2' ? 2 : 3 })
+    if (existing) return full
+    return `<${tag}${attrs} id="${id}">${inner}</${tag}>`
+  })
+
+  // 2. Ensure every <img> has a non-empty alt (fallback = post title).
+  const fallbackAlt = (post.title || 'Blog image').replace(/"/g, '&quot;')
+  html = html.replace(/<img\b([^>]*)>/gi, (full, attrs) => {
+    if (/\salt=["'][^"']*["']/i.test(attrs)) {
+      // Has alt but it may be empty → fill empty ones.
+      return full.replace(/\salt=["']\s*["']/i, ` alt="${fallbackAlt}"`)
+    }
+    return `<img${attrs} alt="${fallbackAlt}">`
+  })
+
+  toc.value = items
+  return html
 })
 
 const tagStyle = (tag: string) => {
@@ -365,5 +537,157 @@ const tagStyle = (tag: string) => {
   font-style: italic;
   text-align: center;
   line-height: 1.5;
+}
+
+/* ── Visible date ──────────────────────────────────────────────────────────── */
+.date-label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-right: 6px;
+}
+
+/* ── Author (hero) ─────────────────────────────────────────────────────────── */
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 1.75rem;
+}
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+.author-meta { display: flex; flex-direction: column; gap: 1px; }
+.author-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  text-decoration: none;
+}
+a.author-name:hover { color: var(--color-primary-container); text-decoration: underline; }
+.author-bio { font-size: 12px; color: var(--color-text-muted); line-height: 1.4; }
+
+/* ── Table of contents ─────────────────────────────────────────────────────── */
+.post-toc {
+  margin: 0 0 2.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.toc-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.625rem;
+}
+.post-toc ul { list-style: none; margin: 0; padding: 0; }
+.post-toc li { margin: 0.3rem 0; }
+.post-toc li.toc-l3 { padding-left: 1rem; }
+.post-toc a {
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.post-toc a:hover { color: var(--color-primary-container); }
+.prose :deep(h2),
+.prose :deep(h3) { scroll-margin-top: 90px; }
+/* ── Author card (footer) ──────────────────────────────────────────────────── */
+.author-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 3.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.author-card-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+.author-card-name { font-size: 15px; font-weight: 800; color: var(--color-text-main); margin-bottom: 2px; }
+.author-card-bio { font-size: 13px; color: var(--color-text-muted); line-height: 1.55; margin-bottom: 6px; }
+.author-card-link {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-primary-container);
+  text-decoration: none;
+}
+.author-card-link:hover { text-decoration: underline; }
+
+/* ── Related blogs ─────────────────────────────────────────────────────────── */
+.related-blogs {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.related-title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  margin-bottom: 1.25rem;
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.related-card:hover {
+  border-color: rgba(124, 58, 237, 0.4);
+  transform: translateY(-2px);
+}
+.related-card-tag {
+  align-self: flex-start;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+.related-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  line-height: 1.35;
+}
+.related-card-excerpt {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
