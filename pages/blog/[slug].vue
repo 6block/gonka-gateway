@@ -248,9 +248,14 @@ const renderedContent = computed(() => {
 
   // Server-safe DOM parsing isn't available during SSR, so process with
   // regex: this runs identically on server and client and avoids hydration
-  // mismatches. Both transforms are idempotent.
+  // mismatches. All transforms are idempotent.
   const used = new Set<string>()
   const items: TocItem[] = []
+
+  // 0. Demote any body <h1> to <h2>. The page title is the sole H1; legacy
+  //    posts authored before the editor blocked H1 may still contain one,
+  //    which would create a duplicate-H1 SEO problem.
+  html = html.replace(/<(\/?)h1(\b[^>]*)>/gi, '<$1h2$2>')
 
   // 1. Add ids to h2/h3 and collect TOC entries.
   html = html.replace(/<(h2|h3)([^>]*)>([\s\S]*?)<\/\1>/gi, (full, tag, attrs, inner) => {
