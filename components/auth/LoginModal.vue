@@ -276,7 +276,7 @@ onUnmounted(stopTimer)
           </p>
 
           <!-- Legacy/migration path: existing wallet accounts sign in via SIWE -->
-          <div class="mt-5 border-t border-white/5 pt-4 text-center">
+          <!-- <div class="mt-5 border-t border-white/5 pt-4 text-center">
             <button
               type="button"
               :disabled="walletConnecting"
@@ -287,7 +287,7 @@ onUnmounted(stopTimer)
               <LucideWallet v-else class="h-3.5 w-3.5" />
               Have a wallet account? Sign in with wallet
             </button>
-          </div>
+          </div> -->
         </div>
 
         <!-- ===================== Code step ===================== -->
