@@ -26,26 +26,19 @@
               <span class="date-label">{{ isUpdated ? 'Updated' : 'Published' }}</span>
               <time :datetime="isUpdated ? modifiedISO : publishedISO">{{ displayDate }}</time>
             </span>
+            <span class="post-meta-sep">·</span>
+            <a
+              v-if="author.linkedin"
+              :href="author.linkedin"
+              target="_blank"
+              rel="author noopener"
+              class="post-author-inline"
+            >{{ author.name }}</a>
+            <span v-else class="post-author-inline">{{ author.name }}</span>
           </div>
 
           <h1 class="post-title">{{ post.title }}</h1>
           <p class="post-excerpt">{{ post.excerpt }}</p>
-
-          <!-- Author -->
-          <div class="post-author">
-            <img class="author-avatar" :src="author.avatar" :alt="author.name" width="40" height="40" />
-            <div class="author-meta">
-              <a
-                v-if="author.linkedin"
-                :href="author.linkedin"
-                target="_blank"
-                rel="author noopener"
-                class="author-name"
-              >{{ author.name }}</a>
-              <span v-else class="author-name">{{ author.name }}</span>
-              <span class="author-bio">{{ author.bio }}</span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -62,22 +55,6 @@
         </nav>
 
         <div class="prose" v-html="renderedContent" />
-
-        <!-- Author card (footer, reinforces authority) -->
-        <div class="author-card">
-          <img class="author-card-avatar" :src="author.avatar" :alt="author.name" width="56" height="56" />
-          <div class="author-card-body">
-            <p class="author-card-name">{{ author.name }}</p>
-            <p class="author-card-bio">{{ author.bio }}</p>
-            <a
-              v-if="author.linkedin"
-              :href="author.linkedin"
-              target="_blank"
-              rel="author noopener"
-              class="author-card-link"
-            >LinkedIn ↗</a>
-          </div>
-        </div>
 
         <!-- Related posts (internal links) -->
         <section v-if="relatedPosts.length" class="related-blogs" aria-label="Related posts">
@@ -554,31 +531,15 @@ const tagStyle = (tag: string) => {
   margin-right: 6px;
 }
 
-/* ── Author (hero) ─────────────────────────────────────────────────────────── */
-.post-author {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 1.75rem;
-}
-.author-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.04);
-}
-.author-meta { display: flex; flex-direction: column; gap: 1px; }
-.author-name {
-  font-size: 13px;
+/* ── Author (inline, next to date) ─────────────────────────────────────────── */
+.post-meta-sep { color: var(--color-text-muted); opacity: 0.5; }
+.post-author-inline {
+  font-size: 12px;
   font-weight: 700;
-  color: var(--color-text-main);
+  color: var(--color-text-muted);
   text-decoration: none;
 }
-a.author-name:hover { color: var(--color-primary-container); text-decoration: underline; }
-.author-bio { font-size: 12px; color: var(--color-text-muted); line-height: 1.4; }
+a.post-author-inline:hover { color: var(--color-primary-container); text-decoration: underline; }
 
 /* ── Table of contents ─────────────────────────────────────────────────────── */
 .post-toc {
@@ -608,36 +569,6 @@ a.author-name:hover { color: var(--color-primary-container); text-decoration: un
 .post-toc a:hover { color: var(--color-primary-container); }
 .prose :deep(h2),
 .prose :deep(h3) { scroll-margin-top: 90px; }
-/* ── Author card (footer) ──────────────────────────────────────────────────── */
-.author-card {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  margin-top: 3.5rem;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-}
-.author-card-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.04);
-}
-.author-card-name { font-size: 15px; font-weight: 800; color: var(--color-text-main); margin-bottom: 2px; }
-.author-card-bio { font-size: 13px; color: var(--color-text-muted); line-height: 1.55; margin-bottom: 6px; }
-.author-card-link {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--color-primary-container);
-  text-decoration: none;
-}
-.author-card-link:hover { text-decoration: underline; }
-
 /* ── Related blogs ─────────────────────────────────────────────────────────── */
 .related-blogs {
   margin-top: 3.5rem;
