@@ -310,9 +310,9 @@ const MiniMaxIconImg = () =>
     ]
   )
 
-// TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B carry `hidden: true` while upstream
-// Gonka takes them offline for adjustment. The full card data is kept intact;
-// to restore a model simply remove its `hidden: true` line.
+// TEMP 2026-06-25: Qwen3-235B carries `hidden: true` while upstream Gonka takes
+// it offline for adjustment. The full card data is kept intact; to restore it
+// simply remove its `hidden: true` line.
 const allModels = [
   {
     id: 'qwen3-235b',
@@ -350,7 +350,6 @@ const allModels = [
   },
   {
     id: 'kimi-k2-6',
-    hidden: true,
     name: 'Kimi-K2.6',
     apiId: 'moonshotai/Kimi-K2.6',
     iconComponent: KimiIconImg,

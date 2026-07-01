@@ -501,16 +501,16 @@ const featuredModels = [
     apiId: 'MiniMaxAI/MiniMax-M2.7',
     tagline:
       'Optimized MiniMax-M2.7: A self-evolving agent model built for elite coding and complex agent harnesses — end-to-end software engineering and stable long-chain tool calling on the Gonka pipeline.'
+  },
+  {
+    id: 'kimi',
+    label: 'Kimi-K2.6',
+    apiId: 'moonshotai/Kimi-K2.6',
+    tagline:
+      'Optimized Kimi-K2.6: Superior long-context reasoning with enhanced throughput on the Gonka pipeline.'
   }
-  // TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B hidden while upstream Gonka takes
-  // them offline for adjustment. Restore when they are back online.
-  // {
-  //   id: 'kimi',
-  //   label: 'Kimi-K2.6',
-  //   apiId: 'moonshotai/Kimi-K2.6',
-  //   tagline:
-  //     'Optimized Kimi-K2.6: Superior long-context reasoning with enhanced throughput on the Gonka pipeline.'
-  // },
+  // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
+  // adjustment. Restore when it is back online.
   // {
   //   id: 'qwen',
   //   label: 'Qwen3-235B',

@@ -219,10 +219,10 @@ const steps = [
 ]
 
 const models = [
-  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' }
-  // TEMP 2026-06-25: Kimi-K2.6 / Qwen3-235B hidden while upstream Gonka takes
-  // them offline for adjustment. Restore when they are back online.
-  // { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6', ctx: '262K' },
+  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' },
+  { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6', ctx: '262K' }
+  // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
+  // adjustment. Restore when it is back online.
   // { name: 'Qwen3-235B-A22B-Instruct', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8', ctx: '262K' }
 ]
 </script>
