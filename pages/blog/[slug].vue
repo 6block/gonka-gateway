@@ -101,6 +101,15 @@ const siteUrl = (config.public.siteUrl as string) || 'https://gonkarouter.io'
 const { fetchPost, fetchPosts } = useBlogPosts()
 const post = await fetchPost(slug)
 
+// Return a real 404 status when the post doesn't exist. Without this, unknown
+// slugs render the "Post not found" template with a 200, which search engines
+// treat as a soft-404 and keep indexed. createError on the server sets the
+// HTTP status so crawlers drop the URL; the template's v-else still renders a
+// friendly not-found body for humans.
+if (!post && import.meta.server) {
+  setResponseStatus(useRequestEvent()!, 404)
+}
+
 // Related posts: same tag, most recent, excluding the current post (max 3).
 // Falls back to other recent posts if too few share the tag, so the section
 // is never empty on a site with enough content.
