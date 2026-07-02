@@ -163,6 +163,16 @@ function clampDescription(s: string, max = 160): string {
 }
 const metaDescription = computed(() => clampDescription(post?.excerpt ?? ''))
 
+// Social crawlers (Telegram, WeChat, Twitter, LinkedIn) only accept an
+// http(s) URL for og:image — a `data:` URI (our base64-inlined blog covers)
+// is silently ignored, leaving no preview image. So only use the cover when
+// it is a real URL; otherwise fall back to the hosted default image.
+const defaultOgImage = `${siteUrl}/og-default.png`
+const socialImage = (post?.cover && /^https?:\/\//i.test(post.cover))
+  ? post.cover
+  : defaultOgImage
+const usingDefaultImage = socialImage === defaultOgImage
+
 if (post) {
   useSeoMeta({
     title: `${post.title} — GonkaRouter Blog`,
@@ -171,10 +181,10 @@ if (post) {
     ogDescription: metaDescription.value,
     ogType: 'article',
     ogUrl: `${siteUrl}/blog/${slug}`,
-    ogImage: post.cover || `${siteUrl}/og-default.png`,
+    ogImage: socialImage,
     twitterTitle: post.title,
     twitterDescription: metaDescription.value,
-    twitterImage: post.cover || `${siteUrl}/og-default.png`,
+    twitterImage: socialImage,
     // article:* time tags — both published and modified, per guide page 2/3.
     articlePublishedTime: publishedISO.value,
     articleModifiedTime: modifiedISO.value,
@@ -182,6 +192,17 @@ if (post) {
   })
   useHead({
     link: [{ rel: 'canonical', href: `${siteUrl}/blog/${slug}` }],
+    // Declare og image dimensions only when we fall back to the default image
+    // (a known 1200x630). User-uploaded covers have unknown dimensions, so we
+    // omit width/height there rather than assert a wrong size.
+    meta: usingDefaultImage
+      ? [
+          { property: 'og:image:width', content: '1200' },
+          { property: 'og:image:height', content: '630' },
+          { property: 'og:image:type', content: 'image/png' },
+          { property: 'og:image:alt', content: post.title },
+        ]
+      : [],
   })
   useStructuredData([
     {
@@ -192,7 +213,7 @@ if (post) {
       url: `${siteUrl}/blog/${slug}`,
       datePublished: publishedISO.value,
       dateModified: modifiedISO.value,
-      image: post.cover || `${siteUrl}/og-default.png`,
+      image: socialImage,
       author: {
         '@type': 'Person',
         name: BLOG_AUTHOR.name,
