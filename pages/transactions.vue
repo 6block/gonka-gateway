@@ -391,7 +391,8 @@ function formatChain(chain) {
     base: 'Base',
     polygon: 'Polygon',
     arbitrum: 'Arbitrum',
-    optimism: 'Optimism'
+    optimism: 'Optimism',
+    ton: 'TON',
   }
   return map[chain?.toLowerCase()] || (chain ? chain.toUpperCase() : '-')
 }
