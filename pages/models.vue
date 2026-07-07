@@ -247,7 +247,6 @@ import {
   LucideSearch,
   LucideHelpCircle
 } from 'lucide-vue-next'
-import qwenIcon from '@/assets/img/qwen-icon.png'
 import { useToast } from '~/composables/useToast'
 
 const modelsConfig = useRuntimeConfig()
@@ -255,7 +254,7 @@ const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Supported AI Models',
   description:
-    'Browse all AI models available on GonkaRouter — Kimi-K2, Qwen, DeepSeek, and more. One unified API, transparent pricing at $0.0004 per 1M tokens.',
+    'Browse all AI models available on GonkaRouter — Kimi-K2, MiniMax, DeepSeek, and more. One unified API, transparent pricing at $0.0004 per 1M tokens.',
   ogTitle: 'Supported AI Models | GonkaRouter',
   ogDescription:
     'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
@@ -275,8 +274,6 @@ const languageTabs = ['python', 'typescript', 'javascript', 'curl']
 
 // Inline icons. Kimi has no asset yet, so render a styled "K" tile that
 // matches the design until a real PNG is added under assets/img/.
-const QwenIconImg = () =>
-  h('img', { src: qwenIcon, alt: 'Qwen3-235b', class: 'w-12 h-12 shrink-0' })
 
 const KimiIconImg = () =>
   h(
@@ -314,40 +311,6 @@ const MiniMaxIconImg = () =>
 // it offline for adjustment. The full card data is kept intact; to restore it
 // simply remove its `hidden: true` line.
 const allModels = [
-  {
-    id: 'qwen3-235b',
-    hidden: true,
-    name: 'Qwen3-235B-A22B-Instruct-2507-FP8',
-    apiId: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
-    iconComponent: QwenIconImg,
-    description:
-      'A large-scale, instruction-tuned Mixture-of-Experts language model optimized for high-quality general-purpose text generation, strong reasoning ability, and long-context understanding, with efficient FP8 deployment.',
-    maxOutput: '262K',
-    price: {
-      amount: '$0.0004',
-      unit: '1M tokens',
-      note: 'Same rate for input and output tokens'
-    },
-    tags: [
-      { label: 'chat', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
-      {
-        label: 'Function',
-        icon: LucideTerminal,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      },
-      {
-        label: 'Reasoning',
-        icon: LucideZap,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      },
-      {
-        label: 'Cache',
-        icon: LucideDatabase,
-        color: 'bg-primary-container/10 text-primary-container border-primary-container/20'
-      }
-    ],
-    date: '2026-04-02'
-  },
   {
     id: 'kimi-k2-6',
     name: 'Kimi-K2.6',

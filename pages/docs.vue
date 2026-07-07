@@ -711,7 +711,7 @@ import {
 definePageMeta({ layout: 'landing' })
 
 const config = useRuntimeConfig()
-const apiBase = computed(() => config.public.apiBase || 'https://api.gonkascan.com')
+const apiBase = computed(() => config.public.apiBase || 'https://api.gonkarouter.io')
 
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
@@ -882,7 +882,6 @@ const cursorValues = computed(
 OpenAI Base URL:  ${apiBase.value}/v1
 OpenAI API Key:   sk-xxxxxx          # your GonkaRouter key
 Model name #1:    moonshotai/Kimi-K2.6
-Model name #2:    Qwen/Qwen3-235B-A22B-Instruct-2507-FP8
 
 # Optional Settings → Models → Advanced
 Max output tokens: 4096               # protects against reasoning-token starvation
@@ -947,8 +946,7 @@ const openclawProvider = computed(
         auth: "api-key",
         api: "anthropic-messages",
         models: [
-          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" },
-          { id: "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",     name: "Qwen3-235B" }
+          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" }
         ]
       }
     }

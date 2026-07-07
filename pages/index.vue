@@ -381,7 +381,7 @@ import {
 const homeFaqs = [
   {
     q: 'What is GonkaRouter?',
-    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including Kimi-K2.6, Qwen3-235B, MiniMax-M2.7, and more — with transparent per-token pricing and no monthly subscriptions.'
+    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including Kimi-K2.6, MiniMax-M2.7, and more — with transparent per-token pricing and no monthly subscriptions.'
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
@@ -397,11 +397,11 @@ const homeFaqs = [
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, and <strong class="text-text-main">Qwen3-235B-A22B-Instruct</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
-    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkascan.com/v1</code> and setting your GonkaRouter API key.'
+    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkarouter.io/v1</code> and setting your GonkaRouter API key.'
   },
   {
     q: 'Do I need a crypto wallet to use GonkaRouter?',
