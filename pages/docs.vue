@@ -711,7 +711,7 @@ import {
 definePageMeta({ layout: 'landing' })
 
 const config = useRuntimeConfig()
-const apiBase = computed(() => config.public.apiBase || 'https://api.gonkascan.com')
+const apiBase = computed(() => config.public.apiBase || 'https://api.gonkarouter.io')
 
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({

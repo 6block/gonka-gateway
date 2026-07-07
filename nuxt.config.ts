@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const isProd = process.env.NODE_ENV === 'production'
 
-const apiOrigin = process.env.API_BASE || 'https://api.gonkascan.com'
+const apiOrigin = process.env.API_BASE || 'https://api.gonkarouter.io'
 const siteUrl = process.env.SITE_URL || 'https://gonkarouter.io'
 const siteName = 'GonkaRouter'
 const siteDescription =
@@ -123,7 +123,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'https://api.gonkascan.com',
+      apiBase: process.env.API_BASE || 'https://api.gonkarouter.io',
       siteUrl,
       // Google Sign-In client ID (public) and Cloudflare Turnstile site key
       // (public). Empty by default → the corresponding UI degrades gracefully

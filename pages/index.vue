@@ -401,7 +401,7 @@ const homeFaqs = [
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
-    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkascan.com/v1</code> and setting your GonkaRouter API key.'
+    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkarouter.io/v1</code> and setting your GonkaRouter API key.'
   },
   {
     q: 'Do I need a crypto wallet to use GonkaRouter?',
