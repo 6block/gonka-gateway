@@ -45,6 +45,12 @@
             Blog
           </NuxtLink>
           <NuxtLink
+            to="/webx"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+          >
+            Event
+          </NuxtLink>
+          <NuxtLink
             to="/feedback"
             class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
           >
@@ -105,6 +111,9 @@
         </div>
       </div>
 
+      <!-- Scrolling event announcement — home page only, sits under the nav bar -->
+      <EventTicker v-if="isHome" />
+
       <!-- Mobile menu panel -->
       <Transition name="menu-slide">
         <div
@@ -140,6 +149,13 @@
               Blog
             </NuxtLink>
             <NuxtLink
+              to="/webx"
+              @click="closeMobileMenu"
+              class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
+            >
+              Event
+            </NuxtLink>
+            <NuxtLink
               to="/feedback"
               @click="closeMobileMenu"
               class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
@@ -166,7 +182,10 @@
     </nav>
 
     <!-- Main content -->
-    <main>
+    <!-- On home, pt offsets the EventTicker height added inside the fixed nav so
+         the page's own top padding keeps clearing the bar. Other pages have no
+         ticker, so no offset. -->
+    <main :class="isHome ? 'pt-[39px]' : ''">
       <slot />
     </main>
 
@@ -280,7 +299,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { LucideSun, LucideMoon, LucideSend, LucideMail, LucideMenu, LucideX } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { useLoginModal } from '~/composables/useLoginModal'
@@ -290,6 +309,9 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const { open: openLoginModal } = useLoginModal()
+
+// EventTicker shows on the landing home route only.
+const isHome = computed(() => route.path === '/')
 const scrollProgress = ref(0)
 const isMobileMenuOpen = ref(false)
 
