@@ -7,7 +7,7 @@
         <div class="webx-topbar-actions">
           <button type="button" class="webx-lang" @click="toggleLang" :aria-label="`Switch language to ${t.langLabel}`">
             <LucideLanguages :size="14" />
-            {{ t.langLabel }}
+            <span class="webx-lang-text">{{ t.langLabel }}</span>
           </button>
           <NuxtLink to="/" class="webx-back">
             {{ t.back }}
@@ -356,6 +356,7 @@ const resetForm = () => {
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
+  white-space: nowrap;
   cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
@@ -378,6 +379,7 @@ const resetForm = () => {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   text-decoration: none;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
@@ -385,6 +387,34 @@ const resetForm = () => {
   color: #061710;
   background: var(--wx-accent);
   border-color: var(--wx-accent);
+}
+
+/* Mobile: keep the top bar on one comfortable row — tighter spacing, smaller
+   pills, and the language button collapses to just its globe icon. */
+@media (max-width: 560px) {
+  .webx-topbar-inner {
+    min-height: 52px;
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .webx-topbar-actions {
+    gap: 8px;
+  }
+  .webx-lang {
+    min-height: 34px;
+    padding: 0;
+    width: 34px;
+    gap: 0;
+  }
+  .webx-lang-text {
+    display: none;
+  }
+  .webx-back {
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
 }
 
 .webx-wrap {
