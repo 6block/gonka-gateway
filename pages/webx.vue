@@ -4,9 +4,15 @@
     <header class="webx-topbar">
       <div class="webx-topbar-inner">
         <NuxtLink to="/" class="webx-brand text-xl md:text-4xl" >GonkaRouter</NuxtLink>
-        <NuxtLink to="/" class="webx-back">
-          Back to GonkaRouter
-        </NuxtLink>
+        <div class="webx-topbar-actions">
+          <button type="button" class="webx-lang" @click="toggleLang" :aria-label="`Switch language to ${t.langLabel}`">
+            <LucideLanguages :size="14" />
+            {{ t.langLabel }}
+          </button>
+          <NuxtLink to="/" class="webx-back">
+            {{ t.back }}
+          </NuxtLink>
+        </div>
       </div>
     </header>
 
@@ -15,25 +21,25 @@
       <div class="webx-hero-grid">
         <!-- Left: headline + CTAs -->
         <div class="webx-hero-left">
-          <span class="webx-badge">WebX Japan</span>
-          <h1 class="webx-h1">Build AI on Gonka Router at WebX Japan</h1>
+          <span class="webx-badge">{{ t.badge }}</span>
+          <h1 class="webx-h1">{{ t.h1 }}</h1>
 
           <div class="webx-subhead">
-            <h2 class="webx-subhead-title">Build with Gonka, Unlock Up to $40 Credits</h2>
+            <h2 class="webx-subhead-title">{{ t.subheadTitle }}</h2>
             <p class="webx-subhead-copy">
-              Start building with Gonka Router and get up to $40 in free inference credits.
+              {{ t.subheadCopy }}
             </p>
           </div>
 
           <div class="webx-cta-row">
-            <button type="button" class="webx-btn webx-btn-primary" @click="goRegister">Register</button>
-            <a href="#apply" class="webx-btn webx-btn-ghost">Apply for more credits</a>
+            <button type="button" class="webx-btn webx-btn-primary" @click="goRegister">{{ t.register }}</button>
+            <a href="#apply" class="webx-btn webx-btn-ghost">{{ t.applyCta }}</a>
           </div>
         </div>
 
         <!-- Right: numbered credit rule cards -->
         <div class="webx-rules">
-          <article v-for="(rule, i) in creditRules" :key="i" class="webx-rule">
+          <article v-for="(rule, i) in t.creditRules" :key="i" class="webx-rule">
             <p>{{ rule }}</p>
           </article>
         </div>
@@ -42,7 +48,7 @@
 
     <!-- ===================== CLOSING ===================== -->
     <section class="webx-wrap webx-closing">
-      <p class="webx-closing-text">Test, ship, and scale your AI product with Gonka Router.</p>
+      <p class="webx-closing-text">{{ t.closing }}</p>
     </section>
 
     <!-- ===================== APPLY FORM ===================== -->
@@ -51,9 +57,9 @@
         <div class="webx-apply-grid">
           <!-- Left: heading -->
           <div class="webx-apply-intro">
-            <h2 class="webx-apply-title">Apply for more credits</h2>
+            <h2 class="webx-apply-title">{{ t.applyTitle }}</h2>
             <p class="webx-apply-copy">
-              Send the registered email and a short note about what you are building with Gonka Router.
+              {{ t.applyCopy }}
             </p>
           </div>
 
@@ -61,18 +67,18 @@
           <div>
             <div v-if="status === 'success'" class="webx-success">
               <div class="webx-success-icon"><LucideCheck :size="26" /></div>
-              <h3 class="webx-success-title">Request sent.</h3>
-              <p class="webx-success-copy">The team will review your application soon.</p>
-              <button type="button" class="webx-success-again" @click="resetForm">Submit another →</button>
+              <h3 class="webx-success-title">{{ t.successTitle }}</h3>
+              <p class="webx-success-copy">{{ t.successCopy }}</p>
+              <button type="button" class="webx-success-again" @click="resetForm">{{ t.submitAnother }}</button>
             </div>
 
             <form v-else class="webx-form" novalidate @submit.prevent="submit">
               <div class="webx-field">
-                <label class="webx-label">Registered email</label>
+                <label class="webx-label">{{ t.emailLabel }}</label>
                 <input
                   v-model="form.email"
                   type="email"
-                  placeholder="you@example.com"
+                  :placeholder="t.emailPlaceholder"
                   autocomplete="email"
                   class="webx-input"
                   :class="{ 'webx-input-error': errors.email }"
@@ -81,11 +87,11 @@
               </div>
 
               <div class="webx-field">
-                <label class="webx-label">Build notes</label>
+                <label class="webx-label">{{ t.notesLabel }}</label>
                 <textarea
                   v-model="form.message"
                   rows="4"
-                  placeholder="Tell us what you are building, which model you use, and where extra credits would help."
+                  :placeholder="t.notesPlaceholder"
                   class="webx-input webx-textarea"
                   :class="{ 'webx-input-error': errors.message }"
                 ></textarea>
@@ -94,15 +100,15 @@
 
               <div v-if="status === 'error'" class="webx-error-banner">
                 <LucideAlertCircle :size="16" />
-                Something went wrong. Please try again.
+                {{ t.errorBanner }}
               </div>
 
               <button type="submit" class="webx-btn webx-btn-primary webx-submit" :disabled="status === 'submitting'">
                 <span v-if="status === 'submitting'" class="webx-submit-loading">
                   <LucideLoader2 :size="16" class="webx-spin" />
-                  Sending…
+                  {{ t.sending }}
                 </span>
-                <span v-else>Submit request</span>
+                <span v-else>{{ t.submit }}</span>
               </button>
             </form>
           </div>
@@ -114,8 +120,8 @@
 
 <!-- PLACEHOLDER_SCRIPT -->
 <script setup>
-import { reactive, ref } from 'vue'
-import { LucideCheck, LucideLoader2, LucideAlertCircle, LucideArrowLeft } from 'lucide-vue-next'
+import { reactive, ref, computed } from 'vue'
+import { LucideCheck, LucideLoader2, LucideAlertCircle, LucideArrowLeft, LucideLanguages } from 'lucide-vue-next'
 import { useLoginModal } from '~/composables/useLoginModal'
 
 // Standalone page: no app header/footer. It carries its own top bar.
@@ -144,12 +150,82 @@ const goRegister = async () => {
   openLoginModal()
 }
 
-const creditRules = [
-  'Get $20 when you register, create an API key, and complete your first real API call.',
-  'Unlock another $20 by using Gonka Router actively during the period from 7/13/2026 to 7/31/2026.',
-  'Keep Gonka Router as one of your inference providers and unlock more credits at 30, 60, and 90-day milestones.',
-  'Real builders get rewarded.'
-]
+// ---- Language toggle (EN / 日本語), scoped to this page only ----
+// All copy lives here inline; no i18n framework is pulled in.
+const messages = {
+  en: {
+    langLabel: '日本語',
+    back: 'Back to GonkaRouter',
+    badge: 'WebX Japan',
+    h1: 'Build AI on Gonka Router at WebX Japan',
+    subheadTitle: 'Build with Gonka, Unlock Up to $40 Credits',
+    subheadCopy: 'Start building with Gonka Router and get up to $40 in free inference credits.',
+    register: 'Register',
+    applyCta: 'Apply for more credits',
+    creditRules: [
+      'Get $20 when you register, create an API key, and complete your first real API call.',
+      'Unlock another $20 by using Gonka Router actively during the period from 7/13/2026 to 7/31/2026.',
+      'Keep Gonka Router as one of your inference providers and unlock more credits at 30, 60, and 90-day milestones.',
+      'Real builders get rewarded.'
+    ],
+    closing: 'Test, ship, and scale your AI product with Gonka Router.',
+    applyTitle: 'Apply for more credits',
+    applyCopy: 'Send the registered email and a short note about what you are building with Gonka Router.',
+    emailLabel: 'Registered email',
+    emailPlaceholder: 'you@example.com',
+    notesLabel: 'Build notes',
+    notesPlaceholder: 'Tell us what you are building, which model you use, and where extra credits would help.',
+    submit: 'Submit request',
+    sending: 'Sending…',
+    errorBanner: 'Something went wrong. Please try again.',
+    successTitle: 'Request sent.',
+    successCopy: 'The team will review your application soon.',
+    submitAnother: 'Submit another →',
+    errEmailRequired: 'Email is required.',
+    errEmailInvalid: 'Please enter a valid email address.',
+    errNotesRequired: 'Build notes are required.',
+    errNotesShort: 'Please add at least 10 characters.'
+  },
+  ja: {
+    langLabel: 'English',
+    back: 'GonkaRouter に戻る',
+    badge: 'WebX Japan',
+    h1: 'WebX Japan で Gonka Router を使って AI を構築しよう',
+    subheadTitle: 'Gonka で構築して、最大 $40 のクレジットを獲得',
+    subheadCopy: 'Gonka Router で構築を始めると、最大 $40 分の無料推論クレジットがもらえます。',
+    register: '登録する',
+    applyCta: 'クレジットを追加申請',
+    creditRules: [
+      '登録して API キーを作成し、最初の実際の API 呼び出しを完了すると $20 を獲得できます。',
+      '2026/7/13 から 2026/7/31 の期間中に Gonka Router を積極的に利用すると、さらに $20 を獲得できます。',
+      'Gonka Router を推論プロバイダーの一つとして使い続けると、30日・60日・90日の各マイルストーンでさらにクレジットを獲得できます。',
+      '本気のビルダーには報酬が与えられます。'
+    ],
+    closing: 'Gonka Router で AI プロダクトをテストし、リリースし、スケールしよう。',
+    applyTitle: 'クレジットを追加申請',
+    applyCopy: '登録済みのメールアドレスと、Gonka Router で何を構築しているかの簡単なメモをお送りください。',
+    emailLabel: '登録済みメールアドレス',
+    emailPlaceholder: 'you@example.com',
+    notesLabel: '開発メモ',
+    notesPlaceholder: '何を構築しているか、どのモデルを使っているか、追加クレジットがどこで役立つかを教えてください。',
+    submit: '申請を送信',
+    sending: '送信中…',
+    errorBanner: '問題が発生しました。もう一度お試しください。',
+    successTitle: '申請を送信しました。',
+    successCopy: 'チームが近日中に申請内容を確認します。',
+    submitAnother: 'もう一度送信 →',
+    errEmailRequired: 'メールアドレスは必須です。',
+    errEmailInvalid: '有効なメールアドレスを入力してください。',
+    errNotesRequired: '開発メモは必須です。',
+    errNotesShort: '10文字以上入力してください。'
+  }
+}
+
+const lang = ref('en')
+const t = computed(() => messages[lang.value])
+const toggleLang = () => {
+  lang.value = lang.value === 'en' ? 'ja' : 'en'
+}
 
 // ---- Apply form (reuses the /feedback API endpoint) ----
 const defaultForm = () => ({ email: '', message: '' })
@@ -162,14 +238,14 @@ const apiBase = (config.public.apiBase || '').replace(/\/$/, '')
 const validate = () => {
   const e = {}
   if (!form.email.trim()) {
-    e.email = 'Email is required.'
+    e.email = t.value.errEmailRequired
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    e.email = 'Please enter a valid email address.'
+    e.email = t.value.errEmailInvalid
   }
   if (!form.message.trim()) {
-    e.message = 'Build notes are required.'
+    e.message = t.value.errNotesRequired
   } else if (form.message.trim().length < 10) {
-    e.message = 'Please add at least 10 characters.'
+    e.message = t.value.errNotesShort
   }
   return e
 }
@@ -259,6 +335,33 @@ const resetForm = () => {
   letter-spacing: -0.03em;
   color: var(--wx-accent);
   text-decoration: none;
+}
+.webx-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.webx-lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: rgba(247, 247, 247, 0.68);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.webx-lang:hover {
+  color: var(--wx-text);
+  border-color: rgba(0, 255, 163, 0.4);
 }
 .webx-back {
   display: inline-flex;
