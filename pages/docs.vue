@@ -88,13 +88,19 @@
           class="bg-surface-container-high border border-white/5 rounded-3xl p-5 sm:p-8 space-y-5"
         >
           <p class="text-sm sm:text-base text-text-muted leading-relaxed">
-            Before wiring up an SDK, paste the curl below into a terminal — substitute
-            your real key for <code class="font-mono text-primary-container">$KEY</code>.
-            If you get back a <code class="font-mono">200</code> with a
+            Before wiring up an SDK, run the snippet below in a terminal — pick your OS
+            tab and substitute your real key. If you get back a
+            <code class="font-mono">200</code> with a
             <code class="font-mono">content[].text</code> field, every other example
             on this page will work too.
           </p>
-          <DocsCodeBlock filename="smoke-test.sh" :code="smokeCurl" />
+          <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+            On Windows, pick the <span class="font-bold text-text-main">Windows (cmd)</span> tab
+            and run it in the Command Prompt (<code class="font-mono">cmd</code>) —
+            <code class="font-mono">curl.exe</code> ships with Windows 10 and later, so no
+            extra install is needed.
+          </p>
+          <DocsCodeBlock :variants="smokeCurl" />
           <div
             class="bg-surface-container-highest/40 border border-white/5 border-l-2 border-l-primary-container/50 rounded-2xl p-4 sm:p-5 space-y-2"
           >
@@ -223,7 +229,7 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               5. Raw curl reference
             </p>
-            <DocsCodeBlock filename="messages.sh" :code="claudeCurl" />
+            <DocsCodeBlock :variants="claudeCurl" />
           </div>
         </div>
 
@@ -397,12 +403,32 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               2. Launch with an isolated HOME (recommended)
             </p>
-            <DocsCodeBlock filename="run-claude.sh" :code="claudeCodeRun" />
+            <DocsCodeBlock :variants="claudeCodeRun" />
             <p class="text-xs text-text-muted leading-relaxed">
               Use this exact incantation when you want Claude Code to route
               <span class="font-bold">cleanly through GonkaRouter</span> without
               touching your existing Anthropic OAuth session.
             </p>
+            <div
+              class="bg-amber-500/[0.04] border border-amber-500/20 rounded-2xl p-4 sm:p-5 space-y-2"
+            >
+              <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400/90 flex items-center gap-2">
+                <LucideTriangleAlert class="w-3.5 h-3.5" />
+                Only if you prefer PowerShell — "running scripts is disabled on this system"
+              </p>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                The cmd steps above run <code class="font-mono">claude</code> fine. But if you
+                launch it from <span class="font-bold">PowerShell</span> instead, npm's
+                <code class="font-mono">claude.ps1</code> is blocked by default
+                (<code class="font-mono">Restricted</code> execution policy). Run this
+                <span class="font-bold">once</span> to allow local scripts for your own user:
+              </p>
+              <DocsCodeBlock
+                filename="allow-scripts.ps1"
+                code="Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+# answer Y when prompted. (In cmd you don't need this at all.)"
+              />
+            </div>
           </div>
 
           <!-- Why each var -->
@@ -455,7 +481,7 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               3. (Optional) Wrap it in a shell function so you don't retype every time
             </p>
-            <DocsCodeBlock filename="~/.zshrc (or ~/.bashrc)" :code="claudeCodeShellFn" />
+            <DocsCodeBlock :variants="claudeCodeShellFn" />
           </div>
 
           <!-- Gotchas -->
@@ -521,7 +547,7 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               1. Prerequisite — Node ≥ 22.12
             </p>
-            <DocsCodeBlock filename="prereq.sh" :code="openclawPrereq" />
+            <DocsCodeBlock :variants="openclawPrereq" />
             <p class="text-xs text-text-muted leading-relaxed">
               OpenClaw requires Node 22 LTS. If <code class="font-mono">node -v</code>
               shows v20.x you'll get <code class="font-mono">Node.js v22.12+ is required</code>
@@ -542,8 +568,8 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               3. Register the <code class="font-mono">gonka</code> provider
             </p>
-            <DocsCodeBlock filename="gonka-provider.json5" :code="openclawProvider" />
-            <DocsCodeBlock filename="apply.sh" :code="openclawApply" />
+            <DocsCodeBlock :variants="openclawProvider" />
+            <DocsCodeBlock :variants="openclawApply" />
             <p class="text-xs text-text-muted leading-relaxed">
               The patch validates against OpenClaw's JSON schema before writing, and the
               previous config is auto-backed up to
@@ -570,7 +596,7 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               5. Three ways to use it
             </p>
-            <DocsCodeBlock filename="run.sh" :code="openclawRun" />
+            <DocsCodeBlock :variants="openclawRun" />
             <p class="text-xs text-text-muted leading-relaxed">
               All three modes resolve <code class="font-mono">gonka/&lt;model-id&gt;</code>
               against your registered provider. The Dashboard's
@@ -698,17 +724,20 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import {
   LucideArrowLeft,
   LucideKey,
   LucideBookOpen,
-  LucideSend,
-  LucideMail,
   LucideTriangleAlert
 } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'landing' })
+
+// Shared OS selection for every DocsCodeBlock that carries per-OS variants.
+// 'unix' covers macOS + Linux (both bash/zsh); 'windows' is PowerShell.
+const docsOs = ref('unix')
+provide('docsOs', docsOs)
 
 const config = useRuntimeConfig()
 const apiBase = computed(() => config.public.apiBase || 'https://api.gonkarouter.io')
@@ -756,8 +785,12 @@ const tabs = [
 ]
 const activeTab = ref('claude')
 
-const smokeCurl = computed(
-  () => `KEY="sk-xxxxxx"   # paste your real key here
+const smokeCurl = computed(() => [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'smoke-test.sh',
+    code: `KEY="sk-xxxxxx"   # paste your real key here
 
 curl -s ${apiBase.value}/v1/messages \\
   -H "x-api-key: $KEY" \\
@@ -769,7 +802,19 @@ curl -s ${apiBase.value}/v1/messages \\
     "messages": [{"role":"user","content":"Reply with just: pong"}]
   }'
 `
-)
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'smoke-test.cmd',
+    code: `:: Command Prompt (cmd). curl.exe is built into Windows 10+.
+:: JSON quotes are escaped with \\" so cmd passes them through to curl.
+set KEY=sk-xxxxxx
+
+curl -s ${apiBase.value}/v1/messages -H "x-api-key: %KEY%" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"moonshotai/Kimi-K2.6\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Reply with just: pong\\"}]}"
+`
+  }
+])
 
 const claudeInstall = `# Python
 pip install "anthropic>=0.40"
@@ -860,8 +905,12 @@ console.log("\\nusage:", finalMsg.usage);
 `
 )
 
-const claudeCurl = computed(
-  () => `curl ${apiBase.value}/v1/messages \\
+const claudeCurl = computed(() => [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'messages.sh',
+    code: `curl ${apiBase.value}/v1/messages \\
   -H "x-api-key: sk-xxxxxx" \\
   -H "anthropic-version: 2023-06-01" \\
   -H "content-type: application/json" \\
@@ -875,7 +924,18 @@ const claudeCurl = computed(
 
 # Streaming variant — add "stream": true to the JSON body and pipe to a parser.
 `
-)
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'messages.cmd',
+    code: `:: Command Prompt (cmd). curl.exe ships with Windows 10+.
+curl ${apiBase.value}/v1/messages -H "x-api-key: sk-xxxxxx" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"moonshotai/Kimi-K2.6\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Hello!\\"}]}"
+
+:: Streaming variant — add \\"stream\\":true to the JSON body and pipe to a parser.
+`
+  }
+])
 
 const cursorValues = computed(
   () => `# Paste these EXACT values into Cursor → Settings → Models
@@ -892,8 +952,12 @@ const claudeCodeInstall = `npm install -g @anthropic-ai/claude-code
 claude --version    # → 1.x.x
 `
 
-const claudeCodeRun = computed(
-  () => `# 1. Create an isolated HOME so Claude Code does NOT pick up your existing
+const claudeCodeRun = computed(() => [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'run-claude.sh',
+    code: `# 1. Create an isolated HOME so Claude Code does NOT pick up your existing
 #    ~/.claude/credentials OAuth session and silently ignore the env vars below.
 mkdir -p /tmp/gonka-claude-home
 
@@ -906,10 +970,37 @@ ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6 \\
 DISABLE_PROMPT_CACHING=1 \\
 claude
 `
-)
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'run-claude.cmd',
+    code: `:: Command Prompt (cmd). On Windows the credentials store lives under
+:: %USERPROFILE%, so isolate it by pointing USERPROFILE at a throwaway folder.
+:: 1. Create an isolated profile dir so Claude Code does NOT pick up your
+::    existing OAuth session and silently ignore the env vars below.
+set USERPROFILE=%TEMP%\\gonka-claude-home
+mkdir "%USERPROFILE%" 2>nul
 
-const claudeCodeShellFn = computed(
-  () => `gonka-claude() {
+:: 2. Set env vars for this session (no spaces around =, no quotes on values),
+::    then launch inside your project directory.
+set ANTHROPIC_BASE_URL=${apiBase.value}
+set ANTHROPIC_AUTH_TOKEN=sk-xxxxxx
+set ANTHROPIC_MODEL=moonshotai/Kimi-K2.6
+set ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6
+set DISABLE_PROMPT_CACHING=1
+
+claude
+`
+  }
+])
+
+const claudeCodeShellFn = computed(() => [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: '~/.zshrc (or ~/.bashrc)',
+    code: `gonka-claude() {
   HOME=/tmp/gonka-claude-home \\
   ANTHROPIC_BASE_URL=${apiBase.value} \\
   ANTHROPIC_AUTH_TOKEN="\${GONKA_API_KEY:?set GONKA_API_KEY in your shell}" \\
@@ -921,22 +1012,70 @@ const claudeCodeShellFn = computed(
 
 # then in any project: \`gonka-claude\`
 `
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'gonka-claude.cmd (save on your PATH)',
+    code: `:: cmd has no shell functions — save this as gonka-claude.cmd in a folder
+:: that's on your PATH (e.g. %USERPROFILE%\\bin), then run "gonka-claude" anywhere.
+@echo off
+if "%GONKA_API_KEY%"=="" (
+  echo set GONKA_API_KEY first, e.g.  set GONKA_API_KEY=sk-xxxxxx
+  exit /b 1
 )
+set USERPROFILE=%TEMP%\\gonka-claude-home
+mkdir "%USERPROFILE%" 2>nul
+set ANTHROPIC_BASE_URL=${apiBase.value}
+set ANTHROPIC_AUTH_TOKEN=%GONKA_API_KEY%
+set ANTHROPIC_MODEL=moonshotai/Kimi-K2.6
+set ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6
+set DISABLE_PROMPT_CACHING=1
+claude %*
+`
+  }
+])
 
-const openclawPrereq = `# OpenClaw requires Node.js ≥ 22.12 (LTS).
+const openclawPrereq = [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'prereq.sh',
+    code: `# OpenClaw requires Node.js ≥ 22.12 (LTS).
 # If you use nvm:
 nvm install 22
 nvm use 22
 nvm alias default 22
 node -v          # → v22.x.x
 `
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'prereq.cmd',
+    code: `:: OpenClaw requires Node.js ≥ 22.12 (LTS).
+:: Easiest: install via winget (or grab the LTS installer from nodejs.org).
+winget install OpenJS.NodeJS.LTS
+
+:: If you use nvm-windows (https://github.com/coreybutler/nvm-windows):
+nvm install 22.12.0
+nvm use 22.12.0
+
+node -v          :: -> v22.x.x
+`
+  }
+]
 
 const openclawInstall = `npm install -g openclaw
 openclaw --version   # → OpenClaw 2026.x.x
 `
 
-const openclawProvider = computed(
-  () => `// Save as /tmp/gonka-provider.json5
+const openclawProvider = computed(() => [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'gonka-provider.json5',
+    code: `// Save as /tmp/gonka-provider.json5
 {
   models: {
     providers: {
@@ -953,9 +1092,37 @@ const openclawProvider = computed(
   }
 }
 `
-)
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'gonka-provider.json5',
+    code: `// Save as %TEMP%\\gonka-provider.json5
+{
+  models: {
+    providers: {
+      gonka: {
+        baseUrl: "${apiBase.value}",
+        apiKey: "sk-xxxxxx",              // your GonkaRouter key
+        auth: "api-key",
+        api: "anthropic-messages",
+        models: [
+          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" }
+        ]
+      }
+    }
+  }
+}
+`
+  }
+])
 
-const openclawApply = `# Dry-run validates the patch against the JSON schema:
+const openclawApply = [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'apply.sh',
+    code: `# Dry-run validates the patch against the JSON schema:
 openclaw config patch --file /tmp/gonka-provider.json5 --dry-run
 
 # Apply for real:
@@ -964,6 +1131,22 @@ openclaw config patch --file /tmp/gonka-provider.json5
 # Confirm it landed (apiKey shows as __OPENCLAW_REDACTED__ — that's fine):
 openclaw config get models.providers.gonka
 `
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'apply.cmd',
+    code: `:: Dry-run validates the patch against the JSON schema:
+openclaw config patch --file "%TEMP%\\gonka-provider.json5" --dry-run
+
+:: Apply for real:
+openclaw config patch --file "%TEMP%\\gonka-provider.json5"
+
+:: Confirm it landed (apiKey shows as __OPENCLAW_REDACTED__ — that's fine):
+openclaw config get models.providers.gonka
+`
+  }
+]
 
 const openclawDaemon = `openclaw config set gateway.mode local
 openclaw daemon restart
@@ -975,7 +1158,12 @@ openclaw gateway status
 # → Listening: 127.0.0.1:18789
 `
 
-const openclawRun = `# A. One-shot call (best for scripts / CI)
+const openclawRun = [
+  {
+    os: 'unix',
+    label: 'macOS / Linux',
+    filename: 'run.sh',
+    code: `# A. One-shot call (best for scripts / CI)
 openclaw infer model run \\
   --model "gonka/moonshotai/Kimi-K2.6" \\
   --prompt "Reply with just: pong" \\
@@ -987,4 +1175,23 @@ openclaw chat --local
 # C. Web Dashboard
 openclaw            # opens http://127.0.0.1:18789/ with an auth-included URL
 `
+  },
+  {
+    os: 'windows',
+    label: 'Windows (cmd)',
+    filename: 'run.cmd',
+    code: `:: A. One-shot call (best for scripts / CI). cmd uses ^ for line-continuation.
+openclaw infer model run ^
+  --model "gonka/moonshotai/Kimi-K2.6" ^
+  --prompt "Reply with just: pong" ^
+  --json
+
+:: B. Interactive terminal UI
+openclaw chat --local
+
+:: C. Web Dashboard
+openclaw            :: opens http://127.0.0.1:18789/ with an auth-included URL
+`
+  }
+]
 </script>
