@@ -39,6 +39,25 @@
 
           <h1 class="post-title">{{ post.title }}</h1>
           <p class="post-excerpt">{{ post.excerpt }}</p>
+
+          <!-- Share -->
+          <div class="post-share" role="group" aria-label="Share this article">
+            <span class="share-label">Share</span>
+            <a class="share-btn" :href="shareX" target="_blank" rel="noopener" aria-label="Share on X">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+            <a class="share-btn" :href="shareLinkedIn" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+              </svg>
+            </a>
+            <button class="share-btn" type="button" aria-label="Copy link" @click="copyLink">
+              <LucideCheck v-if="copied" class="w-[15px] h-[15px]" />
+              <LucideLink v-else class="w-[15px] h-[15px]" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -55,6 +74,25 @@
         </nav>
 
         <div class="prose" v-html="renderedContent" />
+
+        <!-- Share (end of article) -->
+        <div class="post-share post-share-end" role="group" aria-label="Share this article">
+          <span class="share-label">Enjoyed this? Share it</span>
+          <a class="share-btn" :href="shareX" target="_blank" rel="noopener" aria-label="Share on X">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+          <a class="share-btn" :href="shareLinkedIn" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+            </svg>
+          </a>
+          <button class="share-btn" type="button" aria-label="Copy link" @click="copyLink">
+            <LucideCheck v-if="copied" class="w-[15px] h-[15px]" />
+            <LucideLink v-else class="w-[15px] h-[15px]" />
+          </button>
+        </div>
 
         <!-- Related posts (internal links) -->
         <section v-if="relatedPosts.length" class="related-blogs" aria-label="Related posts">
@@ -84,7 +122,7 @@
 
 <script setup lang="ts">
 import { marked } from 'marked'
-import { LucideArrowLeft } from 'lucide-vue-next'
+import { LucideArrowLeft, LucideLink, LucideCheck } from 'lucide-vue-next'
 import { BLOG_AUTHOR, authorSameAs } from '~/composables/useBlogAuthor'
 
 definePageMeta({ layout: 'landing' })
@@ -299,6 +337,33 @@ const tagStyle = (tag: string) => {
     Agents: 'tag-agents',
   }
   return map[tag] ?? 'tag-default'
+}
+
+// ── Share ───────────────────────────────────────────────────────────────────
+// X uses the intent/post endpoint (url + text); the rich card preview is driven
+// by the page's og:image (see useSeoMeta above). LinkedIn only takes the URL —
+// it fetches title/description/image from the page's OpenGraph tags itself.
+const shareUrl = `${siteUrl}/blog/${slug}`
+const shareText = post?.title ?? 'GonkaRouter Blog'
+const shareX = computed(
+  () => `https://x.com/intent/post?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
+)
+const shareLinkedIn = computed(
+  () => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+)
+
+const copied = ref(false)
+let copyTimer: ReturnType<typeof setTimeout> | null = null
+const copyLink = async () => {
+  try {
+    await navigator.clipboard.writeText(shareUrl)
+    copied.value = true
+    if (copyTimer) clearTimeout(copyTimer)
+    copyTimer = setTimeout(() => (copied.value = false), 2000)
+  } catch {
+    // Clipboard API can be blocked (insecure context); silently ignore —
+    // the X/LinkedIn buttons still work.
+  }
 }
 </script>
 
@@ -599,6 +664,49 @@ a.post-author-inline:hover { color: var(--color-primary-container); text-decorat
 .post-toc a:hover { color: var(--color-primary-container); }
 .prose :deep(h2),
 .prose :deep(h3) { scroll-margin-top: 90px; }
+
+/* ── Share ─────────────────────────────────────────────────────────────────── */
+.post-share {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 1.75rem;
+}
+.share-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-right: 2px;
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.share-btn:hover {
+  color: var(--color-primary-container);
+  border-color: rgba(0, 255, 163, 0.4);
+  background: rgba(0, 255, 163, 0.06);
+  transform: translateY(-1px);
+}
+/* End-of-article variant: separated by a top divider, stacks label above on wrap */
+.post-share-end {
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
 /* ── Related blogs ─────────────────────────────────────────────────────────── */
 .related-blogs {
   margin-top: 3.5rem;
