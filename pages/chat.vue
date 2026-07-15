@@ -640,6 +640,19 @@ async function sendMessage() {
     const decoder = new TextDecoder()
     let done = false
     let buffer = ''
+    // Reasoning-model support: MiniMax/Kimi stream chain-of-thought in
+    // delta.reasoning (a separate field from delta.content). We wrap the
+    // reasoning stream in <think>…</think> so parseThink() renders it as a
+    // collapsible "Reasoning" block. Without this, a request that spends all
+    // its tokens reasoning (e.g. a long arithmetic prompt) shows a blank
+    // reply because delta.content never arrives.
+    let reasoningOpen = false
+    const closeReasoning = () => {
+      if (reasoningOpen) {
+        messages.value[activeMessageIndex].content += '</think>'
+        reasoningOpen = false
+      }
+    }
 
     while (!done) {
       const { value, done: readerDone } = await reader.read()
@@ -663,8 +676,25 @@ async function sendMessage() {
 
               const parsed = JSON.parse(jsonStr)
               if (parsed.choices && parsed.choices.length > 0) {
-                const content = parsed.choices[0]?.delta?.content
-                if (content !== undefined && content !== null) {
+                const delta = parsed.choices[0]?.delta || {}
+                const reasoning = delta.reasoning ?? delta.reasoning_content
+                const content = delta.content
+
+                // Reasoning tokens arrive first on reasoning models. Open a
+                // <think> block on the first reasoning delta and keep appending.
+                if (reasoning !== undefined && reasoning !== null && reasoning !== '') {
+                  if (!reasoningOpen) {
+                    messages.value[activeMessageIndex].content += '<think>'
+                    reasoningOpen = true
+                  }
+                  messages.value[activeMessageIndex].content += reasoning
+                  scrollToBottom()
+                }
+
+                // First real content delta means reasoning is done — close the
+                // <think> block before appending the answer.
+                if (content !== undefined && content !== null && content !== '') {
+                  closeReasoning()
                   messages.value[activeMessageIndex].content += content
                   scrollToBottom()
                 }
@@ -676,6 +706,11 @@ async function sendMessage() {
         }
       }
     }
+
+    // Stream ended. If the model produced only reasoning and never emitted a
+    // content delta (e.g. it exhausted tokens mid-thought), close the dangling
+    // <think> block so the reasoning is still rendered instead of a blank reply.
+    closeReasoning()
 
     // Plan-a write-back: persist this completed turn once the stream finishes.
     // Only when we have a conversation and a non-empty assistant reply. Failure

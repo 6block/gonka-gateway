@@ -194,4 +194,14 @@ async function onClick(e: MouseEvent) {
   padding: 0;
   border: 0;
 }
+
+/* KaTeX math — let long display equations scroll instead of overflowing the
+   bubble, and give block math a little breathing room. */
+.markdown-body .katex-display {
+  margin: 0.6rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2rem 0;
+}
+.markdown-body .katex { font-size: 1.05em; }
 </style>

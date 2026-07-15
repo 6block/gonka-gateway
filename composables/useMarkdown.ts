@@ -1,12 +1,14 @@
 import { Marked } from 'marked'
 import { markedHighlight } from 'marked-highlight'
+import markedKatex from 'marked-katex-extension'
 import hljs from 'highlight.js/lib/common'
 
 // Renders assistant chat messages (untrusted LLM output) from Markdown to safe
-// HTML: marked for parsing, highlight.js for code blocks, DOMPurify for XSS
-// sanitisation. Sanitisation needs a DOM, so rendering runs client-side only;
-// on the server we return escaped plain text and the client re-renders on
-// hydration (chat is a logged-in, client-fetched view, so there is no SEO cost).
+// HTML: marked for parsing, highlight.js for code blocks, KaTeX for $…$ / $$…$$
+// math, DOMPurify for XSS sanitisation. Sanitisation needs a DOM, so rendering
+// runs client-side only; on the server we return escaped plain text and the
+// client re-renders on hydration (chat is a logged-in, client-fetched view, so
+// there is no SEO cost).
 
 let marked: Marked | null = null
 
@@ -24,6 +26,15 @@ function getMarked(): Marked {
           return code
         }
       }
+    })
+  )
+  // KaTeX: render $…$ inline and $$…$$ block math. throwOnError:false so a
+  // malformed expression from the model degrades to visible source instead of
+  // breaking the whole message.
+  marked.use(
+    markedKatex({
+      throwOnError: false,
+      nonStandard: true // also accept $…$ without the strict spacing rules
     })
   )
   marked.setOptions({
@@ -54,10 +65,13 @@ export function useMarkdown() {
     // Dynamic import keeps DOMPurify out of the SSR bundle and off the initial
     // client load until a message actually needs rendering.
     const DOMPurify = (await import('dompurify')).default
+    // KaTeX emits MathML plus positioned <span>s that rely on inline `style`,
+    // so we keep `style` (DOMPurify parses and sanitises CSS values — it strips
+    // js/behaviour, so this is safe) and enable the MathML profile. Event-handler
+    // attributes are still dropped by DOMPurify's defaults.
     return DOMPurify.sanitize(rawHtml, {
-      ADD_ATTR: ['target', 'rel'],
-      // Anchor safety: force external links to open safely.
-      FORBID_ATTR: ['style', 'onerror', 'onload']
+      USE_PROFILES: { html: true, mathMl: true },
+      ADD_ATTR: ['target', 'rel']
     })
   }
 
