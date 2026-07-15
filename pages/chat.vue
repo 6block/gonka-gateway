@@ -1,219 +1,339 @@
 <template>
-  <div class="h-full flex flex-col p-3 sm:p-4 lg:p-8 max-w-5xl mx-auto animate-fade-in relative w-full">
-    <div class="flex justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4 flex-wrap">
-      <div class="min-w-0">
-        <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">Chat</h1>
-        <p class="text-text-muted mt-1.5 sm:mt-2 font-body text-xs sm:text-sm">
-          Interact with frontier open-source models
-        </p>
-      </div>
-      <div
-        v-if="!auth.isLoggedIn"
-        class="inline-flex items-center gap-2 sm:gap-3 bg-surface-container-high border border-white/5 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shrink-0"
-      >
-        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
-        <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
-          Guest Mode
-        </span>
-        <button
-          @click="openLogin"
-          class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
-        >
-          Connect →
-        </button>
-      </div>
-    </div>
-
-    <!-- Messages -->
-    <div
-      class="flex-1 bg-surface-container-high rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 overflow-y-auto mb-4 sm:mb-5 flex flex-col space-y-4 sm:space-y-5 border border-white/5 custom-scrollbar min-h-0"
-      ref="chatContainer"
+  <div class="h-full flex animate-fade-in relative w-full overflow-hidden">
+    <!-- Conversation sidebar (logged-in only) -->
+    <aside
+      v-if="auth.isLoggedIn"
+      class="shrink-0 flex-col border-r border-white/5 bg-surface-container-high/40 transition-transform duration-300 z-30"
+      :class="[
+        'w-[260px]',
+        'lg:flex lg:relative lg:translate-x-0',
+        sidebarOpen
+          ? 'flex fixed inset-y-0 left-0 translate-x-0 shadow-2xl'
+          : 'hidden lg:flex'
+      ]"
     >
-      <div
-        v-if="messages.length === 0"
-        class="flex-1 flex flex-col items-center justify-center text-center min-h-[300px] space-y-6"
-      >
-        <div
-          class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center shadow-lg border border-white/5 animate-float"
-        >
-          <LucideMessageCircle class="w-8 h-8 text-primary-container" />
-        </div>
-        <div class="max-w-sm space-y-2">
-          <h3 class="text-lg font-headline font-bold tracking-tight text-text-main">
-            {{ auth.isLoggedIn ? 'Start a conversation' : 'Preview mode' }}
-          </h3>
-          <p class="text-text-muted text-sm font-body font-light leading-relaxed">
-            <template v-if="auth.isLoggedIn">
-              Initiate a session to evaluate reasoning depth and network latency.
-            </template>
-            <template v-else>
-              Sign in to send messages. You can still browse the interface
-              as a guest.
-            </template>
-          </p>
-        </div>
+      <div class="p-3 sm:p-4 flex flex-col h-full min-h-0">
         <button
-          v-if="!auth.isLoggedIn"
-          @click="openLogin"
-          class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-2.5 rounded-full font-black text-xs tracking-tight hover:shadow-glow-emerald transition-all active:scale-95"
+          @click="handleNewChat"
+          class="w-full inline-flex items-center justify-center gap-2 kinetic-gradient text-primary-on px-4 py-2.5 rounded-xl font-black text-xs tracking-tight hover:shadow-glow-emerald transition-all active:scale-95 mb-3 shrink-0"
         >
-          <LucideLogIn class="w-4 h-4" />
-          Sign In
+          <LucidePlus class="w-4 h-4" />
+          New chat
         </button>
-      </div>
 
-      <div
-        v-for="(msg, i) in messages"
-        :key="i"
-        class="flex w-full animate-slide-up"
-        :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
-      >
-        <div
-          class="flex items-start max-w-[90%] sm:max-w-[85%] md:max-w-[75%] gap-2 sm:gap-3"
-          :class="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
-        >
-          <!-- Avatar -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar -mx-1 px-1 space-y-1 min-h-0">
+          <p
+            v-if="chat.conversations.length === 0"
+            class="text-text-muted/60 text-[11px] font-body text-center px-2 py-6 leading-relaxed"
+          >
+            No conversations yet. Start chatting and your history appears here.
+          </p>
           <div
-            class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+            v-for="conv in chat.conversations"
+            :key="conv.id"
+            @click="handleSelectConversation(conv.id)"
+            class="group flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all border"
             :class="
-              msg.role === 'user'
-                ? 'bg-primary-container text-primary-on'
-                : 'bg-surface-container-highest text-primary-container'
+              chat.activeConversationId === conv.id
+                ? 'bg-primary-container/15 border-primary-container/40'
+                : 'border-transparent hover:bg-white/5'
             "
           >
-            <LucideUser v-if="msg.role === 'user'" class="w-4 h-4" />
-            <LucideBot v-else class="w-4 h-4" />
-          </div>
-
-          <!-- Bubble -->
-          <div
-            class="rounded-2xl sm:rounded-3xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-[15px] leading-relaxed break-words overflow-hidden transition-all"
-            :class="[
-              msg.role === 'user'
-                ? 'bg-primary-container text-primary-on font-black'
-                : 'bg-surface-container-highest text-text-main border border-white/5',
-              msg.isError
-                ? '!bg-red-500/10 !border-red-500/20 !text-red-400 font-medium'
-                : '',
-              !msg.content && isLoading && i === messages.length - 1 && msg.role === 'assistant'
-                ? 'flex items-center min-h-[48px]'
-                : ''
-            ]"
-          >
-            <div
-              v-if="msg.content"
-              class="whitespace-pre-wrap font-body max-w-full overflow-x-auto custom-scrollbar"
-            >{{ msg.role === 'assistant' ? msg.content.trimStart() : msg.content }}</div>
-            <div
-              v-else-if="
-                isLoading && i === messages.length - 1 && msg.role === 'assistant'
+            <LucideMessageSquare
+              class="w-3.5 h-3.5 shrink-0"
+              :class="
+                chat.activeConversationId === conv.id
+                  ? 'text-primary-container'
+                  : 'text-text-muted'
               "
-              class="flex items-center space-x-1.5 px-1"
+            />
+            <span
+              class="flex-1 min-w-0 truncate text-[13px] font-body"
+              :class="
+                chat.activeConversationId === conv.id
+                  ? 'text-text-main font-medium'
+                  : 'text-text-muted'
+              "
             >
-              <span
-                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
-              ></span>
-              <span
-                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
-                style="animation-delay: 0.15s"
-              ></span>
-              <span
-                class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
-                style="animation-delay: 0.3s"
-              ></span>
-            </div>
+              {{ conv.title }}
+            </span>
+            <button
+              @click.stop="handleDeleteConversation(conv.id)"
+              class="shrink-0 opacity-0 group-hover:opacity-100 text-text-muted hover:text-red-400 transition-all p-0.5"
+              title="Delete conversation"
+            >
+              <LucideTrash2 class="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </aside>
 
-    <!-- Input area -->
-    <div class="shrink-0 space-y-3 sm:space-y-4">
-      <!-- Model selector -->
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <span
-          class="text-[10px] font-black uppercase tracking-widest text-text-muted"
-        >
-          Model
-        </span>
-        <div class="flex flex-wrap gap-1.5 sm:gap-2">
+    <!-- Mobile drawer backdrop -->
+    <div
+      v-if="sidebarOpen && auth.isLoggedIn"
+      @click="sidebarOpen = false"
+      class="fixed inset-0 bg-black/50 z-20 lg:hidden"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Main chat column -->
+    <div class="flex-1 min-w-0 flex flex-col p-3 sm:p-4 lg:p-8 max-w-5xl mx-auto w-full">
+      <div class="flex justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4 flex-wrap">
+        <div class="min-w-0 flex items-center gap-3">
           <button
-            v-for="model in availableModels"
-            :key="model.id"
-            @click="selectedModel = model.id"
-            class="px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
-            :class="
-              selectedModel === model.id
-                ? 'bg-primary-container/20 border-primary-container text-primary-container shadow-lg shadow-primary-container/10'
-                : 'bg-surface-container-high border-white/5 text-text-muted hover:border-white/10 hover:bg-white/5'
-            "
+            v-if="auth.isLoggedIn"
+            @click="sidebarOpen = true"
+            class="lg:hidden shrink-0 p-2 -ml-1 rounded-xl bg-surface-container-high border border-white/5 text-text-muted hover:text-text-main transition-colors"
+            title="Conversations"
           >
-            {{ model.name }}
+            <LucideMenu class="w-4 h-4" />
+          </button>
+          <div class="min-w-0">
+            <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">Chat</h1>
+            <p class="text-text-muted mt-1.5 sm:mt-2 font-body text-xs sm:text-sm">
+              Interact with frontier open-source models
+            </p>
+          </div>
+        </div>
+        <div
+          v-if="!auth.isLoggedIn"
+          class="inline-flex items-center gap-2 sm:gap-3 bg-surface-container-high border border-white/5 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shrink-0"
+        >
+          <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" aria-hidden="true"></span>
+          <span class="text-[10px] font-black text-text-muted tracking-widest uppercase">
+            Guest Mode
+          </span>
+          <button
+            @click="openLogin"
+            class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+          >
+            Connect →
           </button>
         </div>
       </div>
 
-      <form @submit.prevent="sendMessage" class="relative group">
+      <!-- Messages -->
+      <div
+        class="flex-1 bg-surface-container-high rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 overflow-y-auto mb-4 sm:mb-5 flex flex-col space-y-4 sm:space-y-5 border border-white/5 custom-scrollbar min-h-0"
+        ref="chatContainer"
+      >
         <div
-          class="relative flex items-end bg-surface-container-high border border-white/5 rounded-2xl transition-all duration-300 focus-within:border-primary-container/40 focus-within:shadow-glow-emerald"
-          :class="{ 'opacity-70': !auth.isLoggedIn }"
+          v-if="messages.length === 0"
+          class="flex-1 flex flex-col items-center justify-center text-center min-h-[300px] space-y-6"
         >
-          <textarea
-            v-model="input"
-            @keydown.enter.prevent="handleEnter"
-            @input="adjustTextareaHeight"
-            ref="textareaRef"
-            :placeholder="
-              auth.isLoggedIn ? 'Type a message...' : 'Sign in to chat'
-            "
-            :disabled="!auth.isLoggedIn"
-            class="w-full bg-transparent border-none px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[52px] sm:min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
-            rows="1"
-            inputmode="text"
-            autocapitalize="sentences"
-            autocomplete="off"
-          ></textarea>
-          <div class="p-2 shrink-0 flex items-end mb-1">
-            <button
-              v-if="auth.isLoggedIn"
-              type="submit"
-              :disabled="!input.trim() || isLoading"
-              class="p-2.5 kinetic-gradient text-primary-on rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-glow-emerald"
-              title="Send (Enter)"
+          <div
+            class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center shadow-lg border border-white/5 animate-float"
+          >
+            <LucideMessageCircle class="w-8 h-8 text-primary-container" />
+          </div>
+          <div class="max-w-sm space-y-2">
+            <h3 class="text-lg font-headline font-bold tracking-tight text-text-main">
+              {{ auth.isLoggedIn ? 'Start a conversation' : 'Preview mode' }}
+            </h3>
+            <p class="text-text-muted text-sm font-body font-light leading-relaxed">
+              <template v-if="auth.isLoggedIn">
+                Initiate a session to evaluate reasoning depth and network latency.
+              </template>
+              <template v-else>
+                Sign in to send messages. You can still browse the interface
+                as a guest.
+              </template>
+            </p>
+          </div>
+          <button
+            v-if="!auth.isLoggedIn"
+            @click="openLogin"
+            class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-6 py-2.5 rounded-full font-black text-xs tracking-tight hover:shadow-glow-emerald transition-all active:scale-95"
+          >
+            <LucideLogIn class="w-4 h-4" />
+            Sign In
+          </button>
+        </div>
+
+        <div
+          v-for="(msg, i) in messages"
+          :key="i"
+          class="flex w-full animate-slide-up"
+          :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
+        >
+          <div
+            class="flex items-start max-w-[90%] sm:max-w-[85%] md:max-w-[75%] gap-2 sm:gap-3"
+            :class="msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
+          >
+            <!-- Avatar -->
+            <div
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 border border-white/5"
+              :class="
+                msg.role === 'user'
+                  ? 'bg-primary-container text-primary-on'
+                  : 'bg-surface-container-highest text-primary-container'
+              "
             >
-              <LucideSend class="w-4 h-4" />
-            </button>
-            <button
-              v-else
-              type="button"
-              @click="openLogin"
-              class="px-3 py-2 kinetic-gradient text-primary-on rounded-xl text-[11px] font-black tracking-widest uppercase flex items-center gap-1.5 hover:shadow-glow-emerald active:scale-95 transition-all"
-              title="Sign in"
+              <LucideUser v-if="msg.role === 'user'" class="w-4 h-4" />
+              <LucideBot v-else class="w-4 h-4" />
+            </div>
+
+            <!-- Bubble -->
+            <div
+              class="rounded-2xl sm:rounded-3xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-[15px] leading-relaxed break-words overflow-hidden transition-all"
+              :class="[
+                msg.role === 'user'
+                  ? 'bg-primary-container text-primary-on font-black'
+                  : 'bg-surface-container-highest text-text-main border border-white/5',
+                msg.isError
+                  ? '!bg-red-500/10 !border-red-500/20 !text-red-400 font-medium'
+                  : '',
+                !msg.content && isLoading && i === messages.length - 1 && msg.role === 'assistant'
+                  ? 'flex items-center min-h-[48px]'
+                  : ''
+              ]"
             >
-              <LucideLogIn class="w-3.5 h-3.5" />
-              Sign In
+              <!-- User message: plain -->
+              <div
+                v-if="msg.content && msg.role === 'user'"
+                class="whitespace-pre-wrap font-body max-w-full overflow-x-auto custom-scrollbar"
+              >{{ msg.content }}</div>
+
+              <!-- Assistant message: split reasoning (<think>) from answer -->
+              <template v-else-if="msg.content && msg.role === 'assistant'">
+                <div
+                  v-if="think(msg.content).reasoning"
+                  class="mb-2.5 last:mb-0"
+                >
+                  <button
+                    type="button"
+                    @click="toggleReasoning(i)"
+                    class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest text-text-muted hover:text-text-main transition-colors"
+                  >
+                    <LucideBrain class="w-3.5 h-3.5" />
+                    <span>{{ think(msg.content).thinking ? 'Thinking…' : 'Reasoning' }}</span>
+                    <LucideChevronRight
+                      class="w-3.5 h-3.5 transition-transform duration-200"
+                      :class="(expandedReasoning[i] || think(msg.content).thinking) ? 'rotate-90' : ''"
+                    />
+                  </button>
+                  <div
+                    v-if="expandedReasoning[i] || think(msg.content).thinking"
+                    class="mt-2 pl-3 border-l-2 border-white/10 text-text-muted whitespace-pre-wrap font-body text-[13px] leading-relaxed max-w-full overflow-x-auto custom-scrollbar"
+                  >{{ think(msg.content).reasoning }}</div>
+                </div>
+                <MarkdownMessage
+                  v-if="think(msg.content).answer"
+                  :content="think(msg.content).answer"
+                />
+              </template>
+              <div
+                v-else-if="
+                  isLoading && i === messages.length - 1 && msg.role === 'assistant'
+                "
+                class="flex items-center space-x-1.5 px-1"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+                ></span>
+                <span
+                  class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+                  style="animation-delay: 0.15s"
+                ></span>
+                <span
+                  class="w-1.5 h-1.5 bg-primary-container rounded-full animate-bounce"
+                  style="animation-delay: 0.3s"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div class="shrink-0 space-y-3 sm:space-y-4">
+        <!-- Model selector -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest text-text-muted"
+          >
+            Model
+          </span>
+          <div class="flex flex-wrap gap-1.5 sm:gap-2">
+            <button
+              v-for="model in availableModels"
+              :key="model.id"
+              @click="selectedModel = model.id"
+              class="px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
+              :class="
+                selectedModel === model.id
+                  ? 'bg-primary-container/20 border-primary-container text-primary-container shadow-lg shadow-primary-container/10'
+                  : 'bg-surface-container-high border-white/5 text-text-muted hover:border-white/10 hover:bg-white/5'
+              "
+            >
+              {{ model.name }}
             </button>
           </div>
         </div>
-      </form>
 
-      <div class="hidden sm:block text-center text-[11px] text-text-muted font-medium">
-        Press
-        <kbd
-          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
-          >Enter</kbd
-        >
-        to send,
-        <kbd
-          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
-          >Shift</kbd
-        >
-        +
-        <kbd
-          class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
-          >Enter</kbd
-        >
-        for new line
+        <form @submit.prevent="sendMessage" class="relative group">
+          <div
+            class="relative flex items-end bg-surface-container-high border border-white/5 rounded-2xl transition-all duration-300 focus-within:border-primary-container/40 focus-within:shadow-glow-emerald"
+            :class="{ 'opacity-70': !auth.isLoggedIn }"
+          >
+            <textarea
+              v-model="input"
+              @keydown.enter.prevent="handleEnter"
+              @input="adjustTextareaHeight"
+              ref="textareaRef"
+              :placeholder="
+                auth.isLoggedIn ? 'Type a message...' : 'Sign in to chat'
+              "
+              :disabled="!auth.isLoggedIn"
+              class="w-full bg-transparent border-none px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-[15px] text-text-main focus:outline-none resize-none max-h-[200px] min-h-[52px] sm:min-h-[56px] custom-scrollbar placeholder:text-text-muted/60 font-body disabled:cursor-not-allowed"
+              rows="1"
+              inputmode="text"
+              autocapitalize="sentences"
+              autocomplete="off"
+            ></textarea>
+            <div class="p-2 shrink-0 flex items-end mb-1">
+              <button
+                v-if="auth.isLoggedIn"
+                type="submit"
+                :disabled="!input.trim() || isLoading"
+                class="p-2.5 kinetic-gradient text-primary-on rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-glow-emerald"
+                title="Send (Enter)"
+              >
+                <LucideSend class="w-4 h-4" />
+              </button>
+              <button
+                v-else
+                type="button"
+                @click="openLogin"
+                class="px-3 py-2 kinetic-gradient text-primary-on rounded-xl text-[11px] font-black tracking-widest uppercase flex items-center gap-1.5 hover:shadow-glow-emerald active:scale-95 transition-all"
+                title="Sign in"
+              >
+                <LucideLogIn class="w-3.5 h-3.5" />
+                Sign In
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="hidden sm:block text-center text-[11px] text-text-muted font-medium">
+          Press
+          <kbd
+            class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+            >Enter</kbd
+          >
+          to send,
+          <kbd
+            class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+            >Shift</kbd
+          >
+          +
+          <kbd
+            class="px-1.5 py-0.5 rounded-md bg-surface-container-highest border border-white/5 font-mono text-[10px]"
+            >Enter</kbd
+          >
+          for new line
+        </div>
       </div>
     </div>
   </div>
@@ -225,13 +345,20 @@ import {
   LucideMessageCircle,
   LucideUser,
   LucideBot,
-  LucideWallet,
-  LucideLogIn
+  LucideLogIn,
+  LucidePlus,
+  LucideMenu,
+  LucideMessageSquare,
+  LucideTrash2,
+  LucideBrain,
+  LucideChevronRight
 } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '~/stores/auth'
+import { useChatStore } from '~/stores/chat'
 import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
-import { ref, nextTick, watch } from 'vue'
+import { ref, reactive, nextTick, watch, onMounted } from 'vue'
 
 const seoConfig = useRuntimeConfig()
 const seoSiteUrl = seoConfig.public.siteUrl || 'https://gonkarouter.io'
@@ -250,13 +377,19 @@ useSeoMeta({
 useHead({ link: [{ rel: 'canonical', href: `${seoSiteUrl}/chat` }] })
 
 const auth = useAuthStore()
+const chat = useChatStore()
 const toast = useToast()
 const { open: openLogin } = useLoginModal()
-const messages = ref([])
+// messages lives in the chat store so it survives conversation switches; guests
+// still use it as plain in-memory state (no backend calls made for them).
+// storeToRefs keeps the local binding reactive across the store's reassignments
+// (fetchMessages / reset replace messages.value wholesale).
+const { messages } = storeToRefs(chat)
 const input = ref('')
 const isLoading = ref(false)
 const chatContainer = ref(null)
 const textareaRef = ref(null)
+const sidebarOpen = ref(false)
 const config = useRuntimeConfig()
 
 const availableModels = [
@@ -267,6 +400,111 @@ const availableModels = [
   // { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
 ]
 const selectedModel = ref(availableModels[0].id)
+
+// ── Conversation history ─────────────────────────────────────────────────────
+
+onMounted(async () => {
+  if (!auth.isLoggedIn) return
+  try {
+    await chat.fetchConversations()
+    // Restore the most recent conversation so a reload lands the user back in
+    // their last thread instead of a blank slate.
+    const latest = chat.conversations[0]
+    if (latest) await chat.fetchMessages(latest.id)
+  } catch (e) {
+    if (import.meta.dev) console.error('Failed to load conversations', e)
+  }
+})
+
+// Reset all history state on logout to prevent one account's threads from
+// bleeding into the next login.
+watch(
+  () => auth.isLoggedIn,
+  (loggedIn) => {
+    if (!loggedIn) {
+      chat.reset()
+      sidebarOpen.value = false
+    }
+  }
+)
+
+function handleNewChat() {
+  chat.startNewConversation()
+  sidebarOpen.value = false
+  input.value = ''
+}
+
+async function handleSelectConversation(id) {
+  if (chat.activeConversationId === id) {
+    sidebarOpen.value = false
+    return
+  }
+  try {
+    await chat.fetchMessages(id)
+    sidebarOpen.value = false
+    scrollToBottom()
+  } catch (e) {
+    if (import.meta.dev) console.error('Failed to load messages', e)
+    toast.error('Failed to load conversation')
+  }
+}
+
+async function handleDeleteConversation(id) {
+  try {
+    await chat.deleteConversation(id)
+  } catch (e) {
+    if (import.meta.dev) console.error('Failed to delete conversation', e)
+    toast.error('Failed to delete conversation')
+  }
+}
+
+// ── Reasoning (<think>) parsing ──────────────────────────────────────────────
+// Some models wrap their chain-of-thought in <think>…</think> before the real
+// answer; others emit none. Split an assistant message into the reasoning block
+// and the visible answer. Handles the streaming case where the closing tag has
+// not arrived yet (everything so far is still "thinking").
+function parseThink(content) {
+  if (!content) return { reasoning: '', answer: '', thinking: false }
+  const open = content.indexOf('<think>')
+  if (open === -1) {
+    return { reasoning: '', answer: content, thinking: false }
+  }
+  const afterOpen = content.slice(open + '<think>'.length)
+  const close = afterOpen.indexOf('</think>')
+  if (close === -1) {
+    // Still streaming the reasoning — no closing tag yet.
+    return {
+      reasoning: afterOpen.trimStart(),
+      answer: content.slice(0, open),
+      thinking: true
+    }
+  }
+  const reasoning = afterOpen.slice(0, close)
+  const answer = content.slice(0, open) + afterOpen.slice(close + '</think>'.length)
+  return { reasoning: reasoning.trim(), answer: answer.trim(), thinking: false }
+}
+
+// parseThink is pure and cheap, but it's read several times per message per
+// render. Cache per (content) so a re-render of an unchanged message is free.
+const thinkCache = new Map()
+function think(content) {
+  if (thinkCache.has(content)) return thinkCache.get(content)
+  const parsed = parseThink(content)
+  // Bound the cache so a long session doesn't grow it unbounded; streaming
+  // produces many transient keys.
+  if (thinkCache.size > 200) thinkCache.clear()
+  thinkCache.set(content, parsed)
+  return parsed
+}
+
+// Per-message expand state for the reasoning block, keyed by message index.
+// Collapsed by default; the streaming message auto-expands while it thinks.
+const expandedReasoning = reactive({})
+function toggleReasoning(i) {
+  expandedReasoning[i] = !expandedReasoning[i]
+}
+
+// ── Composer helpers ─────────────────────────────────────────────────────────
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -336,7 +574,8 @@ async function sendMessage() {
     return
   }
 
-  const userMsg = { role: 'user', content: input.value.trim() }
+  const userContent = input.value.trim()
+  const userMsg = { role: 'user', content: userContent }
   messages.value.push(userMsg)
   input.value = ''
   isLoading.value = true
@@ -353,6 +592,19 @@ async function sendMessage() {
     toast.error('Authentication required')
     scrollToBottom()
     return
+  }
+
+  // Ensure a backing conversation exists before we start streaming, so the
+  // write-back after the stream has a target id. A failure here shouldn't block
+  // the chat itself — we fall back to an unsaved (in-memory) turn.
+  let conversationId = chat.activeConversationId
+  if (!conversationId) {
+    try {
+      const conv = await chat.createConversation(userContent, selectedModel.value)
+      conversationId = conv.id
+    } catch (e) {
+      if (import.meta.dev) console.error('Failed to create conversation', e)
+    }
   }
 
   const assistantMsg = { role: 'assistant', content: '' }
@@ -424,6 +676,24 @@ async function sendMessage() {
         }
       }
     }
+
+    // Plan-a write-back: persist this completed turn once the stream finishes.
+    // Only when we have a conversation and a non-empty assistant reply. Failure
+    // is non-fatal — the message is already shown; we just warn.
+    const assistantContent = messages.value[activeMessageIndex].content
+    if (conversationId && assistantContent.trim()) {
+      try {
+        await chat.appendMessages(
+          conversationId,
+          userContent,
+          assistantContent,
+          selectedModel.value
+        )
+      } catch (e) {
+        if (import.meta.dev) console.error('Failed to save history', e)
+        toast.error('Reply shown but not saved to history')
+      }
+    }
   } catch (error) {
     if (import.meta.dev) console.error('Chat Error:', error)
     messages.value[activeMessageIndex].content = getUserFriendlyErrorMessage(error)
@@ -435,3 +705,4 @@ async function sendMessage() {
   }
 }
 </script>
+

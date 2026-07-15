@@ -57,7 +57,7 @@ export default defineNuxtConfig({
       '/**': { headers: securityHeaders }
     }
   },
-  css: ['~/assets/css/tokens.css'],
+  css: ['~/assets/css/tokens.css', 'highlight.js/styles/github-dark.css'],
   colorMode: {
     preference: 'dark',
     fallback: 'dark',
