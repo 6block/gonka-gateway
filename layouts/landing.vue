@@ -281,7 +281,7 @@
               </svg>
             </a>
             <a
-              href="https://www.linkedin.com/in/anna-jones-12510041a"
+              href="https://www.linkedin.com/in/carol-gao-71b158422/overlay/contact-info/"
               target="_blank"
               rel="noreferrer"
               class="text-text-muted hover:text-primary-container transition-all hover:scale-110"

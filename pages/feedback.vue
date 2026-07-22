@@ -296,7 +296,7 @@ const socials = [
   { label: 'X', handle: '@gonka_cn', url: 'https://x.com/gonka_cn?s=21', icon: XGlyph },
   { label: 'Telegram', handle: 't.me/gonka_cn', url: 'https://t.me/gonka_cn', icon: LucideSend },
   { label: 'YouTube', handle: '@GonkaRouter', url: 'https://www.youtube.com/@GonkaRouter', icon: YouTubeGlyph },
-  { label: 'LinkedIn', handle: 'Anna Jones', url: 'https://www.linkedin.com/in/anna-jones-12510041a', icon: LinkedInGlyph }
+  { label: 'LinkedIn', handle: 'Carol Gao', url: 'https://www.linkedin.com/in/carol-gao-71b158422/overlay/contact-info/', icon: LinkedInGlyph }
 ]
 
 const topics = ['API issue', 'Model behavior', 'Docs issue', 'Billing issue', 'Feature request', 'Other']
