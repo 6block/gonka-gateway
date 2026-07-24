@@ -122,11 +122,15 @@ export const useAuthStore = defineStore('auth', () => {
       throw new Error('loginWithGoogle() must be called from the browser')
     }
 
+    const signupSource = useSignupSource()
     const data = await $fetch<any>(`${apiBase()}/auth/google-login`, {
       method: 'POST',
-      body: { access_token: accessToken, channel: CHANNEL }
+      body: { access_token: accessToken, channel: CHANNEL, source: signupSource.get() }
     })
     if (!data || !data.token) throw new Error('No token returned')
+
+    // Attribution is consumed once the account exists; clear it either way.
+    signupSource.clear()
 
     token.value = data.token
     user.value = {
@@ -149,11 +153,15 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function verifyEmailCode(email: string, code: string) {
+    const signupSource = useSignupSource()
     const data = await $fetch<any>(`${apiBase()}/auth/email/verify`, {
       method: 'POST',
-      body: { email, channel: CHANNEL, code }
+      body: { email, channel: CHANNEL, code, source: signupSource.get() }
     })
     if (!data || !data.token) throw new Error('No token returned')
+
+    // Attribution is consumed once the account exists; clear it either way.
+    signupSource.clear()
 
     token.value = data.token
     user.value = {
