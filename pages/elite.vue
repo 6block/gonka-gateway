@@ -22,11 +22,11 @@
         <div class="el-hero-content">
           <div class="el-hero-top">
             <span class="el-badge hero-anim hero-fade" style="animation-delay: 0.15s">
-              <i class="el-badge-dot"></i>AI Research Elite Program
+              <i class="el-badge-dot"></i>8-Week Incubation · Hong Kong
             </span>
             <h1 class="el-h1">
-              <span class="hero-anim hero-reveal-line" style="animation-delay: 0.25s">Incubate The Next</span>
-              <span class="hero-anim hero-reveal-line" style="animation-delay: 0.4s"><span class="el-grad">AI Research Elite</span></span>
+              <span class="hero-anim hero-reveal-line" style="animation-delay: 0.25s">AI Investment Research</span>
+              <span class="hero-anim hero-reveal-line" style="animation-delay: 0.4s"><span class="el-grad">Elite Incubation Program</span></span>
             </h1>
             <p class="el-subtitle hero-anim hero-fade" style="animation-delay: 0.6s">
               8 Weeks Of Building, Powered By Free Inference Tokens
@@ -68,7 +68,7 @@
       <section class="el-wrap el-rewards">
         <div class="el-section-head">
           <span class="el-eyebrow">The Program</span>
-          <h2 class="el-section-title">How participants earn credits</h2>
+          <h2 class="el-section-title">What every participant gets</h2>
         </div>
         <div class="el-grid">
           <article v-for="(rule, i) in creditRules" :key="i" class="el-card">
@@ -176,10 +176,10 @@ const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 
 useSeoMeta({
-  title: 'AI Research Elite Program — Build on Gonka Router',
+  title: 'AI Investment Research Elite Incubation Program — Gonka Router',
   description:
     'An 8-week AI investment-research incubation with two Hong Kong summits. Participants build on Gonka Router with free inference token support.',
-  ogTitle: 'Incubate The Next AI Research Elite',
+  ogTitle: 'AI Investment Research Elite Incubation Program',
   ogDescription: '8 weeks of building, powered by free inference tokens on Gonka Router.',
   ogUrl: `${siteUrl}/elite`
 })
@@ -213,22 +213,22 @@ const creditRules = [
   {
     stage: 'Week 0',
     title: 'Join the program',
-    text: 'Register with your program email, create an API key, and complete your first real API call to get $20.'
+    text: 'Register with your program email and create an API key. Your free inference credits are ready on your first call.'
   },
   {
     stage: 'Week 1–8',
     title: 'Ship weekly missions',
-    text: 'Keep running your research workflows on Gonka Router through the weekly tasks to unlock another $20.'
+    text: 'Run your research workflows on Gonka Router throughout the weekly tasks — inference stays free for the whole program.'
   },
   {
     stage: 'Demo day',
     title: 'Show your work',
-    text: 'Present your AI research workflow or tool demo at the summits. Selected demos earn extra credits.'
+    text: 'Present your AI research workflow or tool demo at the summits. Selected demos receive additional free credits.'
   },
   {
     stage: 'Elite track',
     title: 'Go further',
-    text: 'Finalists move onto the elite track with dedicated credit support for turning the work into a real product.'
+    text: 'Finalists move onto the elite track with dedicated free credit support for turning the work into a real product.'
   }
 ]
 
@@ -523,6 +523,16 @@ onBeforeUnmount(() => {
 .el-hero-left {
   left: clamp(20px, 5vw, 56px);
 }
+/* The lead sits over the brightest part of the lava, where a text-shadow alone
+   is not enough. A soft, edge-less pool of shade restores contrast. */
+.el-hero-left::before {
+  content: '';
+  position: absolute;
+  inset: -28px -46px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(4, 3, 2, 0.72), transparent 72%);
+}
 .el-hero-right {
   right: clamp(20px, 5vw, 56px);
   display: flex;
@@ -579,8 +589,10 @@ onBeforeUnmount(() => {
   margin: 22px 0 0;
   font-family: 'Plus Jakarta Sans', Inter, sans-serif;
   font-weight: 800;
-  font-size: clamp(2.4rem, 1rem + 6vw, 5.2rem);
-  line-height: 0.98;
+  /* The full program name is long, so it runs smaller than a short campaign
+     headline would — two lines that still fit at 1440 and wrap cleanly below. */
+  font-size: clamp(1.85rem, 0.6rem + 4.2vw, 3.7rem);
+  line-height: 1.04;
   letter-spacing: -0.04em;
   text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
 }
