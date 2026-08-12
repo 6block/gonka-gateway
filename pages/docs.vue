@@ -23,8 +23,8 @@
           Integration Guide
         </h1>
         <p class="text-text-muted text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl">
-          Drop your GonkaRouter key into Claude SDKs, Cursor IDE, or OpenClaw in under
-          five minutes. Every snippet in this guide is tested end-to-end against
+          Drop your GonkaRouter key into Claude SDKs, Cursor IDE, OpenClaw, or WorkBuddy
+          in under five minutes. Every snippet in this guide is tested end-to-end against
           <code class="font-mono text-primary-container">{{ apiBase }}</code>.
         </p>
       </header>
@@ -656,6 +656,191 @@
             </ul>
           </div>
         </div>
+
+        <!-- WorkBuddy -->
+        <div
+          v-show="activeTab === 'workbuddy'"
+          class="bg-surface-container-high border border-white/5 rounded-3xl p-5 sm:p-8 space-y-6"
+        >
+          <div class="space-y-2">
+            <h3 class="text-lg sm:text-xl font-black font-headline tracking-tight">
+              WorkBuddy
+            </h3>
+            <p class="text-sm text-text-muted leading-relaxed">
+              WorkBuddy speaks the OpenAI Chat Completions API, so GonkaRouter plugs in
+              as a <span class="font-bold">Custom</span> provider. Verified against
+              WorkBuddy <code class="font-mono">v5.3.11</code>.
+            </p>
+          </div>
+
+          <!-- The one thing that trips everyone up -->
+          <div
+            class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 space-y-2"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400">
+              Read this first — the endpoint field takes the full path
+            </p>
+            <p class="text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+              Unlike every other client on this page, WorkBuddy's
+              <span class="font-bold">Interface URL</span> field is the
+              <span class="font-bold">complete endpoint</span>, not a base URL — it does
+              <span class="font-bold">not</span> append
+              <code class="font-mono">/chat/completions</code> for you. Paste the full
+              path or the request lands on the wrong route and the model errors out with
+              a bare <code class="font-mono">404 page not found</code>:
+            </p>
+            <ul class="space-y-1.5 text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+              <li>
+                <span class="text-red-300 font-black mr-1.5">✗</span>
+                <code class="font-mono">{{ apiBase }}</code> → posts to
+                <code class="font-mono">/</code> → 404
+              </li>
+              <li>
+                <span class="text-red-300 font-black mr-1.5">✗</span>
+                <code class="font-mono">{{ apiBase }}/v1</code> → posts to
+                <code class="font-mono">/v1</code> → 404
+              </li>
+              <li>
+                <span class="text-emerald-300 font-black mr-1.5">✓</span>
+                <code class="font-mono">{{ apiBase }}/v1/chat/completions</code>
+              </li>
+            </ul>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <DocsInfoCard
+              label="Interface URL"
+              :value="`${apiBase}/v1/chat/completions`"
+            />
+            <DocsInfoCard label="API Key" value="paste your sk-… key" />
+          </div>
+
+          <!-- Step by step -->
+          <div class="space-y-4">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Step-by-step
+            </p>
+            <ol class="space-y-4 text-sm text-text-muted leading-relaxed">
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">01</span>
+                <span>
+                  Open <span class="text-text-main font-bold">Settings → Models</span>
+                  and click <span class="text-text-main font-bold">Add Model</span>.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">02</span>
+                <span>
+                  Set <span class="text-text-main font-bold">Provider</span> to
+                  <span class="text-text-main font-bold">Custom</span>. The named
+                  entries in that dropdown (Kimi, MiniMax, Zhipu …) point at those vendors'
+                  own endpoints, not at your gateway.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">03</span>
+                <span>
+                  <span class="text-text-main font-bold">Interface URL</span> —
+                  paste
+                  <code class="font-mono text-primary-container">{{ apiBase }}/v1/chat/completions</code>
+                  in full, as explained above.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">04</span>
+                <span>
+                  <span class="text-text-main font-bold">API Key</span> — paste your
+                  <code class="font-mono">sk-…</code> key from the Dashboard.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">05</span>
+                <span>
+                  <span class="text-text-main font-bold">Model Name</span> —
+                  the model id exactly as listed on
+                  <NuxtLink to="/models" class="font-bold underline hover:text-text-main">Models</NuxtLink>,
+                  e.g. <code class="font-mono text-primary-container">MiniMaxAI/MiniMax-M2.7</code>
+                  or <code class="font-mono text-primary-container">moonshotai/Kimi-K2.6</code>.
+                  Case and slashes matter.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">06</span>
+                <span>
+                  Under <span class="text-text-main font-bold">Advanced</span>, tick the
+                  capabilities the model actually has — tool calling, image input,
+                  reasoning. These are independent capability switches, not a protocol
+                  picker, and none of them affect routing. Leave the context and output
+                  size fields blank to use provider defaults.
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <span class="font-black text-text-muted shrink-0 w-7 font-mono text-xs pt-0.5">07</span>
+                <span>
+                  <span class="text-text-main font-bold">Save</span>, start a new
+                  task, pick the model in the composer's model selector, and send a
+                  message.
+                </span>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Verify -->
+          <div class="space-y-3">
+            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Verify the endpoint before blaming the client
+            </p>
+            <DocsCodeBlock filename="verify.sh" :code="workbuddyVerify" />
+            <p class="text-xs text-text-muted leading-relaxed">
+              If this returns a completion but WorkBuddy still fails, the problem is in
+              the client config — recheck step 03 first.
+            </p>
+          </div>
+
+          <!-- Gotchas -->
+          <div
+            class="bg-amber-500/[0.04] border border-amber-500/20 rounded-2xl p-4 sm:p-5 space-y-3"
+          >
+            <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400/90 flex items-center gap-2">
+              <LucideTriangleAlert class="w-3.5 h-3.5" />
+              Gotchas
+            </p>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-text-muted leading-relaxed list-disc pl-5 marker:text-amber-500/40">
+              <li>
+                <span class="font-black text-text-main">A 404 here is almost always the URL.</span>
+                <code class="font-mono">404 page not found</code> is the router's
+                response to an unregistered path — it means the request reached us but
+                the path was wrong. An invalid key returns
+                <code class="font-mono">401</code>, and an unknown model returns
+                <code class="font-mono">400</code>, so neither of those looks like a 404.
+              </li>
+              <li>
+                <span class="font-black text-text-main">Output is capped at 4096 tokens.</span>
+                Long agent turns get cut off with
+                <code class="font-mono">MAX_TOKENS</code>. Omitting
+                <code class="font-mono">max_tokens</code> yields an even lower default of
+                3072, and asking for more than 4096 is silently clamped back down, so the
+                cap cannot be raised from the client. For reasoning models the thinking
+                tokens count toward it too. Ask for shorter replies, or continue the
+                turn after a truncation.
+              </li>
+              <li>
+                <span class="font-black text-text-main">Model ids differ per gateway plan.</span>
+                Vendor-prefixed ids like
+                <code class="font-mono">MiniMaxAI/MiniMax-M2.7</code> and short ids like
+                <code class="font-mono">kimi-k2.6</code> belong to different catalogs. Copy
+                whatever the <NuxtLink to="/models" class="font-bold underline hover:text-text-main">Models</NuxtLink>
+                page shows for your key.
+              </li>
+              <li>
+                <span class="font-black text-text-main">Requests are relayed by WorkBuddy's own backend.</span>
+                Calls arrive via WorkBuddy's SaaS layer rather than straight from your
+                machine, which is why its error reports carry two ids. When contacting
+                support, quote the Trace ID from the error card.
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <!-- Limits & Specifications -->
@@ -781,7 +966,8 @@ const tabs = [
   { id: 'claude', label: 'Claude SDK' },
   { id: 'cursor', label: 'Cursor IDE' },
   { id: 'claude-code', label: 'Claude Code' },
-  { id: 'openclaw', label: 'OpenClaw' }
+  { id: 'openclaw', label: 'OpenClaw' },
+  { id: 'workbuddy', label: 'WorkBuddy' }
 ]
 const activeTab = ref('claude')
 
@@ -1069,6 +1255,17 @@ node -v          :: -> v22.x.x
 const openclawInstall = `npm install -g openclaw
 openclaw --version   # → OpenClaw 2026.x.x
 `
+
+// Same full path WorkBuddy needs, so a passing curl proves the endpoint and key
+// are fine and narrows any remaining failure to the client config.
+const workbuddyVerify = computed(() => `curl ${apiBase.value}/v1/chat/completions \\
+  -H "Authorization: Bearer sk-xxxxxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "MiniMaxAI/MiniMax-M2.7",
+    "messages": [{"role": "user", "content": "ping"}]
+  }'
+`)
 
 const openclawProvider = computed(() => [
   {
