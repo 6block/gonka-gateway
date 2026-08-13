@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { useMarkdown } from '~/composables/useMarkdown'
 import { useToast } from '~/composables/useToast'
 
@@ -37,14 +37,49 @@ function decorateCodeBlocks(raw: string): string {
   ).replace(/<\/code><\/pre>/g, '</code></pre></div>')
 }
 
-watch(
-  () => props.content,
-  async (val) => {
+// Throttle rendering during streaming. props.content changes on every streamed
+// token; rendering the full accumulated Markdown each time (marked + highlight.js
+// + DOMPurify + full v-html swap) is O(N²) and freezes the tab on long code
+// output. Coalesce to at most one render per window, and always render the final
+// content so the settled message is never left half-rendered.
+const RENDER_THROTTLE_MS = 100
+let pending: string | null = null
+let timer: ReturnType<typeof setTimeout> | null = null
+let rendering = false
+
+async function flush() {
+  timer = null
+  if (rendering || pending === null) return
+  const val = pending
+  pending = null
+  rendering = true
+  try {
     const rendered = await render(val)
     html.value = decorateCodeBlocks(rendered)
+  } finally {
+    rendering = false
+    // Content advanced while we were awaiting render → schedule a trailing pass
+    // so the last tokens are not dropped.
+    if (pending !== null && timer === null) {
+      timer = setTimeout(flush, RENDER_THROTTLE_MS)
+    }
+  }
+}
+
+watch(
+  () => props.content,
+  (val: string) => {
+    pending = val
+    if (timer === null && !rendering) {
+      timer = setTimeout(flush, RENDER_THROTTLE_MS)
+    }
   },
   { immediate: true }
 )
+
+onUnmounted(() => {
+  if (timer) clearTimeout(timer)
+})
 
 // Event delegation for the injected copy buttons (v-html content has no Vue
 // listeners of its own).
