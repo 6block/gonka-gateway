@@ -24,7 +24,7 @@
             <span
               class="font-label text-xs tracking-widest uppercase text-secondary font-bold"
             >
-              Now Supporting MiniMax-M2.7
+              Now Supporting DeepSeek-V4-Flash
             </span>
           </div>
         </div>
@@ -381,7 +381,7 @@ import {
 const homeFaqs = [
   {
     q: 'What is GonkaRouter?',
-    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including Kimi-K2.6, MiniMax-M2.7, and more — with transparent per-token pricing and no monthly subscriptions.'
+    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including DeepSeek-V4-Flash, MiniMax-M2.7, Kimi-K2.6, and more — with transparent per-token pricing and no monthly subscriptions.'
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
@@ -397,7 +397,7 @@ const homeFaqs = [
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong>, <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
@@ -495,6 +495,13 @@ const features = [
 ]
 
 const featuredModels = [
+  {
+    id: 'deepseek',
+    label: 'DeepSeek-V4-Flash',
+    apiId: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+    tagline:
+      'Optimized DeepSeek-V4-Flash: The speed-tuned V4 variant — low-latency general chat, summarisation, and code assistance with reliable tool calling on the Gonka pipeline.'
+  },
   {
     id: 'minimax',
     label: 'MiniMax-M2.7',

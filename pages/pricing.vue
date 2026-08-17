@@ -219,6 +219,9 @@ const steps = [
 ]
 
 const models = [
+  // ctx measured against the live endpoint (260,010-token prompt accepted);
+  // awaiting the official figure from Gonka.
+  { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731', ctx: '262K' },
   { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' },
   { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6', ctx: '262K' }
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for

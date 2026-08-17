@@ -301,6 +301,7 @@ const socials = [
 
 const topics = ['API issue', 'Model behavior', 'Docs issue', 'Billing issue', 'Feature request', 'Other']
 const models = [
+  'deepseek-ai/DeepSeek-V4-Flash-0731',
   'MiniMaxAI/MiniMax-M2.7',
   'moonshotai/Kimi-K2.6',
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
@@ -313,7 +314,7 @@ const defaultForm = () => ({
   name: '',
   email: '',
   topic: '',
-  model: 'MiniMaxAI/MiniMax-M2.7',
+  model: 'deepseek-ai/DeepSeek-V4-Flash-0731',
   message: ''
 })
 

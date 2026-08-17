@@ -307,10 +307,55 @@ const MiniMaxIconImg = () =>
     ]
   )
 
+const DeepSeekIconImg = () =>
+  h(
+    'div',
+    {
+      class:
+        'relative w-12 h-12 shrink-0 rounded-xl bg-black flex items-center justify-center border border-white/10',
+      'aria-label': 'DeepSeek-V4-Flash'
+    },
+    [
+      h('span', { class: 'text-white font-black text-2xl font-headline leading-none' }, 'D'),
+      h('span', {
+        class: 'absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-blue-400'
+      })
+    ]
+  )
+
 // TEMP 2026-06-25: Qwen3-235B carries `hidden: true` while upstream Gonka takes
 // it offline for adjustment. The full card data is kept intact; to restore it
 // simply remove its `hidden: true` line.
 const allModels = [
+  {
+    id: 'deepseek-v4-flash-0731',
+    name: 'DeepSeek-V4-Flash',
+    apiId: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+    iconComponent: DeepSeekIconImg,
+    description:
+      'The speed-tuned member of the DeepSeek V4 line, built for high-throughput everyday work: fast general chat, summarisation, extraction, and code assistance at low latency. It answers directly rather than emitting a visible reasoning trace, which keeps responses compact and quick, and it drives tools reliably for agent workflows.',
+    // Verified by probe on 2026-08-13: a 260,010-token prompt was accepted.
+    // The true ceiling was not reached — pending confirmation from Gonka, this
+    // states the largest value actually measured rather than a guess.
+    maxOutput: '262K',
+    price: {
+      amount: '$0.0004',
+      unit: '1M tokens',
+      note: 'Same rate for input and output tokens'
+    },
+    tags: [
+      { label: 'chat', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
+      // Only capabilities confirmed against the live endpoint are listed:
+      // tool calling returned a well-formed tool_call, while image_url input
+      // was rejected upstream and no reasoning trace is produced.
+      {
+        label: 'Function',
+        icon: LucideTerminal,
+        color: 'bg-surface-container-highest text-text-muted border-white/5'
+      }
+    ],
+    date: '2026-07-31'
+  },
   {
     id: 'kimi-k2-6',
     name: 'Kimi-K2.6',

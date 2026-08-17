@@ -220,7 +220,7 @@
   -H <span class="text-tertiary">"Content-Type: application/json"</span> \
   -H <span class="text-tertiary">"Authorization: Bearer {{ apiKeyFull && showKey ? apiKeyFull : 'sk-xxxxxx' }}"</span> \
   -d <span class="text-tertiary">'{
-    "model": "MiniMaxAI/MiniMax-M2.7",
+    "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'</span></code></pre>
               </div>
@@ -340,7 +340,7 @@
   <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"list"</span>,
   <span class="text-primary-dim">"data"</span>: [
     {
-      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"MiniMaxAI/MiniMax-M2.7"</span>,
+      <span class="text-primary-dim">"id"</span>: <span class="text-tertiary">"deepseek-ai/DeepSeek-V4-Flash-0731"</span>,
       <span class="text-primary-dim">"object"</span>: <span class="text-tertiary">"model"</span>
     }
   ]
@@ -504,7 +504,7 @@ async function copyCurl() {
   const body = `curl -X POST ${config.public.apiBase}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${maskedKey()}" \\
-  -d '{"model":"moonshotai/Kimi-K2.6","messages":[{"role":"user","content":"Hello!"}]}'`
+  -d '{"model":"deepseek-ai/DeepSeek-V4-Flash-0731","messages":[{"role":"user","content":"Hello!"}]}'`
   try {
     await navigator.clipboard.writeText(body)
     toast.success('cURL command copied')
