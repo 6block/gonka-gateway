@@ -333,11 +333,13 @@ const allModels = [
     apiId: 'deepseek-ai/DeepSeek-V4-Flash-0731',
     iconComponent: DeepSeekIconImg,
     description:
-      'The speed-tuned member of the DeepSeek V4 line, built for high-throughput everyday work: fast general chat, summarisation, extraction, and code assistance at low latency. It answers directly rather than emitting a visible reasoning trace, which keeps responses compact and quick, and it drives tools reliably for agent workflows.',
-    // Verified by probe on 2026-08-13: a 260,010-token prompt was accepted.
-    // The true ceiling was not reached — pending confirmation from Gonka, this
-    // states the largest value actually measured rather than a guess.
-    maxOutput: '262K',
+      'The speed-tuned member of the DeepSeek V4 line, built for high-throughput everyday work: fast general chat, summarisation, extraction, and code assistance at low latency. It answers directly rather than emitting a visible reasoning trace, which keeps responses compact and quick, and it drives tools reliably for agent workflows. Note: prompts in the hundreds of thousands of tokens can exceed the gateway\'s 10-minute request timeout — split very long inputs across turns.',
+    // The model's published limit (max_position_embeddings 1048576). What is
+    // reachable in practice is lower and load-dependent: a 260K-token prompt
+    // completed once in under 5 minutes but timed out on a repeat, and 400K
+    // never finished. Hence the caveat in the description rather than a
+    // smaller headline number.
+    maxOutput: '1M',
     price: {
       amount: '$0.0004',
       unit: '1M tokens',

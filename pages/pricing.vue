@@ -119,6 +119,11 @@
         </table>
       </div>
       <p class="text-text-muted text-xs mt-4 font-body">
+        Context figures are each model's published limit. Prompts in the hundreds of
+        thousands of tokens take minutes to process and can exceed the gateway's
+        10-minute request timeout — split very long inputs across turns.
+      </p>
+      <p class="text-text-muted text-xs mt-2 font-body">
         More models coming soon.
         <NuxtLink to="/models" class="text-primary-container hover:underline">View all models →</NuxtLink>
       </p>
@@ -219,9 +224,9 @@ const steps = [
 ]
 
 const models = [
-  // ctx measured against the live endpoint (260,010-token prompt accepted);
-  // awaiting the official figure from Gonka.
-  { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731', ctx: '262K' },
+  // Published limit (max_position_embeddings 1048576). Reaching it in practice
+  // is load-dependent — see the timeout note rendered under the table.
+  { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731', ctx: '1M' },
   { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' },
   { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6', ctx: '262K' }
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
