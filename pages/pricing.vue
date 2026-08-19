@@ -26,13 +26,13 @@
         <div class="md:col-span-2 bg-surface-container-low border border-primary-container/20 rounded-3xl p-8 sm:p-10 relative overflow-hidden">
           <div class="absolute top-0 left-0 right-0 h-1 kinetic-gradient"></div>
           <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
-          <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">Flat Token Rate</p>
+          <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">Live Token Rate</p>
           <div class="flex items-baseline gap-2 mb-3">
-            <span class="text-5xl sm:text-6xl font-black font-headline tracking-tighter text-text-main">$0.0004</span>
+            <span class="text-5xl sm:text-6xl font-black font-headline tracking-tighter text-text-main">{{ fromPer1M }}</span>
             <span class="text-text-muted font-body text-sm">/ 1M tokens</span>
           </div>
           <p class="text-text-muted text-sm font-body mb-8 leading-relaxed">
-            Same rate for input and output tokens, across all models. No per-model surcharges.
+            Same rate for input and output tokens, across all models. Tracks the Gonka network price — no middleman markup.
           </p>
           <ul class="space-y-3">
             <li v-for="f in rateFeatures" :key="f" class="flex items-center gap-3 text-sm font-body text-text-muted">
@@ -84,7 +84,7 @@
       <h2 class="text-2xl sm:text-3xl font-black font-headline tracking-tight text-text-main mb-2">
         Available models
       </h2>
-      <p class="text-text-muted text-sm mb-8">All models at the same rate — $0.0004 / 1M tokens.</p>
+      <p class="text-text-muted text-sm mb-8">All models at the same rate — from {{ fromPer1M }} / 1M tokens, tracking the Gonka network.</p>
       <div class="border border-white/5 rounded-2xl overflow-hidden">
         <table class="w-full text-sm font-body">
           <thead>
@@ -107,11 +107,11 @@
               </td>
               <td class="px-6 py-4 text-text-muted hidden sm:table-cell">{{ model.ctx }}</td>
               <td class="px-6 py-4 text-right">
-                <span class="text-primary-container font-black">$0.0004</span>
+                <span class="text-primary-container font-black">{{ fromPer1M }}</span>
                 <span class="text-text-muted text-[11px]">/1M</span>
               </td>
               <td class="px-6 py-4 text-right">
-                <span class="text-primary-container font-black">$0.0004</span>
+                <span class="text-primary-container font-black">{{ fromPer1M }}</span>
                 <span class="text-text-muted text-[11px]">/1M</span>
               </td>
             </tr>
@@ -167,17 +167,21 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 
+// Live rate — tracks the Gonka network. Used both in the page body and, via
+// computed getters, in the SEO meta so crawlers see the real current number.
+const { fromPer1M } = useGonkaPricing()
+
 useSeoMeta({
-  title: 'Pricing — $0.0004 per 1M tokens',
-  description:
-    'GonkaRouter charges a flat $0.0004 per 1M tokens for all models — input and output. No monthly fees, no per-model markups. New users get $20 credits.',
+  title: () => `Pricing — from ${fromPer1M.value} per 1M tokens`,
+  description: () =>
+    `GonkaRouter tracks the Gonka network price — currently from ${fromPer1M.value} per 1M tokens, input and output alike. No monthly fees, no per-model markups. New users get $20 credits.`,
   ogTitle: 'Pricing | GonkaRouter',
-  ogDescription:
-    'Flat $0.0004 per 1M tokens across all models. No subscriptions. A one-time $20 free credit for new users.',
+  ogDescription: () =>
+    `From ${fromPer1M.value} per 1M tokens across all models, tracking the Gonka network. No subscriptions. A one-time $20 free credit for new users.`,
   ogUrl: `${siteUrl}/pricing`,
   twitterTitle: 'Pricing | GonkaRouter',
-  twitterDescription:
-    'Flat $0.0004 per 1M tokens. No monthly fees. A one-time $20 free credit for new users.'
+  twitterDescription: () =>
+    `From ${fromPer1M.value} per 1M tokens, tracking the Gonka network. No monthly fees. A one-time $20 free credit for new users.`
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/pricing` }] })
 
@@ -187,7 +191,7 @@ useStructuredData([
     '@type': 'WebPage',
     name: 'GonkaRouter Pricing',
     description:
-      'GonkaRouter charges a flat $0.0004 per 1M tokens for all AI models, with no monthly fees and a one-time $20 free credit for new users.',
+      'GonkaRouter tracks the Gonka network price across all AI models — input and output billed equally, with no monthly fees and a one-time $20 free credit for new users.',
     url: `${siteUrl}/pricing`
   },
   breadcrumbList([
@@ -214,7 +218,7 @@ const steps = [
   {
     icon: LucideZap,
     title: 'Use the API',
-    desc: 'Make API calls using any OpenAI-compatible SDK. Each request deducts from your balance at $0.0004 per 1M tokens.'
+    desc: 'Make API calls using any OpenAI-compatible SDK. Each request deducts from your balance at the current per-token rate.'
   },
   {
     icon: LucideBarChart2,

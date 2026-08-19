@@ -191,7 +191,7 @@
                 </div>
                 <div class="flex items-baseline gap-1.5">
                   <span class="text-lg font-black font-headline tracking-tight">
-                    {{ model.price.amount }}
+                    {{ fromPer1M }}
                   </span>
                   <span class="text-xs font-black font-headline tracking-tight">
                     / {{ model.price.unit }}
@@ -251,10 +251,12 @@ import { useToast } from '~/composables/useToast'
 
 const modelsConfig = useRuntimeConfig()
 const modelsSiteUrl = modelsConfig.public.siteUrl || 'https://gonkarouter.io'
+// Live rate — tracks the Gonka network; all models share it.
+const { fromPer1M, fromPer1MRaw } = useGonkaPricing()
 useSeoMeta({
   title: 'Supported AI Models',
-  description:
-    'Browse all AI models available on GonkaRouter — Kimi-K2, MiniMax, DeepSeek, and more. One unified API, transparent pricing at $0.0004 per 1M tokens.',
+  description: () =>
+    `Browse all AI models available on GonkaRouter — Kimi-K2, MiniMax, DeepSeek, and more. One unified API, transparent pricing from ${fromPer1M.value} per 1M tokens, tracking the Gonka network.`,
   ogTitle: 'Supported AI Models | GonkaRouter',
   ogDescription:
     'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
@@ -341,7 +343,7 @@ const allModels = [
     // smaller headline number.
     maxOutput: '1M',
     price: {
-      amount: '$0.0004',
+      amount: '', // display uses the live rate from useGonkaPricing()
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -367,7 +369,7 @@ const allModels = [
       'A large language model developed by Moonshot AI, designed for advanced reasoning, long-context understanding, and code-intensive tasks. It significantly improves performance in software engineering, document processing, and multi-step task execution, while supporting very long context windows and agent-like capabilities for complex workflow automation.',
     maxOutput: '262K',
     price: {
-      amount: '$0.0004',
+      amount: '', // display uses the live rate from useGonkaPricing()
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -410,7 +412,7 @@ const allModels = [
       'An agent-native model from MiniMax, positioned as their first model to deeply participate in its own evolution. It excels at complex agent harnesses and real-world software engineering — end-to-end project delivery, log analysis, bug troubleshooting, code security, and machine-learning workflows — with strong planning, stable long-chain tool calling, and reasoning, plus high-fidelity office-document editing across Excel, PPT, and Word.',
     maxOutput: '192K',
     price: {
-      amount: '$0.0004',
+      amount: '', // display uses the live rate from useGonkaPricing()
       unit: '1M tokens',
       note: 'Same rate for input and output tokens'
     },
@@ -458,9 +460,9 @@ useStructuredData({
       url: `${modelsSiteUrl}/models`,
       offers: {
         '@type': 'Offer',
-        price: '0.0004',
+        price: fromPer1MRaw.value,
         priceCurrency: 'USD',
-        description: `${m.price.amount} per ${m.price.unit}`
+        description: `from ${fromPer1M.value} per ${m.price.unit}`
       }
     }
   }))

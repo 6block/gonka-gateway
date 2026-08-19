@@ -385,19 +385,19 @@ const homeFaqs = [
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
-    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments, lower per-token rates starting at <strong class="text-text-main">$0.0004 per 1M tokens</strong>, and a one-time $20 free credit for new users.'
+    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong> with no middleman markup, plus a one-time $20 free credit for new users.'
   },
   {
     q: 'How is GonkaRouter different from OpenRouter?',
-    a: `A flat $0.0004 per 1M tokens for both input and output — no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get $20 credits.`
+    a: `A single per-token rate that tracks the Gonka network — the same for input and output, with no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get $20 credits.`
   },
   {
     q: 'How does GonkaRouter pricing work?',
-    a: 'GonkaRouter charges a flat rate of <strong class="text-text-main">$0.0004 per 1 million tokens</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges. New users get $20 credits. After that, you top up your balance and are billed only for what you consume.'
+    a: 'GonkaRouter charges a <strong class="text-text-main">single per-token rate that tracks the Gonka network price</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges — see the Pricing page for the current live rate. New users get $20 credits. After that, you top up your balance and are billed only for what you consume.'
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong>, <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same $0.0004/1M token rate and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong>, <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
@@ -464,22 +464,25 @@ const config = useRuntimeConfig()
 const baseUrl = computed(() => `${config.public.apiBase}/v1`)
 
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
+// Live rate — tracks the Gonka network.
+const { fromPer1M } = useGonkaPricing()
 useSeoMeta({
   title: 'AI Model Router on the Gonka Network',
-  description:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens, with a one-time $20 free credit for new users.',
+  description: () =>
+    `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens, with a one-time $20 free credit for new users.`,
   ogTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
-  ogDescription:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.',
+  ogDescription: () =>
+    `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens.`,
   ogUrl: siteUrl,
   twitterTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
-  twitterDescription:
-    'One API for all AI models. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.'
+  twitterDescription: () =>
+    `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens.`
 })
 useHead({ link: [{ rel: 'canonical', href: siteUrl }] })
 
-const heroDescription =
-  'One API for All AI Models\nDevelopers first\nAt $0.0004 per 1M tokens'
+const heroDescription = computed(
+  () => `One API for All AI Models\nDevelopers first\nFrom ${fromPer1M.value} per 1M tokens`
+)
 
 const whyItems = [
   { title: 'Cost-Effective Pricing', icon: LucideZap },

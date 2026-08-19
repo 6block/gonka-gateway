@@ -4,8 +4,10 @@ const isProd = process.env.NODE_ENV === 'production'
 const apiOrigin = process.env.API_BASE || 'https://api.gonkarouter.io'
 const siteUrl = process.env.SITE_URL || 'https://gonkarouter.io'
 const siteName = 'GonkaRouter'
+// Build-time default (no runtime price available here). Per-page useSeoMeta on
+// the home/pricing/models pages overrides this with the live rate.
 const siteDescription =
-  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.0004 per 1M tokens, with a one-time $20 free credit for new users.'
+  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, per-token pricing that tracks the Gonka network, with a one-time $20 free credit for new users.'
 const ogImage = `${siteUrl}/og-cover.png`
 const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 

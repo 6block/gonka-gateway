@@ -2,6 +2,11 @@
 const appConfig = useRuntimeConfig()
 const appSiteUrl = appConfig.public.siteUrl || 'https://gonkarouter.io'
 
+// Global JSON-LD is serialized once (non-reactive), so the Offer uses the
+// snapshot price available at render — the live per-page rate is shown in the
+// page body and per-page SEO meta.
+const { fromPer1MRaw } = useGonkaPricing()
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -18,7 +23,7 @@ const jsonLd = {
       url: appSiteUrl,
       name: 'GonkaRouter',
       description:
-        'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, $0.0004 per 1M tokens.',
+        'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, per-token pricing that tracks the Gonka network.',
       publisher: { '@id': `${appSiteUrl}/#organization` },
       inLanguage: 'en'
     },
@@ -27,7 +32,7 @@ const jsonLd = {
       name: 'GonkaRouter',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Any',
-      offers: { '@type': 'Offer', price: '0.0004', priceCurrency: 'USD' },
+      offers: { '@type': 'Offer', price: fromPer1MRaw.value, priceCurrency: 'USD' },
       url: appSiteUrl
     }
   ]
