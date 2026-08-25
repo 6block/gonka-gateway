@@ -16,6 +16,26 @@ interface AuthUser {
 // This frontend always authenticates against the gonka channel.
 const CHANNEL = 'gonka'
 
+// Reports the auth outcome to analytics.
+//
+// isNewUser comes from the backend, which already computes it to decide on the
+// signup bonus but does not yet return it. Until it does, the flag is undefined
+// and everything is reported as `login` — accurate, just not split by
+// registration. Once the field ships, sign-ups start being counted here with no
+// further frontend change.
+//
+// signupSource is our own campaign tag (see useSignupSource). Attaching it to
+// the conversion is what lets a landing page be tied to the accounts it
+// actually produced, which page-view data alone cannot answer.
+function reportAuthEvent(method: string, isNewUser: unknown, signupSource: string): void {
+  const { trackSignUp, trackLogin } = useAnalytics()
+  if (isNewUser === true) {
+    trackSignUp(method, signupSource)
+    return
+  }
+  trackLogin(method)
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const token = useCookie<string | null>('auth_token', {
     maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -123,11 +143,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const signupSource = useSignupSource()
+    const source = signupSource.get()
     const data = await $fetch<any>(`${apiBase()}/auth/google-login`, {
       method: 'POST',
-      body: { access_token: accessToken, channel: CHANNEL, source: signupSource.get() }
+      body: { access_token: accessToken, channel: CHANNEL, source }
     })
     if (!data || !data.token) throw new Error('No token returned')
+
+    reportAuthEvent('google', data.is_new_user, source)
 
     // Attribution is consumed once the account exists; clear it either way.
     signupSource.clear()
@@ -154,11 +177,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function verifyEmailCode(email: string, code: string) {
     const signupSource = useSignupSource()
+    const source = signupSource.get()
     const data = await $fetch<any>(`${apiBase()}/auth/email/verify`, {
       method: 'POST',
-      body: { email, channel: CHANNEL, code, source: signupSource.get() }
+      body: { email, channel: CHANNEL, code, source }
     })
     if (!data || !data.token) throw new Error('No token returned')
+
+    reportAuthEvent('email', data.is_new_user, source)
 
     // Attribution is consumed once the account exists; clear it either way.
     signupSource.clear()

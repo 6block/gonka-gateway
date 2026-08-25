@@ -19,18 +19,26 @@ const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 // youtube.com / youtu.be / player.bilibili.com → blog post embedded players,
 // authored via the admin "嵌入" toolbar button. frame-src only — these hosts
 // do not run any of our scripts, just render their own iframe content.
+//
+// googletagmanager.com → the GA4 (gtag.js) loader script. Analytics beacons go
+// to google-analytics.com / analytics.google.com, and the exact subdomain
+// varies by region (e.g. region1.google-analytics.com), hence the wildcards in
+// connect-src. Without these entries the CSP silently blocks GA and the whole
+// integration looks "installed but reporting nothing" — img-src already allows
+// https: so the fallback pixel would still fire, which makes the failure even
+// harder to spot.
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://challenges.cloudflare.com",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://challenges.cloudflare.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   "frame-src https://accounts.google.com https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com https://player.bilibili.com",
-  `connect-src 'self' ${apiOrigin} https://accounts.google.com https://challenges.cloudflare.com${isProd ? '' : ' ws: wss:'}`
+  `connect-src 'self' ${apiOrigin} https://accounts.google.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com${isProd ? '' : ' ws: wss:'}`
 ].join('; ')
 
 const securityHeaders: Record<string, string> = {
@@ -136,7 +144,11 @@ export default defineNuxtConfig({
       // (Google button hidden, Turnstile skipped) so dev works without them.
       // Override at runtime via NUXT_PUBLIC_GOOGLE_CLIENT_ID / NUXT_PUBLIC_TURNSTILE_SITE_KEY.
       googleClientId: process.env.GOOGLE_CLIENT_ID || '',
-      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || ''
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '',
+      // GA4 measurement ID (G-XXXXXXXXXX). Empty → plugins/gtag.client.ts is a
+      // no-op and no analytics script is loaded, so dev and preview stay clean.
+      // Override at runtime via NUXT_PUBLIC_GA_MEASUREMENT_ID.
+      gaMeasurementId: process.env.GA_MEASUREMENT_ID || ''
     }
   },
   devServer: {
