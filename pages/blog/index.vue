@@ -58,6 +58,48 @@
       </NuxtLink>
     </div>
 
+    <!-- Pagination -->
+    <nav
+      v-if="totalPages > 1"
+      class="mt-12 flex items-center justify-center gap-2 flex-wrap"
+      aria-label="Blog pagination"
+    >
+      <NuxtLink
+        v-if="currentPage > 1"
+        :to="pageLink(currentPage - 1)"
+        rel="prev"
+        class="px-3 py-2 rounded-lg text-sm font-headline font-bold text-text-muted hover:text-text-main hover:bg-white/5 border border-white/10 transition-all"
+        aria-label="Previous page"
+      >
+        ← Prev
+      </NuxtLink>
+
+      <template v-for="(item, i) in pageItems" :key="`${item}-${i}`">
+        <span v-if="item === '…'" class="px-2 text-text-muted select-none">…</span>
+        <NuxtLink
+          v-else
+          :to="pageLink(item)"
+          class="min-w-[38px] text-center px-3 py-2 rounded-lg text-sm font-headline font-bold border transition-all"
+          :class="item === currentPage
+            ? 'bg-primary-container/15 text-primary-container border-primary-container/30'
+            : 'text-text-muted hover:text-text-main hover:bg-white/5 border-white/10'"
+          :aria-current="item === currentPage ? 'page' : undefined"
+        >
+          {{ item }}
+        </NuxtLink>
+      </template>
+
+      <NuxtLink
+        v-if="currentPage < totalPages"
+        :to="pageLink(currentPage + 1)"
+        rel="next"
+        class="px-3 py-2 rounded-lg text-sm font-headline font-bold text-text-muted hover:text-text-main hover:bg-white/5 border border-white/10 transition-all"
+        aria-label="Next page"
+      >
+        Next →
+      </NuxtLink>
+    </nav>
+
     <!-- Empty state (shown when posts array is empty) -->
     <div v-if="posts.length === 0" class="text-center py-24">
       <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-surface-container-high border border-white/5 flex items-center justify-center">
@@ -81,8 +123,45 @@ definePageMeta({ layout: 'landing' })
 const config = useRuntimeConfig()
 const siteUrl = (config.public.siteUrl as string) || 'https://gonkarouter.io'
 
-const { fetchPosts } = useBlogPosts()
-const posts = await fetchPosts()
+const route = useRoute()
+const PAGE_SIZE = 12
+
+// Current page comes from ?page=N (1-based). Clamped to >= 1.
+const currentPage = computed(() => {
+  const p = parseInt(String(route.query.page ?? '1'), 10)
+  return Number.isFinite(p) && p > 0 ? p : 1
+})
+
+const { fetchPostsPaged } = useBlogPosts()
+
+// Refetch whenever the page query changes; useAsyncData keeps SSR + client in
+// sync and caches per page key.
+const { data: pageData } = await useAsyncData(
+  () => `blog-list-${currentPage.value}`,
+  () => fetchPostsPaged(currentPage.value, PAGE_SIZE),
+  { watch: [currentPage] },
+)
+
+const posts = computed(() => pageData.value?.items ?? [])
+const total = computed(() => pageData.value?.total ?? 0)
+const totalPages = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
+
+// Compact page number list with ellipses, e.g. 1 … 4 5 [6] 7 8 … 12
+const pageItems = computed<(number | '…')[]>(() => {
+  const tp = totalPages.value
+  const cur = currentPage.value
+  if (tp <= 7) return Array.from({ length: tp }, (_, i) => i + 1)
+  const out: (number | '…')[] = [1]
+  const start = Math.max(2, cur - 1)
+  const end = Math.min(tp - 1, cur + 1)
+  if (start > 2) out.push('…')
+  for (let i = start; i <= end; i++) out.push(i)
+  if (end < tp - 1) out.push('…')
+  out.push(tp)
+  return out
+})
+
+const pageLink = (p: number) => (p <= 1 ? '/blog' : `/blog?page=${p}`)
 
 useSeoMeta({
   title: 'Blog — News & Updates',
@@ -95,7 +174,19 @@ useSeoMeta({
   twitterTitle: 'Blog | GonkaRouter',
   twitterDescription: 'Product updates and engineering guides from the GonkaRouter team.'
 })
-useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/blog` }] })
+// Canonical points at the current page; add prev/next hints for crawlers.
+useHead(() => {
+  const links: { rel: string; href: string }[] = [
+    { rel: 'canonical', href: currentPage.value <= 1 ? `${siteUrl}/blog` : `${siteUrl}/blog?page=${currentPage.value}` },
+  ]
+  if (currentPage.value > 1) {
+    links.push({ rel: 'prev', href: currentPage.value - 1 <= 1 ? `${siteUrl}/blog` : `${siteUrl}/blog?page=${currentPage.value - 1}` })
+  }
+  if (currentPage.value < totalPages.value) {
+    links.push({ rel: 'next', href: `${siteUrl}/blog?page=${currentPage.value + 1}` })
+  }
+  return { link: links }
+})
 
 useStructuredData([
   {

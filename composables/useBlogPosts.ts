@@ -12,6 +12,20 @@ export interface BlogPost {
   updated_at?: string
 }
 
+export interface BlogPostsPage {
+  items: BlogPost[]
+  total: number
+  page: number
+  pageSize: number
+}
+
+const formatDate = (p: BlogPost): BlogPost => ({
+  ...p,
+  date: p.created_at
+    ? new Date(p.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : p.date ?? '',
+})
+
 export const useBlogPosts = () => {
   const config = useRuntimeConfig()
   const apiBase = (config.public.apiBase as string | undefined)?.replace(/\/$/, '') ?? ''
@@ -24,14 +38,30 @@ export const useBlogPosts = () => {
         timeout: 5000,
       })
       const items = Array.isArray(data) ? data : (data as { items: BlogPost[] }).items ?? []
-      return items.map((p) => ({
-        ...p,
-        date: p.created_at
-          ? new Date(p.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-          : p.date ?? '',
-      }))
+      return items.map(formatDate)
     } catch {
       return []
+    }
+  }
+
+  // Paginated variant for the blog index. Returns items plus total so the page
+  // can render a pager. Fails soft to an empty page.
+  const fetchPostsPaged = async (page: number, pageSize: number): Promise<BlogPostsPage> => {
+    const empty: BlogPostsPage = { items: [], total: 0, page, pageSize }
+    if (!apiBase) return empty
+    try {
+      const data = await $fetch<{ items: BlogPost[]; total: number; page: number; page_size: number }>(
+        `${apiBase}/api/posts`,
+        { params: { status: 'published', page, page_size: pageSize }, timeout: 5000 },
+      )
+      return {
+        items: (data.items ?? []).map(formatDate),
+        total: data.total ?? 0,
+        page: data.page ?? page,
+        pageSize: data.page_size ?? pageSize,
+      }
+    } catch {
+      return empty
     }
   }
 
@@ -50,5 +80,5 @@ export const useBlogPosts = () => {
     }
   }
 
-  return { fetchPosts, fetchPost }
+  return { fetchPosts, fetchPostsPaged, fetchPost }
 }
