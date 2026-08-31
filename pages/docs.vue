@@ -877,6 +877,34 @@
             </ul>
           </div>
 
+          <!-- Model Fallback -->
+          <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Model Fallback
+            </h3>
+            <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
+              <li>
+                When a requested model's upstream is temporarily saturated (a
+                <code class="font-mono text-primary-container">429</code> that persists after retries),
+                the request is <span class="text-text-main font-bold">served by a fallback model</span>
+                instead of failing — so your call still returns a result.
+              </li>
+              <li>
+                A substitution is <span class="text-text-main font-bold">never silent</span>: the response
+                carries a header naming the requested and served model, e.g.
+                <code class="font-mono text-primary-container break-all">X-Gonka-Fallback: deepseek-ai/DeepSeek-V4-Flash-0731 -&gt; MiniMaxAI/MiniMax-M2.7</code>.
+                The <code class="font-mono">model</code> field in the response body reflects the model that actually served it.
+              </li>
+              <li>
+                To <span class="text-text-main font-bold">enforce the exact requested model</span> (no substitution),
+                send the request header
+                <code class="font-mono text-primary-container">X-Gonka-No-Fallback: true</code>.
+                Saturated requests then return the real upstream
+                <code class="font-mono">429</code> instead of being re-routed — ideal for benchmarking and evals.
+              </li>
+            </ul>
+          </div>
+
           <!-- Streaming Timeouts -->
           <div class="space-y-3">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
