@@ -905,6 +905,33 @@
             </ul>
           </div>
 
+          <!-- Request Receipts -->
+          <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
+              Request Receipts
+            </h3>
+            <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
+              <li>
+                Every call returns an <code class="font-mono text-primary-container">X-Request-Id</code>
+                response header. You can look that id up later — no auth required — to independently
+                confirm a recorded call:
+                <code class="font-mono text-primary-container break-all">GET /v1/receipts/&#123;x-request-id&#125;</code>
+              </li>
+              <li>
+                It returns <span class="text-text-main font-bold">metadata only</span> —
+                <code class="font-mono">model</code>, <code class="font-mono">created_at</code>,
+                <code class="font-mono">total_tokens</code>, <code class="font-mono">x_devshard_id</code>,
+                <code class="font-mono">outcome</code>, <code class="font-mono">status_code</code> — never
+                prompt/response content, account identity, or cost. Handy for reconciliation and letting
+                third parties verify your usage.
+              </li>
+              <li>
+                Rate-limited per IP (<span class="text-text-main font-bold">60/min</span>); unknown ids
+                return <code class="font-mono">404</code>.
+              </li>
+            </ul>
+          </div>
+
           <!-- Streaming Timeouts -->
           <div class="space-y-3">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
