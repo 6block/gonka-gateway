@@ -58,6 +58,10 @@ useHead({
     <AuthLoginModal />
     <!-- Forced account upgrade for legacy wallet users (bind an email) -->
     <AuthUpgradeModal />
+    <!-- One-shot campaign promo for the AI Builders Day offline event -->
+    <ClientOnly>
+      <PromoEventPromoModal />
+    </ClientOnly>
     <!-- Global toasts so notifications surface on landing pages too -->
     <Toast />
   </div>
