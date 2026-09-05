@@ -396,8 +396,8 @@ const config = useRuntimeConfig()
 // model for new chats is changed by reordering this list.
 const availableModels = [
   { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731' },
-  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7' },
-  { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6' }
+  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7' }
+  // 2026-09-05: Kimi-K2.6 removed — 0 serving nodes left on the Gonka network.
   // { name: 'Qwen3-235B-FP8', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8' }
 ]
 const selectedModel = ref(availableModels[0].id)

@@ -231,8 +231,9 @@ const models = [
   // Published limit (max_position_embeddings 1048576). Reaching it in practice
   // is load-dependent — see the timeout note rendered under the table.
   { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731', ctx: '1M' },
-  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' },
-  { name: 'Kimi-K2.6', id: 'moonshotai/Kimi-K2.6', ctx: '262K' }
+  { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' }
+  // 2026-09-05: Kimi-K2.6 removed — it lost every serving node on the Gonka
+  // network (0 hosts on-chain as of epoch 383), so the model is uncallable.
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
   // adjustment. Restore when it is back online.
   // { name: 'Qwen3-235B-A22B-Instruct', id: 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8', ctx: '262K' }

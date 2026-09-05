@@ -303,7 +303,7 @@ const topics = ['API issue', 'Model behavior', 'Docs issue', 'Billing issue', 'F
 const models = [
   'deepseek-ai/DeepSeek-V4-Flash-0731',
   'MiniMaxAI/MiniMax-M2.7',
-  'moonshotai/Kimi-K2.6',
+  // 2026-09-05: Kimi-K2.6 removed — 0 serving nodes left on the Gonka network.
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
   // adjustment. Restore when it is back online.
   // 'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',

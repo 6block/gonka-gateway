@@ -243,8 +243,6 @@ import {
   LucideChevronLeft,
   LucideMessageCircle,
   LucideDatabase,
-  LucideEye,
-  LucideSearch,
   LucideHelpCircle
 } from 'lucide-vue-next'
 import { useToast } from '~/composables/useToast'
@@ -256,7 +254,7 @@ const { fromPer1M, fromPer1MRaw } = useGonkaPricing()
 useSeoMeta({
   title: 'Supported AI Models',
   description: () =>
-    `Browse all AI models available on GonkaRouter — Kimi-K2, MiniMax, DeepSeek, and more. One unified API, transparent pricing from ${fromPer1M.value} per 1M tokens, tracking the Gonka network.`,
+    `Browse all AI models available on GonkaRouter — DeepSeek-V4-Flash, MiniMax-M2.7, and more. One unified API, transparent pricing from ${fromPer1M.value} per 1M tokens, tracking the Gonka network.`,
   ogTitle: 'Supported AI Models | GonkaRouter',
   ogDescription:
     'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
@@ -274,24 +272,7 @@ const selectedModelId = ref(null)
 const activeLang = ref('python')
 const languageTabs = ['python', 'typescript', 'javascript', 'curl']
 
-// Inline icons. Kimi has no asset yet, so render a styled "K" tile that
-// matches the design until a real PNG is added under assets/img/.
-
-const KimiIconImg = () =>
-  h(
-    'div',
-    {
-      class:
-        'relative w-12 h-12 shrink-0 rounded-xl bg-black flex items-center justify-center border border-white/10',
-      'aria-label': 'Kimi-K2.6'
-    },
-    [
-      h('span', { class: 'text-white font-black text-2xl font-headline leading-none' }, 'K'),
-      h('span', {
-        class: 'absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-cyan-400'
-      })
-    ]
-  )
+// Inline icons rendered as styled tiles until real PNGs land under assets/img/.
 
 const MiniMaxIconImg = () =>
   h(
@@ -359,49 +340,6 @@ const allModels = [
       }
     ],
     date: '2026-07-31'
-  },
-  {
-    id: 'kimi-k2-6',
-    name: 'Kimi-K2.6',
-    apiId: 'moonshotai/Kimi-K2.6',
-    iconComponent: KimiIconImg,
-    description:
-      'A large language model developed by Moonshot AI, designed for advanced reasoning, long-context understanding, and code-intensive tasks. It significantly improves performance in software engineering, document processing, and multi-step task execution, while supporting very long context windows and agent-like capabilities for complex workflow automation.',
-    maxOutput: '262K',
-    price: {
-      amount: '', // display uses the live rate from useGonkaPricing()
-      unit: '1M tokens',
-      note: 'Same rate for input and output tokens'
-    },
-    tags: [
-      { label: 'chat', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
-      {
-        label: 'Vision',
-        icon: LucideEye,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      },
-      {
-        label: 'Function',
-        icon: LucideTerminal,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      },
-      {
-        label: 'Reasoning',
-        icon: LucideZap,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      },
-      {
-        label: 'Cache',
-        icon: LucideDatabase,
-        color: 'bg-primary-container/10 text-primary-container border-primary-container/20'
-      },
-      {
-        label: 'Search',
-        icon: LucideSearch,
-        color: 'bg-surface-container-highest text-text-muted border-white/5'
-      }
-    ],
-    date: '2026-05-09'
   },
   {
     id: 'minimax-m2-7',

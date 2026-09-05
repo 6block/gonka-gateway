@@ -381,7 +381,7 @@ import {
 const homeFaqs = [
   {
     q: 'What is GonkaRouter?',
-    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including DeepSeek-V4-Flash, MiniMax-M2.7, Kimi-K2.6, and more — with transparent per-token pricing and no monthly subscriptions.'
+    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including DeepSeek-V4-Flash and MiniMax-M2.7 — with transparent per-token pricing and no monthly subscriptions.'
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
@@ -397,7 +397,7 @@ const homeFaqs = [
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong>, <strong class="text-text-main">MiniMax-M2.7</strong>, <strong class="text-text-main">Kimi-K2.6</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong> and <strong class="text-text-main">MiniMax-M2.7</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
@@ -511,14 +511,9 @@ const featuredModels = [
     apiId: 'MiniMaxAI/MiniMax-M2.7',
     tagline:
       'Optimized MiniMax-M2.7: A self-evolving agent model built for elite coding and complex agent harnesses — end-to-end software engineering and stable long-chain tool calling on the Gonka pipeline.'
-  },
-  {
-    id: 'kimi',
-    label: 'Kimi-K2.6',
-    apiId: 'moonshotai/Kimi-K2.6',
-    tagline:
-      'Optimized Kimi-K2.6: Superior long-context reasoning with enhanced throughput on the Gonka pipeline.'
   }
+  // 2026-09-05: Kimi-K2.6 removed — it lost every serving node on the Gonka
+  // network (0 hosts on-chain as of epoch 383), so the model is uncallable.
   // TEMP 2026-06-25: Qwen3-235B hidden while upstream Gonka takes it offline for
   // adjustment. Restore when it is back online.
   // {

@@ -111,7 +111,7 @@
   "id": "msg_…",
   "type": "message",
   "role": "assistant",
-  "model": "moonshotai/Kimi-K2.6",
+  "model": "MiniMaxAI/MiniMax-M2.7",
   "content": [{"type":"text","text":" pong"}],
   "stop_reason": "end_turn",
   "usage": {"input_tokens":15,"output_tokens":43}
@@ -216,7 +216,7 @@
             <ul class="space-y-2 text-xs sm:text-sm text-primary-dim leading-relaxed list-disc pl-5">
               <li>
                 <span class="font-black">Set <code class="font-mono">max_tokens ≥ 1024</code>.</span>
-                Kimi-K2.6 emits internal "reasoning" tokens before producing visible text.
+                These models emit internal "reasoning" tokens before producing visible text.
                 With a tight budget (e.g. <code class="font-mono">max_tokens=64</code>)
                 you can get <code class="font-mono">stop_reason: "max_tokens"</code> and
                 <code class="font-mono">content[0].text == null</code>.
@@ -508,8 +508,8 @@
               </li>
               <li>
                 <span class="font-black text-text-main">Model id is case-sensitive.</span>
-                <code class="font-mono">moonshotai/Kimi-K2.6</code> works,
-                <code class="font-mono">Kimi-K2.6</code> alone returns
+                <code class="font-mono">MiniMaxAI/MiniMax-M2.7</code> works,
+                <code class="font-mono">MiniMax-M2.7</code> alone returns
                 <em>model not available for your channel</em>.
               </li>
             </ul>
@@ -617,7 +617,7 @@
   "capability": "model.run",
   "transport": "local",
   "provider": "gonka",
-  "model": "moonshotai/Kimi-K2.6",
+  "model": "MiniMaxAI/MiniMax-M2.7",
   "outputs": [{"text": "pong", "mediaUrl": null}]
 }</pre>
           </div>
@@ -636,7 +636,7 @@
                 The prefix is the provider id you registered, not the underlying
                 <code class="font-mono">anthropic/</code> path. Slashes inside the model
                 id are part of the id and must be preserved verbatim
-                (<code class="font-mono">gonka/moonshotai/Kimi-K2.6</code>).
+                (<code class="font-mono">gonka/MiniMaxAI/MiniMax-M2.7</code>).
               </li>
               <li>
                 <span class="font-black text-text-main">Daemon vs. <code class="font-mono">--local</code>.</span>
@@ -760,7 +760,7 @@
                   the model id exactly as listed on
                   <NuxtLink to="/models" class="font-bold underline hover:text-text-main">Models</NuxtLink>,
                   e.g. <code class="font-mono text-primary-container">MiniMaxAI/MiniMax-M2.7</code>
-                  or <code class="font-mono text-primary-container">moonshotai/Kimi-K2.6</code>.
+                  or <code class="font-mono text-primary-container">deepseek-ai/DeepSeek-V4-Flash-0731</code>.
                   Case and slashes matter.
                 </span>
               </li>
@@ -948,8 +948,9 @@
             <h3 class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               Context Windows
             </h3>
-            <!-- TEMP 2026-06-25: Qwen3-235B / Kimi-K2.6 cards hidden while upstream
-                 Gonka takes them offline for adjustment. Restore when back online. -->
+            <!-- TEMP 2026-06-25: Qwen3-235B card hidden while upstream Gonka takes it
+                 offline for adjustment. Restore when back online.
+                 2026-09-05: Kimi-K2.6 removed for good — 0 serving nodes on-chain. -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="bg-surface-container-lowest/60 rounded-2xl px-4 py-3 border border-white/5">
                 <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-1">MiniMaxAI/MiniMax-M2.7</p>
@@ -1038,7 +1039,7 @@ curl -s ${apiBase.value}/v1/messages \\
   -H "anthropic-version: 2023-06-01" \\
   -H "content-type: application/json" \\
   -d '{
-    "model": "moonshotai/Kimi-K2.6",
+    "model": "MiniMaxAI/MiniMax-M2.7",
     "max_tokens": 1024,
     "messages": [{"role":"user","content":"Reply with just: pong"}]
   }'
@@ -1052,7 +1053,7 @@ curl -s ${apiBase.value}/v1/messages \\
 :: JSON quotes are escaped with \\" so cmd passes them through to curl.
 set KEY=sk-xxxxxx
 
-curl -s ${apiBase.value}/v1/messages -H "x-api-key: %KEY%" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"moonshotai/Kimi-K2.6\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Reply with just: pong\\"}]}"
+curl -s ${apiBase.value}/v1/messages -H "x-api-key: %KEY%" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"MiniMaxAI/MiniMax-M2.7\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Reply with just: pong\\"}]}"
 `
   }
 ])
@@ -1073,7 +1074,7 @@ client = Anthropic(
 )
 
 msg = client.messages.create(
-    model="moonshotai/Kimi-K2.6",
+    model="MiniMaxAI/MiniMax-M2.7",
     max_tokens=1024,             # keep ≥ 1024 — see "reasoning tokens" note below
     messages=[
         {"role": "user", "content": "Reply with just: pong"},
@@ -1097,7 +1098,7 @@ client = Anthropic(
 
 # Idiomatic Anthropic streaming — text_stream yields each token chunk as a string.
 with client.messages.stream(
-    model="moonshotai/Kimi-K2.6",
+    model="MiniMaxAI/MiniMax-M2.7",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Say hello in exactly three words."}],
 ) as stream:
@@ -1120,7 +1121,7 @@ const client = new Anthropic({
 
 // One-shot
 const msg = await client.messages.create({
-  model: "moonshotai/Kimi-K2.6",
+  model: "MiniMaxAI/MiniMax-M2.7",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Reply with just: pong" }],
 });
@@ -1132,7 +1133,7 @@ console.log(text);
 
 // Streaming — idiomatic helper
 const stream = client.messages.stream({
-  model: "moonshotai/Kimi-K2.6",
+  model: "MiniMaxAI/MiniMax-M2.7",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Say hello in three words." }],
 });
@@ -1156,7 +1157,7 @@ const claudeCurl = computed(() => [
   -H "anthropic-version: 2023-06-01" \\
   -H "content-type: application/json" \\
   -d '{
-    "model": "moonshotai/Kimi-K2.6",
+    "model": "MiniMaxAI/MiniMax-M2.7",
     "max_tokens": 1024,
     "messages": [
       {"role": "user", "content": "Hello!"}
@@ -1171,7 +1172,7 @@ const claudeCurl = computed(() => [
     label: 'Windows (cmd)',
     filename: 'messages.cmd',
     code: `:: Command Prompt (cmd). curl.exe ships with Windows 10+.
-curl ${apiBase.value}/v1/messages -H "x-api-key: sk-xxxxxx" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"moonshotai/Kimi-K2.6\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Hello!\\"}]}"
+curl ${apiBase.value}/v1/messages -H "x-api-key: sk-xxxxxx" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" -d "{\\"model\\":\\"MiniMaxAI/MiniMax-M2.7\\",\\"max_tokens\\":1024,\\"messages\\":[{\\"role\\":\\"user\\",\\"content\\":\\"Hello!\\"}]}"
 
 :: Streaming variant — add \\"stream\\":true to the JSON body and pipe to a parser.
 `
@@ -1182,7 +1183,7 @@ const cursorValues = computed(
   () => `# Paste these EXACT values into Cursor → Settings → Models
 OpenAI Base URL:  ${apiBase.value}/v1
 OpenAI API Key:   sk-xxxxxx          # your GonkaRouter key
-Model name #1:    moonshotai/Kimi-K2.6
+Model name #1:    MiniMaxAI/MiniMax-M2.7
 
 # Optional Settings → Models → Advanced
 Max output tokens: 4096               # protects against reasoning-token starvation
@@ -1206,8 +1207,8 @@ mkdir -p /tmp/gonka-claude-home
 HOME=/tmp/gonka-claude-home \\
 ANTHROPIC_BASE_URL=${apiBase.value} \\
 ANTHROPIC_AUTH_TOKEN=sk-xxxxxx \\
-ANTHROPIC_MODEL=moonshotai/Kimi-K2.6 \\
-ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6 \\
+ANTHROPIC_MODEL=MiniMaxAI/MiniMax-M2.7 \\
+ANTHROPIC_SMALL_FAST_MODEL=MiniMaxAI/MiniMax-M2.7 \\
 DISABLE_PROMPT_CACHING=1 \\
 claude
 `
@@ -1227,8 +1228,8 @@ mkdir "%USERPROFILE%" 2>nul
 ::    then launch inside your project directory.
 set ANTHROPIC_BASE_URL=${apiBase.value}
 set ANTHROPIC_AUTH_TOKEN=sk-xxxxxx
-set ANTHROPIC_MODEL=moonshotai/Kimi-K2.6
-set ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6
+set ANTHROPIC_MODEL=MiniMaxAI/MiniMax-M2.7
+set ANTHROPIC_SMALL_FAST_MODEL=MiniMaxAI/MiniMax-M2.7
 set DISABLE_PROMPT_CACHING=1
 
 claude
@@ -1245,8 +1246,8 @@ const claudeCodeShellFn = computed(() => [
   HOME=/tmp/gonka-claude-home \\
   ANTHROPIC_BASE_URL=${apiBase.value} \\
   ANTHROPIC_AUTH_TOKEN="\${GONKA_API_KEY:?set GONKA_API_KEY in your shell}" \\
-  ANTHROPIC_MODEL=moonshotai/Kimi-K2.6 \\
-  ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6 \\
+  ANTHROPIC_MODEL=MiniMaxAI/MiniMax-M2.7 \\
+  ANTHROPIC_SMALL_FAST_MODEL=MiniMaxAI/MiniMax-M2.7 \\
   DISABLE_PROMPT_CACHING=1 \\
   claude "$@"
 }
@@ -1269,8 +1270,8 @@ set USERPROFILE=%TEMP%\\gonka-claude-home
 mkdir "%USERPROFILE%" 2>nul
 set ANTHROPIC_BASE_URL=${apiBase.value}
 set ANTHROPIC_AUTH_TOKEN=%GONKA_API_KEY%
-set ANTHROPIC_MODEL=moonshotai/Kimi-K2.6
-set ANTHROPIC_SMALL_FAST_MODEL=moonshotai/Kimi-K2.6
+set ANTHROPIC_MODEL=MiniMaxAI/MiniMax-M2.7
+set ANTHROPIC_SMALL_FAST_MODEL=MiniMaxAI/MiniMax-M2.7
 set DISABLE_PROMPT_CACHING=1
 claude %*
 `
@@ -1337,7 +1338,7 @@ const openclawProvider = computed(() => [
         auth: "api-key",
         api: "anthropic-messages",
         models: [
-          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" }
+          { id: "MiniMaxAI/MiniMax-M2.7",                       name: "MiniMax-M2.7" }
         ]
       }
     }
@@ -1359,7 +1360,7 @@ const openclawProvider = computed(() => [
         auth: "api-key",
         api: "anthropic-messages",
         models: [
-          { id: "moonshotai/Kimi-K2.6",                       name: "Kimi-K2.6" }
+          { id: "MiniMaxAI/MiniMax-M2.7",                       name: "MiniMax-M2.7" }
         ]
       }
     }
@@ -1417,7 +1418,7 @@ const openclawRun = [
     filename: 'run.sh',
     code: `# A. One-shot call (best for scripts / CI)
 openclaw infer model run \\
-  --model "gonka/moonshotai/Kimi-K2.6" \\
+  --model "gonka/MiniMaxAI/MiniMax-M2.7" \\
   --prompt "Reply with just: pong" \\
   --json
 
@@ -1434,7 +1435,7 @@ openclaw            # opens http://127.0.0.1:18789/ with an auth-included URL
     filename: 'run.cmd',
     code: `:: A. One-shot call (best for scripts / CI). cmd uses ^ for line-continuation.
 openclaw infer model run ^
-  --model "gonka/moonshotai/Kimi-K2.6" ^
+  --model "gonka/MiniMaxAI/MiniMax-M2.7" ^
   --prompt "Reply with just: pong" ^
   --json
 
