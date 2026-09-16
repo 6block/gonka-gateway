@@ -119,9 +119,11 @@
         </table>
       </div>
       <p class="text-text-muted text-xs mt-4 font-body">
-        Context figures are each model's published limit. Prompts in the hundreds of
-        thousands of tokens take minutes to process and can exceed the gateway's
-        10-minute request timeout — split very long inputs across turns.
+        Context figures are each model's published limit. In practice this gateway
+        accepts prompts up to roughly <strong class="text-text-main">200K tokens</strong>
+        per request across all models — beyond that, requests take minutes to process
+        and can exceed the 10-minute request timeout, so they are declined up front
+        rather than left to time out. Split very long inputs across turns.
       </p>
       <p class="text-text-muted text-xs mt-2 font-body">
         More models coming soon.

@@ -332,7 +332,7 @@ const allModels = [
     apiId: 'zai-org/GLM-5.3-Flash',
     iconComponent: GLMIconImg,
     description:
-      'Z.ai\'s speed-tuned GLM-5.3 variant, and the only model here that thinks before it answers: it emits a visible reasoning trace alongside the reply, so those thinking tokens are billed as output. Its hybrid architecture runs linear attention on 34 of 45 layers, which makes a long context far cheaper to hold than a conventional transformer — a 355K-token prompt came back in 13 seconds where comparable models time out. Drives tools reliably for agent workflows. Text only — image input is rejected upstream.',
+      'Z.ai\'s speed-tuned GLM-5.3 variant, and the only model here that thinks before it answers: it emits a visible reasoning trace alongside the reply, so those thinking tokens are billed as output. Its hybrid architecture runs linear attention on 34 of 45 layers, which makes a long context far cheaper to hold than a conventional transformer — a 355K-token prompt came back in 13 seconds where comparable models time out. Drives tools reliably for agent workflows. Text only — image input is rejected upstream. Note: this gateway currently accepts about 200K tokens per request; split longer inputs across turns.',
     // Published limit (max_position_embeddings 1048576). Unlike the other
     // models here, large prompts were measured rather than assumed: 150K in
     // 16s, 300K in 17s and 355K in 13s, all well inside the gateway's
@@ -367,7 +367,7 @@ const allModels = [
     apiId: 'deepseek-ai/DeepSeek-V4-Flash-0731',
     iconComponent: DeepSeekIconImg,
     description:
-      'The speed-tuned member of the DeepSeek V4 line, built for high-throughput everyday work: fast general chat, summarisation, extraction, and code assistance at low latency. It answers directly rather than emitting a visible reasoning trace, which keeps responses compact and quick, and it drives tools reliably for agent workflows. Note: prompts in the hundreds of thousands of tokens can exceed the gateway\'s 10-minute request timeout — split very long inputs across turns.',
+      'The speed-tuned member of the DeepSeek V4 line, built for high-throughput everyday work: fast general chat, summarisation, extraction, and code assistance at low latency. It answers directly rather than emitting a visible reasoning trace, which keeps responses compact and quick, and it drives tools reliably for agent workflows. Note: this gateway currently accepts about 200K tokens per request; split longer inputs across turns.',
     // The model's published limit (max_position_embeddings 1048576). What is
     // reachable in practice is lower and load-dependent: a 260K-token prompt
     // completed once in under 5 minutes but timed out on a repeat, and 400K
