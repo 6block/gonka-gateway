@@ -395,6 +395,7 @@ const config = useRuntimeConfig()
 // Order matters: selectedModel defaults to the first entry, so the default
 // model for new chats is changed by reordering this list.
 const availableModels = [
+  { name: 'GLM-5.3-Flash', id: 'zai-org/GLM-5.3-Flash' },
   { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731' },
   { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7' }
   // 2026-09-05: Kimi-K2.6 removed — 0 serving nodes left on the Gonka network.

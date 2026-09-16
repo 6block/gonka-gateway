@@ -759,7 +759,7 @@
                   <span class="text-text-main font-bold">Model Name</span> —
                   the model id exactly as listed on
                   <NuxtLink to="/models" class="font-bold underline hover:text-text-main">Models</NuxtLink>,
-                  e.g. <code class="font-mono text-primary-container">MiniMaxAI/MiniMax-M2.7</code>
+                  e.g. <code class="font-mono text-primary-container">zai-org/GLM-5.3-Flash</code>
                   or <code class="font-mono text-primary-container">deepseek-ai/DeepSeek-V4-Flash-0731</code>.
                   Case and slashes matter.
                 </span>
@@ -892,7 +892,7 @@
               <li>
                 A substitution is <span class="text-text-main font-bold">never silent</span>: the response
                 carries a header naming the requested and served model, e.g.
-                <code class="font-mono text-primary-container break-all">X-Gonka-Fallback: deepseek-ai/DeepSeek-V4-Flash-0731 -&gt; MiniMaxAI/MiniMax-M2.7</code>.
+                <code class="font-mono text-primary-container break-all">X-Gonka-Fallback: zai-org/GLM-5.3-Flash -&gt; MiniMaxAI/MiniMax-M2.7</code>.
                 The <code class="font-mono">model</code> field in the response body reflects the model that actually served it.
               </li>
               <li>

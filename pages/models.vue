@@ -254,7 +254,7 @@ const { fromPer1M, fromPer1MRaw } = useGonkaPricing()
 useSeoMeta({
   title: 'Supported AI Models',
   description: () =>
-    `Browse all AI models available on GonkaRouter — DeepSeek-V4-Flash, MiniMax-M2.7, and more. One unified API, transparent pricing from ${fromPer1M.value} per 1M tokens, tracking the Gonka network.`,
+    `Browse all AI models available on GonkaRouter — GLM-5.3-Flash, DeepSeek-V4-Flash, MiniMax-M2.7, and more. One unified API, transparent pricing from ${fromPer1M.value} per 1M tokens, tracking the Gonka network.`,
   ogTitle: 'Supported AI Models | GonkaRouter',
   ogDescription:
     'All AI models available on GonkaRouter through one unified API on the Gonka Network.',
@@ -306,10 +306,61 @@ const DeepSeekIconImg = () =>
     ]
   )
 
+const GLMIconImg = () =>
+  h(
+    'div',
+    {
+      class:
+        'relative w-12 h-12 shrink-0 rounded-xl bg-black flex items-center justify-center border border-white/10',
+      'aria-label': 'GLM-5.3-Flash'
+    },
+    [
+      h('span', { class: 'text-white font-black text-2xl font-headline leading-none' }, 'G'),
+      h('span', {
+        class: 'absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-emerald-400'
+      })
+    ]
+  )
+
 // TEMP 2026-06-25: Qwen3-235B carries `hidden: true` while upstream Gonka takes
 // it offline for adjustment. The full card data is kept intact; to restore it
 // simply remove its `hidden: true` line.
 const allModels = [
+  {
+    id: 'glm-5-3-flash',
+    name: 'GLM-5.3-Flash',
+    apiId: 'zai-org/GLM-5.3-Flash',
+    iconComponent: GLMIconImg,
+    description:
+      'Z.ai\'s speed-tuned GLM-5.3 variant, and the only model here that thinks before it answers: it emits a visible reasoning trace alongside the reply, so those thinking tokens are billed as output. Its hybrid architecture runs linear attention on 34 of 45 layers, which makes a long context far cheaper to hold than a conventional transformer — a 355K-token prompt came back in 13 seconds where comparable models time out. Drives tools reliably for agent workflows. Text only — image input is rejected upstream.',
+    // Published limit (max_position_embeddings 1048576). Unlike the other
+    // models here, large prompts were measured rather than assumed: 150K in
+    // 16s, 300K in 17s and 355K in 13s, all well inside the gateway's
+    // 10-minute timeout.
+    maxOutput: '1M',
+    price: {
+      amount: '', // display uses the live rate from useGonkaPricing()
+      unit: '1M tokens',
+      note: 'Same rate for input and output tokens'
+    },
+    tags: [
+      { label: 'chat', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
+      // Confirmed against the live endpoint: tool calling returned a
+      // well-formed tool_call and streamed deltas carry a `reasoning` field,
+      // while image_url input was rejected upstream.
+      {
+        label: 'Function',
+        icon: LucideTerminal,
+        color: 'bg-surface-container-highest text-text-muted border-white/5'
+      },
+      {
+        label: 'Reasoning',
+        icon: LucideZap,
+        color: 'bg-surface-container-highest text-text-muted border-white/5'
+      }
+    ],
+    date: '2026-09-16'
+  },
   {
     id: 'deepseek-v4-flash-0731',
     name: 'DeepSeek-V4-Flash',

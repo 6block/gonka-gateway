@@ -24,7 +24,7 @@
             <span
               class="font-label text-xs tracking-widest uppercase text-secondary font-bold"
             >
-              Now Supporting DeepSeek-V4-Flash
+              Now Supporting GLM-5.3-Flash
             </span>
           </div>
         </div>
@@ -381,7 +381,7 @@ import {
 const homeFaqs = [
   {
     q: 'What is GonkaRouter?',
-    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including DeepSeek-V4-Flash and MiniMax-M2.7 — with transparent per-token pricing and no monthly subscriptions.'
+    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including GLM-5.3-Flash, DeepSeek-V4-Flash and MiniMax-M2.7 — with transparent per-token pricing and no monthly subscriptions.'
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
@@ -397,7 +397,7 @@ const homeFaqs = [
   },
   {
     q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">DeepSeek-V4-Flash</strong> and <strong class="text-text-main">MiniMax-M2.7</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
+    a: 'GonkaRouter currently supports <strong class="text-text-main">GLM-5.3-Flash</strong>, <strong class="text-text-main">DeepSeek-V4-Flash</strong> and <strong class="text-text-main">MiniMax-M2.7</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
   },
   {
     q: 'Is the API compatible with OpenAI SDKs?',
@@ -498,6 +498,13 @@ const features = [
 ]
 
 const featuredModels = [
+  {
+    id: 'glm',
+    label: 'GLM-5.3-Flash',
+    apiId: 'zai-org/GLM-5.3-Flash',
+    tagline:
+      'Optimized GLM-5.3-Flash: A reasoning-capable flash model with a 1M-token window — its hybrid linear-attention design holds long context far more comfortably than a standard transformer on the Gonka pipeline.'
+  },
   {
     id: 'deepseek',
     label: 'DeepSeek-V4-Flash',

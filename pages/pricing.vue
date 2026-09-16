@@ -230,6 +230,7 @@ const steps = [
 const models = [
   // Published limit (max_position_embeddings 1048576). Reaching it in practice
   // is load-dependent — see the timeout note rendered under the table.
+  { name: 'GLM-5.3-Flash', id: 'zai-org/GLM-5.3-Flash', ctx: '1M' },
   { name: 'DeepSeek-V4-Flash', id: 'deepseek-ai/DeepSeek-V4-Flash-0731', ctx: '1M' },
   { name: 'MiniMax-M2.7', id: 'MiniMaxAI/MiniMax-M2.7', ctx: '192K' }
   // 2026-09-05: Kimi-K2.6 removed — it lost every serving node on the Gonka

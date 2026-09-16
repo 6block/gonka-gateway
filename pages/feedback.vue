@@ -301,6 +301,7 @@ const socials = [
 
 const topics = ['API issue', 'Model behavior', 'Docs issue', 'Billing issue', 'Feature request', 'Other']
 const models = [
+  'zai-org/GLM-5.3-Flash',
   'deepseek-ai/DeepSeek-V4-Flash-0731',
   'MiniMaxAI/MiniMax-M2.7',
   // 2026-09-05: Kimi-K2.6 removed — 0 serving nodes left on the Gonka network.
@@ -314,7 +315,7 @@ const defaultForm = () => ({
   name: '',
   email: '',
   topic: '',
-  model: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+  model: 'zai-org/GLM-5.3-Flash',
   message: ''
 })
 
