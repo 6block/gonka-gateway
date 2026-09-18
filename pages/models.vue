@@ -30,9 +30,23 @@
         >
           <component :is="activeModel.iconComponent" />
           <div class="flex-1 text-center md:text-left space-y-2 min-w-0">
-            <h3 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight break-all md:break-normal">
-              {{ activeModel.name }}
-            </h3>
+            <!-- Full API id here too, so the name on screen matches the one in
+                 the code example below it. -->
+            <div class="flex items-center justify-center gap-2 md:justify-start">
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-black font-headline tracking-tight break-words md:break-normal">
+                {{ activeModel.apiId }}
+              </h3>
+              <button
+                type="button"
+                class="group/copy shrink-0 rounded-md p-1.5 text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
+                :title="`Copy ${activeModel.apiId}`"
+                @click="copyModelId(activeModel.apiId)"
+              >
+                <LucideCopy
+                  class="h-4 w-4 opacity-50 transition-opacity group-hover/copy:opacity-100"
+                />
+              </button>
+            </div>
             <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed max-w-2xl">
               {{ activeModel.description }}
             </p>
@@ -98,31 +112,33 @@
               <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                 <component :is="model.iconComponent" />
                 <div class="min-w-0">
+                  <!-- One line, and it is the full API id rather than the short
+                       display name: this is the string users copy into their
+                       code, and the display name is not a value the API takes. -->
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h3 class="text-base sm:text-xl font-black font-headline tracking-tight break-all">
-                      {{ model.name }}
+                    <!-- break-words, not break-all: a long id should wrap after
+                         the vendor slash or a hyphen, not mid-token. -->
+                    <h3 class="text-base sm:text-xl font-black font-headline tracking-tight break-words">
+                      {{ model.apiId }}
                     </h3>
+                    <!-- Clicking copies instead of opening the detail view. -->
+                    <button
+                      type="button"
+                      class="group/copy shrink-0 rounded-md p-1 text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
+                      :title="`Copy ${model.apiId}`"
+                      @click.stop="copyModelId(model.apiId)"
+                    >
+                      <!-- Always visible, not hover-only: touch devices have no
+                           hover state and would never see the affordance. -->
+                      <LucideCopy
+                        class="h-3.5 w-3.5 opacity-50 transition-opacity group-hover/copy:opacity-100"
+                      />
+                    </button>
                     <div class="flex items-center gap-1 opacity-60">
                       <LucideMessageCircle class="w-4 h-4" />
                       <span class="text-xs font-black">AI</span>
                     </div>
                   </div>
-                  <!-- The full API id, not the short slug: users copy this line
-                       straight into their code, and the slug is not a value the
-                       API accepts. Clicking copies instead of opening the modal. -->
-                  <button
-                    type="button"
-                    class="group/copy mt-1 flex items-start gap-1.5 text-left text-[11px] sm:text-xs font-mono text-text-muted transition-colors hover:text-primary-container"
-                    :title="`Copy ${model.apiId}`"
-                    @click.stop="copyModelId(model.apiId)"
-                  >
-                    <span class="break-all">{{ model.apiId }}</span>
-                    <!-- Always visible, not hover-only: touch devices have no
-                         hover state and would never see the affordance. -->
-                    <LucideCopy
-                      class="mt-0.5 h-3 w-3 shrink-0 opacity-40 transition-opacity group-hover/copy:opacity-100"
-                    />
-                  </button>
                 </div>
               </div>
               <div
