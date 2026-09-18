@@ -107,7 +107,22 @@
                       <span class="text-xs font-black">AI</span>
                     </div>
                   </div>
-                  <p class="text-[11px] sm:text-xs font-mono text-text-muted mt-1 break-all">{{ model.id }}</p>
+                  <!-- The full API id, not the short slug: users copy this line
+                       straight into their code, and the slug is not a value the
+                       API accepts. Clicking copies instead of opening the modal. -->
+                  <button
+                    type="button"
+                    class="group/copy mt-1 flex items-start gap-1.5 text-left text-[11px] sm:text-xs font-mono text-text-muted transition-colors hover:text-primary-container"
+                    :title="`Copy ${model.apiId}`"
+                    @click.stop="copyModelId(model.apiId)"
+                  >
+                    <span class="break-all">{{ model.apiId }}</span>
+                    <!-- Always visible, not hover-only: touch devices have no
+                         hover state and would never see the affordance. -->
+                    <LucideCopy
+                      class="mt-0.5 h-3 w-3 shrink-0 opacity-40 transition-opacity group-hover/copy:opacity-100"
+                    />
+                  </button>
                 </div>
               </div>
               <div
@@ -532,6 +547,15 @@ const client = new OpenAI({
   }'`
   }
 })
+
+async function copyModelId(apiId) {
+  try {
+    await navigator.clipboard.writeText(apiId)
+    toast.success('Model name copied')
+  } catch {
+    toast.error('Failed to copy model name')
+  }
+}
 
 async function copyCode() {
   try {
