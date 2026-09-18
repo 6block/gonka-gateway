@@ -17,6 +17,7 @@ const EVENT_URL = 'https://luma.com/d66o016k'
 const SHOW_DELAY_MS = 1200
 
 const promo = useEventPromo()
+const route = useRoute()
 const { isOpen: loginModalOpen } = useLoginModal()
 const { track } = useAnalytics()
 
@@ -36,6 +37,9 @@ function open() {
   // The login and account-upgrade modals own the screen when they are up; a
   // marketing prompt must never stack on top of an auth flow in progress.
   if (loginModalOpen.value) return
+  // Re-checked here, not only at mount: the visitor may have navigated onto a
+  // campaign landing page during the show delay.
+  if (promo.isCampaignLanding(route.path)) return
   daysLeft.value = promo.daysUntil()
   isVisible.value = true
   lockScroll()
@@ -77,7 +81,7 @@ function unlockScroll() {
 }
 
 onMounted(() => {
-  if (!promo.isEligible()) return
+  if (!promo.isEligible(route.path)) return
   showTimer = setTimeout(open, SHOW_DELAY_MS)
 })
 

@@ -21,6 +21,15 @@ const EVENT_START_MS = Date.parse('2026-09-21T13:30:00+08:00')
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
+// Campaign landing pages are paid-for or partner-referred traffic arriving with
+// one specific call to action. Covering that with an unrelated event prompt
+// costs conversions on exactly the visitors we spent the most to get, so these
+// pages are excluded outright.
+const CAMPAIGN_LANDING_PAGES = ['/fff', '/elite', '/icg']
+
+const isCampaignLanding = (path: string): boolean =>
+  CAMPAIGN_LANDING_PAGES.includes(path.replace(/\/+$/, '') || '/')
+
 export const useEventPromo = () => {
   const hasExpired = (): boolean => Date.now() > EVENT_END_MS
 
@@ -44,13 +53,17 @@ export const useEventPromo = () => {
     }
   }
 
-  // Eligible = client-side, event still upcoming, and never dismissed before.
-  const isEligible = (): boolean =>
-    typeof window !== 'undefined' && !hasExpired() && !isDismissed()
+  // Eligible = client-side, event still upcoming, never dismissed before, and
+  // not on a campaign landing page.
+  const isEligible = (path: string): boolean =>
+    typeof window !== 'undefined' &&
+    !hasExpired() &&
+    !isDismissed() &&
+    !isCampaignLanding(path)
 
   // Whole days remaining, floored, for the countdown pill. 0 on the event day.
   const daysUntil = (): number =>
     Math.max(0, Math.ceil((EVENT_START_MS - Date.now()) / MS_PER_DAY))
 
-  return { isEligible, isDismissed, dismiss, hasExpired, daysUntil }
+  return { isEligible, isCampaignLanding, isDismissed, dismiss, hasExpired, daysUntil }
 }

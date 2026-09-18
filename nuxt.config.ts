@@ -27,13 +27,18 @@ const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 // integration looks "installed but reporting nothing" — img-src already allows
 // https: so the fallback pixel would still fire, which makes the failure even
 // harder to spot.
+// static.cloudflareinsights.com → the Web Analytics (RUM) beacon that Cloudflare
+// injects into the HTML at the edge. We do not add the tag ourselves, so
+// omitting it here does not remove it: the script is served, blocked by CSP, and
+// logs a violation in every visitor's console while collecting nothing. Its own
+// data POST goes to /cdn-cgi/rum on our origin, which connect-src 'self' covers.
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://challenges.cloudflare.com https://www.googletagmanager.com",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com https://challenges.cloudflare.com https://www.googletagmanager.com https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
