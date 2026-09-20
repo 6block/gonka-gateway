@@ -97,7 +97,13 @@ async function fetchAccessLines(path, logfile) {
   return stdout.split('\n').filter(Boolean)
 }
 
+// nginx logs /icg and /icg/ as two distinct paths, and a partner may publish
+// either spelling — both serve the same page, so both must count. Without this
+// a trailing slash in the published link silently reports zero traffic.
+const normalizePath = (p) => p.replace(/\/+$/, '') || '/'
+
 function summarizeTraffic(lines, { path, since }) {
+  const wanted = normalizePath(path)
   const buckets = new Map() // utm_content → stats
   const daily = new Map() // YYYY-MM-DD → hits
   const referers = new Map()
@@ -112,7 +118,7 @@ function summarizeTraffic(lines, { path, since }) {
     // grep matched anywhere in the line; confirm it is really this page and
     // not, say, a referer that happens to contain the path.
     const [urlPath, queryString = ''] = url.split('?')
-    if (urlPath !== path || method !== 'GET') continue
+    if (normalizePath(urlPath) !== wanted || method !== 'GET') continue
     // 3xx/4xx are not page views; a redirect chain would double-count.
     if (!status.startsWith('2')) continue
 
@@ -129,7 +135,14 @@ function summarizeTraffic(lines, { path, since }) {
     }
 
     const params = new URLSearchParams(queryString)
-    const tag = params.get('utm_content') || params.get('utm_campaign') || '(no utm)'
+    // Most specific tag available: utm_content separates two scripts from the
+    // same partner, campaign groups them, source is the fallback for a link
+    // published with only ?utm_source=.
+    const tag =
+      params.get('utm_content') ||
+      params.get('utm_campaign') ||
+      params.get('utm_source') ||
+      '(no utm)'
 
     if (!buckets.has(tag)) buckets.set(tag, { hits: 0, ips: new Set() })
     const bucket = buckets.get(tag)

@@ -22,31 +22,31 @@
         <div class="icg-hero-content">
           <div class="icg-hero-top">
             <span class="icg-badge hero-anim hero-fade" style="animation-delay: 0.15s">
-              <i class="icg-badge-dot"></i>ICG Community Exclusive
+              <i class="icg-badge-dot"></i>Exclusive for Gonka Users
             </span>
             <h1 class="icg-h1">
               <span class="hero-anim hero-reveal-line" style="animation-delay: 0.25s">Build Your AI Product</span>
               <span class="hero-anim hero-reveal-line" style="animation-delay: 0.4s">With <span class="icg-grad">Gonka Router</span></span>
             </h1>
             <p class="icg-subtitle hero-anim hero-fade" style="animation-delay: 0.6s">
-              Extra Free Inference Credits for ICG Builders
+              Extra Free Inference Credits for Gonka Users
             </p>
           </div>
 
           <div class="icg-hero-corner icg-hero-left hero-anim hero-fade" style="animation-delay: 0.75s">
             <p class="icg-lead">
-              ICG builders get everything in our standard credit program, plus an
-              <span class="icg-hl">extra $20 in credits</span> reserved just for the ICG community.
+              Gonka users get everything in our standard credit program, plus an
+              <span class="icg-hl">extra $20 in credits</span> reserved for this page.
             </p>
           </div>
 
           <div class="icg-hero-corner icg-hero-right hero-anim hero-fade" style="animation-delay: 0.9s">
             <p class="icg-hero-hint">
-              <LucideSprout :size="13" /> Referred by ICG
+              <LucideSprout :size="13" /> Powered by the Gonka network
             </p>
             <div class="icg-cta-row">
               <button type="button" class="icg-btn icg-btn-primary" @click="goRegister">Register</button>
-              <a href="#apply" class="icg-btn icg-btn-ghost">Claim ICG credits</a>
+              <a href="#apply" class="icg-btn icg-btn-ghost">Claim extra credits</a>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
       <section class="icg-wrap icg-rewards">
         <div class="icg-section-head">
           <span class="icg-eyebrow">The Program</span>
-          <h2 class="icg-section-title">How ICG builders earn credits</h2>
+          <h2 class="icg-section-title">How Gonka users earn credits</h2>
         </div>
         <div class="icg-grid">
           <article v-for="(rule, i) in creditRules" :key="i" class="icg-card">
@@ -79,11 +79,11 @@
         <div class="icg-apply">
           <div class="icg-apply-grid">
             <div class="icg-apply-intro">
-              <span class="icg-eyebrow">ICG bonus</span>
-              <h2 class="icg-apply-title">Claim your ICG credits</h2>
+              <span class="icg-eyebrow">Bonus credits</span>
+              <h2 class="icg-apply-title">Claim your extra credits</h2>
               <p class="icg-apply-copy">
                 Register first, then submit your registered email and a short note about your project.
-                The team reviews every request and adds your ICG credits to your account.
+                The team reviews every request and adds the credits to your account.
               </p>
             </div>
 
@@ -163,11 +163,11 @@ const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 
 useSeoMeta({
-  title: 'Build Your AI Product With Gonka Router — ICG Community',
+  title: 'Build Your AI Product With Gonka Router — Extra Credits',
   description:
-    'ICG community exclusive: build your AI product on Gonka Router and get an extra $20 in free inference credits on top of the standard program.',
+    'Build your AI product on Gonka Router and get an extra $20 in free inference credits on top of the standard program.',
   ogTitle: 'Build Your AI Product With Gonka Router',
-  ogDescription: 'Extra free inference credits for ICG builders.',
+  ogDescription: 'Extra free inference credits for Gonka users.',
   ogUrl: `${siteUrl}/icg`
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/icg` }] })
@@ -176,8 +176,9 @@ const router = useRouter()
 const { open: openLoginModal } = useLoginModal()
 const signupSource = useSignupSource()
 
-// Tag this browser as an ICG visitor. Any registration that follows within the
-// attribution window is stored on the new user record as source 'icg'.
+// Tag this browser as a visitor from this partner. The tag stays 'icg' on our
+// side — it is how the partner's traffic is told apart in reporting — even
+// though the partner asked for their name to be kept out of the page copy.
 const tagSource = () => {
   signupSource.set(ICG_SOURCE)
 }
@@ -190,8 +191,8 @@ const goRegister = async () => {
 
 const creditRules = [
   {
-    title: 'ICG welcome bonus',
-    text: 'Register through this page and claim below to receive an extra $20 reserved for the ICG community.'
+    title: 'Welcome bonus',
+    text: 'Register through this page and claim below to receive an extra $20 in credits.'
   },
   {
     title: 'First call bonus',
