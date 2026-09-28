@@ -43,7 +43,19 @@ const ADMIN_PAGE_SIZE = 100
 const ADMIN_MAX_PAGES = 100
 
 // Crawlers and uptime monitors would otherwise inflate a partner's numbers.
-const BOT_UA = /bot|crawler|spider|slurp|curl|wget|python-requests|okhttp|headless|monitor|uptime|axios|go-http-client|scrapy|facebookexternalhit|bingpreview/i
+const BOT_UA = /bot|crawler|spider|slurp|curl|wget|python-requests|okhttp|headless|monitor|uptime|axios|go-http-client|scrapy|bingpreview/i
+
+// Link-preview fetchers: the unfurl request a chat app makes when someone pastes
+// the link. Not visits, but not noise either — they count how often the link was
+// *shared*, which is real signal for a partner distributing via video captions
+// and link-in-bio.
+//
+// Matched anchored at the start of the UA, never as a substring: the same
+// products' real in-app browsers send an ordinary
+// "Mozilla/5.0 ... FBAN/MessengerForiOS" string, so a substring match on
+// "messenger" or "whatsapp" would silently discard real humans.
+const PREVIEW_UA =
+  /^(whatsapp|messenger|facebookexternalhit|telegrambot|snap|line-poker|short\.io|shareextension|ktor|convex|collabbasebot|duckassistbot|claude-user|google-notebooklm|google|python)\b/i
 
 // nginx "combined": ip - user [time] "METHOD path proto" status bytes "referer" "ua"
 const LOG_LINE =
@@ -108,6 +120,7 @@ function summarizeTraffic(lines, { path, since }) {
   const daily = new Map() // YYYY-MM-DD → hits
   const referers = new Map()
   let bots = 0
+  let previews = 0
   let outOfWindow = 0
 
   for (const line of lines) {
@@ -126,6 +139,11 @@ function summarizeTraffic(lines, { path, since }) {
     if (!at) continue
     if (at < since) {
       outOfWindow += 1
+      continue
+    }
+
+    if (PREVIEW_UA.test(ua)) {
+      previews += 1
       continue
     }
 
@@ -161,7 +179,7 @@ function summarizeTraffic(lines, { path, since }) {
     }
   }
 
-  return { buckets, daily, referers, bots, outOfWindow }
+  return { buckets, daily, referers, bots, previews, outOfWindow }
 }
 
 async function adminLogin(username, password) {
@@ -220,6 +238,7 @@ function printReport({ args, since, traffic, conversions, warnings }) {
   console.log('TRAFFIC (nginx access logs, bots excluded)')
   console.log(`  Page views      ${num(totalHits)}`)
   console.log(`  Unique visitors ${num(totalVisitors)}`)
+  console.log(`  Link previews   ${num(traffic.previews)} (excluded above — chat-app unfurls, i.e. times the link was shared)`)
   console.log(`  Bot requests    ${num(traffic.bots)} (excluded above)`)
 
   if (traffic.buckets.size > 0) {
@@ -266,6 +285,7 @@ function writeCsv(file, { args, traffic, conversions }) {
   for (const [day, hits] of [...traffic.daily.entries()].sort()) {
     rows.push(['page_views_by_day', day, hits])
   }
+  rows.push(['link_previews', 'all', traffic.previews])
   rows.push(['bot_requests', 'all', traffic.bots])
   if (conversions) {
     rows.push(
