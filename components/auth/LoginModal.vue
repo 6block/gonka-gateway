@@ -22,9 +22,9 @@ const digits = ref<string[]>(Array(CODE_LENGTH).fill(''))
 const inputRefs = ref<HTMLInputElement[]>([])
 const code = computed(() => digits.value.join(''))
 
-// Turnstile is intentionally skipped for now; the backend treats an empty
-// token as "no challenge configured" and falls back to its rate limiting.
-const turnstileToken = ref('')
+// Fresh token per send (see TurnstileWidget). Without a site key configured it
+// resolves "", which the backend treats as "no challenge configured".
+const turnstile = ref<{ getToken: () => Promise<string> } | null>(null)
 
 const resendIn = ref(0)
 let resendTimer: ReturnType<typeof setInterval> | null = null
@@ -66,7 +66,8 @@ async function sendCode() {
   sending.value = true
   errorMsg.value = ''
   try {
-    const res = await auth.sendEmailCode(email.value.trim(), turnstileToken.value)
+    const token = (await turnstile.value?.getToken()) ?? ''
+    const res = await auth.sendEmailCode(email.value.trim(), token)
     step.value = 'code'
     startResend(res?.resend_after ?? 60)
     await nextTick()
@@ -342,6 +343,9 @@ onUnmounted(stopTimer)
             </button>
           </div>
         </div>
+
+        <!-- Outside both steps so it stays mounted for "Resend code". -->
+        <AuthTurnstileWidget ref="turnstile" class="relative z-10" />
       </div>
     </div>
   </Transition>
