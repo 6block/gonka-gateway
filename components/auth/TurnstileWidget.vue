@@ -17,7 +17,11 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 // which the backend treats as "no challenge configured" — so dev and any
 // environment without keys behave exactly as before.
 
-const TOKEN_TIMEOUT_MS = 60_000
+// Safety net only, for a script that never calls back. When Cloudflare shows the
+// interactive checkbox the user may take a while; Turnstile reports a genuinely
+// abandoned challenge itself via timeout-callback. A short timer here would
+// reject first and then discard the token from the user's late click.
+const TOKEN_TIMEOUT_MS = 300_000
 
 const config = useRuntimeConfig()
 const siteKey = config.public.turnstileSiteKey as string
