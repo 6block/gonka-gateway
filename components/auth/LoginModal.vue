@@ -148,9 +148,10 @@ async function signInWithWallet() {
   walletConnecting.value = true
   errorMsg.value = ''
   try {
+    const token = (await turnstile.value?.getToken()) ?? ''
     const accounts: string[] = await eth.request({ method: 'eth_requestAccounts' })
     if (!accounts?.length) throw new Error('No account authorized')
-    await auth.login(accounts[0], eth)
+    await auth.login(accounts[0], eth, token)
     toast.success('Signed in')
     close()
   } catch (e: unknown) {

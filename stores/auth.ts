@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // ---- Wallet (SIWE) login — unchanged, kept as a legacy/migration path ----
-  async function login(address: string, provider: any) {
+  async function login(address: string, provider: any, turnstileToken: string = '') {
     if (!import.meta.client) {
       throw new Error('login() must be called from the browser')
     }
@@ -115,7 +115,8 @@ export const useAuthStore = defineStore('auth', () => {
           address: checksumAddress,
           channel: CHANNEL,
           message: preparedMessage,
-          signature
+          signature,
+          turnstile_token: turnstileToken
         }
       })
 

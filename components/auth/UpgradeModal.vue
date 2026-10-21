@@ -21,6 +21,9 @@ const sending = ref(false)
 const verifying = ref(false)
 const errorMsg = ref('')
 const otpRef = ref<{ reset: () => void; focus: () => void } | null>(null)
+// /auth/email/send requires a Turnstile token once the backend secret is set;
+// sending "" here 403s every legacy wallet user trying to bind an email.
+const turnstile = ref<{ getToken: () => Promise<string> } | null>(null)
 
 const resendIn = ref(0)
 let resendTimer: ReturnType<typeof setInterval> | null = null
@@ -50,7 +53,8 @@ async function sendCode() {
   sending.value = true
   errorMsg.value = ''
   try {
-    const res = await auth.sendEmailCode(email.value.trim(), '')
+    const token = (await turnstile.value?.getToken()) ?? ''
+    const res = await auth.sendEmailCode(email.value.trim(), token)
     step.value = 'code'
     startResend(res?.resend_after ?? 60)
     otpRef.value?.reset()
@@ -226,6 +230,9 @@ onUnmounted(stopTimer)
             </button>
           </div>
         </div>
+
+        <!-- Outside the steps so it stays mounted for "Resend code". -->
+        <AuthTurnstileWidget ref="turnstile" class="relative z-10" />
       </div>
     </div>
   </Transition>
