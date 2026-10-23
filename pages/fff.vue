@@ -35,7 +35,7 @@
 
           <div class="fff-hero-corner fff-hero-left hero-anim hero-fade" style="animation-delay: 0.75s">
             <p class="fff-lead">
-              Startups building AI applications on Gonka Router get free inference credit support
+              Startups building AI applications on Gonka Router get free inference token support
               to launch faster — up to <span class="fff-hl">$40 in credits</span>.
             </p>
           </div>
@@ -82,7 +82,7 @@
               <span class="fff-eyebrow">More credits</span>
               <h2 class="fff-apply-title">Apply for more credits</h2>
               <p class="fff-apply-copy">
-                Submit your registered email and a short note about your project to apply for more credits.
+                Submit your registered email and a short note about your project to apply for more tokens.
               </p>
             </div>
 
@@ -113,7 +113,7 @@
                   <textarea
                     v-model="form.message"
                     rows="4"
-                    placeholder="Tell us what you are building, which model you use, and where extra credits would help."
+                    placeholder="Tell us what you are building, which model you use, and where extra tokens would help."
                     class="fff-input fff-textarea"
                     :class="{ 'fff-input-error': errors.message }"
                   ></textarea>
@@ -190,15 +190,15 @@ const goRegister = async () => {
 const creditRules = [
   {
     title: 'First call bonus',
-    text: 'Register, create an API key, and complete your first real API call to get $20.'
+    text: 'Register, create an API key, and complete your first real API call to get 10M free tokens.'
   },
   {
     title: 'Stay active',
-    text: 'Actively use Gonka Router within 30 days to unlock another $20.'
+    text: 'Actively use Gonka Router within 30 days to unlock another 10M tokens.'
   },
   {
     title: 'Hit milestones',
-    text: 'Keep using Gonka Router and unlock more credits at the 60, 90, and 120-day milestones.'
+    text: 'Keep using Gonka Router and unlock more tokens at the 60, 90, and 120-day milestones.'
   },
   {
     title: 'Real rewards',

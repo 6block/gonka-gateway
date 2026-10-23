@@ -96,7 +96,7 @@
               <h2 class="el-apply-title">Apply for more credits</h2>
               <p class="el-apply-copy">
                 Submit your registered email and a short note about your research
-                project to apply for more credits.
+                project to apply for more tokens.
               </p>
             </div>
 
@@ -127,7 +127,7 @@
                   <textarea
                     v-model="form.message"
                     rows="4"
-                    placeholder="Tell us what you are researching or building, which model you use, and where extra credits would help."
+                    placeholder="Tell us what you are researching or building, which model you use, and where extra tokens would help."
                     class="el-input el-textarea"
                     :class="{ 'el-input-error': errors.message }"
                   ></textarea>
@@ -213,7 +213,7 @@ const creditRules = [
   {
     stage: 'Week 0',
     title: 'Join the program',
-    text: 'Register with your program email and create an API key. Your free inference credits are ready on your first call.'
+    text: 'Register with your program email and create an API key. Your 10M free tokens are ready on your first call.'
   },
   {
     stage: 'Week 1–8',
@@ -223,12 +223,12 @@ const creditRules = [
   {
     stage: 'Demo day',
     title: 'Show your work',
-    text: 'Present your AI research workflow or tool demo at the summits. Selected demos receive additional free credits.'
+    text: 'Present your AI research workflow or tool demo at the summits. Selected demos receive additional free tokens.'
   },
   {
     stage: 'Elite track',
     title: 'Go further',
-    text: 'Finalists move onto the elite track with dedicated free credit support for turning the work into a real product.'
+    text: 'Finalists move onto the elite track with dedicated free token support for turning the work into a real product.'
   }
 ]
 

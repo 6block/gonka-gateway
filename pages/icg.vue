@@ -29,14 +29,14 @@
               <span class="hero-anim hero-reveal-line" style="animation-delay: 0.4s">With <span class="icg-grad">Gonka Router</span></span>
             </h1>
             <p class="icg-subtitle hero-anim hero-fade" style="animation-delay: 0.6s">
-              Extra Free Inference Credits for Gonka Users
+              Extra Free Inference Tokens for Gonka Users
             </p>
           </div>
 
           <div class="icg-hero-corner icg-hero-left hero-anim hero-fade" style="animation-delay: 0.75s">
             <p class="icg-lead">
-              Gonka users get everything in our standard credit program, plus an
-              <span class="icg-hl">extra $20 in credits</span> reserved for this page.
+              Gonka users get everything in our standard token program, plus an
+              <span class="icg-hl">extra 10M free tokens</span> reserved for this page.
             </p>
           </div>
 
@@ -83,7 +83,7 @@
               <h2 class="icg-apply-title">Claim your extra credits</h2>
               <p class="icg-apply-copy">
                 Register first, then submit your registered email and a short note about your project.
-                The team reviews every request and adds the credits to your account.
+                The team reviews every request and adds the tokens to your account.
               </p>
             </div>
 
@@ -114,7 +114,7 @@
                   <textarea
                     v-model="form.message"
                     rows="4"
-                    placeholder="Tell us what you are building, which model you use, and where extra credits would help."
+                    placeholder="Tell us what you are building, which model you use, and where extra tokens would help."
                     class="icg-input icg-textarea"
                     :class="{ 'icg-input-error': errors.message }"
                   ></textarea>
@@ -163,11 +163,11 @@ const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 
 useSeoMeta({
-  title: 'Build Your AI Product With Gonka Router — Extra Credits',
+  title: 'Build Your AI Product With Gonka Router — Extra Free Tokens',
   description:
-    'Build your AI product on Gonka Router and get an extra $20 in free inference credits on top of the standard program.',
+    'Build your AI product on Gonka Router and get an extra 10M free inference tokens on top of the standard program.',
   ogTitle: 'Build Your AI Product With Gonka Router',
-  ogDescription: 'Extra free inference credits for Gonka users.',
+  ogDescription: 'Extra free inference tokens for Gonka users.',
   ogUrl: `${siteUrl}/icg`
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/icg` }] })
@@ -192,19 +192,19 @@ const goRegister = async () => {
 const creditRules = [
   {
     title: 'Welcome bonus',
-    text: 'Register through this page and claim below to receive an extra $20 in credits.'
+    text: 'Register through this page and claim below to receive an extra 10M free tokens.'
   },
   {
     title: 'First call bonus',
-    text: 'Register, create an API key, and complete your first real API call to get $20.'
+    text: 'Register, create an API key, and complete your first real API call to get 10M free tokens.'
   },
   {
     title: 'Stay active',
-    text: 'Actively use Gonka Router within 30 days to unlock another $20.'
+    text: 'Actively use Gonka Router within 30 days to unlock another 10M tokens.'
   },
   {
     title: 'Hit milestones',
-    text: 'Keep using Gonka Router and unlock more credits at the 60, 90, and 120-day milestones.'
+    text: 'Keep using Gonka Router and unlock more tokens at the 60, 90, and 120-day milestones.'
   }
 ]
 
