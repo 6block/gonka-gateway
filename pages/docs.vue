@@ -47,7 +47,7 @@
           <ol class="space-y-2 text-sm sm:text-base text-text-muted leading-relaxed list-decimal pl-5">
             <li>Open the <NuxtLink to="/dashboard" class="text-primary-container font-bold hover:underline">Dashboard</NuxtLink>, sign in with email or Google.</li>
             <li>Click <span class="text-text-main font-bold">Create API Key</span>, give it a label, copy the value.</li>
-            <li>New accounts get <span class="text-primary-container font-bold">a one-time $20 free credit</span>, so you can try every model before topping up.</li>
+            <li>New accounts get <span class="text-primary-container font-bold">10M free tokens</span>, so you can try every model before topping up.</li>
           </ol>
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <NuxtLink

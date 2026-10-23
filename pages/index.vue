@@ -41,7 +41,7 @@
         >
           <LucideZap class="w-4 h-4 text-primary-container" />
           <span class="text-xs sm:text-sm font-bold tracking-wide text-primary-container uppercase">
-            New users get $20 credits
+            New users get 10M free tokens
           </span>
         </div>
 
@@ -385,15 +385,15 @@ const homeFaqs = [
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
-    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong>, plus a one-time $20 free credit for new users.'
+    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong>, plus 10M free tokens for new users.'
   },
   {
     q: 'How is GonkaRouter different from OpenRouter?',
-    a: `A single per-token rate that tracks the Gonka network — the same for input and output, with no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get $20 credits.`
+    a: `A single per-token rate that tracks the Gonka network — the same for input and output, with no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get 10M free tokens.`
   },
   {
     q: 'How does GonkaRouter pricing work?',
-    a: 'GonkaRouter charges a <strong class="text-text-main">single per-token rate that tracks the Gonka network price</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges — see the Pricing page for the current live rate. New users get $20 credits. After that, you top up your balance and are billed only for what you consume.'
+    a: 'GonkaRouter charges a <strong class="text-text-main">single per-token rate that tracks the Gonka network price</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges — see the Pricing page for the current live rate. New users get 10M free tokens. After that, you top up your balance and are billed only for what you consume.'
   },
   {
     q: 'Which AI models does GonkaRouter support?',
@@ -409,7 +409,7 @@ const homeFaqs = [
   },
   {
     q: 'How do I get started?',
-    a: 'Getting started takes less than a minute: sign in with email or Google on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive a one-time $20 free credit — no payment setup required to start.'
+    a: 'Getting started takes less than a minute: sign in with email or Google on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive 10M free tokens — no payment setup required to start.'
   }
 ]
 
@@ -469,7 +469,7 @@ const { fromPer1M } = useGonkaPricing()
 useSeoMeta({
   title: 'AI Model Router on the Gonka Network',
   description: () =>
-    `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens, with a one-time $20 free credit for new users.`,
+    `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens, with 10M free tokens for new users.`,
   ogTitle: 'GonkaRouter — AI Model Router on the Gonka Network',
   ogDescription: () =>
     `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens.`,

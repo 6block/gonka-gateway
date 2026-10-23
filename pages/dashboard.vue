@@ -31,10 +31,11 @@
     </div>
 
     <!-- Metrics Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
       <div
         v-for="stat in metricsDisplay"
         :key="stat.key"
+        :class="stat.cardClass"
         class="bg-surface-container-high p-4 sm:p-5 rounded-2xl flex justify-between items-start gap-2 hover:bg-surface-container-highest transition-all group cursor-default border border-white/5"
       >
         <div class="min-w-0">
@@ -361,7 +362,6 @@ import {
   LucideLogIn,
   LucideZap,
   LucideTerminal,
-  LucideShield,
   LucideGlobe,
   LucideEye,
   LucideEyeOff,
@@ -402,30 +402,33 @@ const keyError = ref(null)
 const copied = ref(false)
 const showKey = ref(false)
 
-const metrics = ref({
-  balance: 0,
-  currency: 'USDT',
-  monthly_cost: 0,
+const EMPTY_METRICS = Object.freeze({
+  remaining_tokens: 0,
   monthly_requests: 0,
   monthly_token_used: 0
 })
+
+const metrics = ref({ ...EMPTY_METRICS })
 
 const metricsDisplay = computed(() => {
   const loggedIn = auth.isLoggedIn
   return [
     {
-      key: 'balance',
-      label: 'Balance',
-      value: loggedIn ? formatNumber(metrics.value.balance) : '-',
-      unit: metrics.value.currency,
+      // Free signup tokens plus the paid balance converted at the current
+      // price, as computed by the backend (/api/me remaining_tokens).
+      key: 'remaining_tokens',
+      label: 'Remaining Tokens',
+      value: loggedIn ? formatInt(metrics.value.remaining_tokens) : '-',
+      unit: 'Tokens',
       icon: LucideWallet,
-      iconClass: 'text-primary-container'
+      iconClass: 'text-primary-container',
+      cardClass: 'col-span-2 lg:col-span-1'
     },
     {
-      key: 'monthly_cost',
-      label: 'Monthly Cost',
-      value: loggedIn ? formatNumber(metrics.value.monthly_cost, 5) : '-',
-      unit: metrics.value.currency,
+      key: 'monthly_tokens',
+      label: 'This Month',
+      value: loggedIn ? formatInt(metrics.value.monthly_token_used) : '-',
+      unit: 'Tokens',
       icon: LucideZap,
       iconClass: 'text-secondary'
     },
@@ -436,30 +439,12 @@ const metricsDisplay = computed(() => {
       unit: 'Reqs',
       icon: LucideTerminal,
       iconClass: 'text-tertiary'
-    },
-    {
-      key: 'tokens',
-      label: 'Tokens',
-      value: loggedIn ? formatInt(metrics.value.monthly_token_used) : '-',
-      unit: 'Tokens',
-      icon: LucideShield,
-      iconClass: 'text-primary-dim'
     }
   ]
 })
 
 // Return '-' (not '0') when the value cannot be parsed so users can tell apart
 // "real zero" from "data missing / load failed".
-function formatNumber(val, decimals = 2) {
-  if (val === null || val === undefined || val === '') return '-'
-  const n = parseFloat(val)
-  if (isNaN(n)) return '-'
-  return n.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: decimals
-  })
-}
-
 function formatInt(val) {
   if (val === null || val === undefined || val === '') return '-'
   const n = parseInt(val, 10)
@@ -605,31 +590,22 @@ async function fetchBalance() {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
 
-    // Response shape: { balance: { USDT: "10" }, usage: { chat: { ... } } }
+    // Response shape: { remaining_tokens: 10000000, usage: { chat: { ... } } }
     // If the shape is unexpected, surface a clear error rather than silently
-    // showing $0.00 and risking the user thinking their funds are gone.
+    // showing 0 and risking the user thinking their balance is gone.
     if (!data || typeof data !== 'object') {
       throw new Error('Unexpected response from /api/me')
     }
-    if (!data.balance || typeof data.balance !== 'object') {
+    if (typeof data.remaining_tokens !== 'number') {
       error.value = 'Account data is unavailable. Please refresh the page.'
-      console.warn('Unexpected /api/me payload (missing balance):', data)
+      console.warn('Unexpected /api/me payload (missing remaining_tokens):', data)
       return
     }
-
-    const balanceMap = data.balance
-    // Prefer USDT; fall back to whichever currency key the server returns first.
-    const currency = balanceMap.USDT !== undefined
-      ? 'USDT'
-      : Object.keys(balanceMap)[0] || 'USDT'
-    const balance = balanceMap[currency] ?? 0
 
     const chat = data.usage?.chat || {}
 
     metrics.value = {
-      balance,
-      currency,
-      monthly_cost: chat.monthly_cost ?? 0,
+      remaining_tokens: data.remaining_tokens,
       monthly_requests: chat.monthly_requests ?? 0,
       monthly_token_used: chat.monthly_token_used ?? 0
     }
@@ -663,13 +639,7 @@ watch(
       fetchBalance()
       fetchApiKey()
     } else {
-      metrics.value = {
-        balance: 0,
-        currency: 'USDT',
-        monthly_cost: 0,
-        monthly_requests: 0,
-        monthly_token_used: 0
-      }
+      metrics.value = { ...EMPTY_METRICS }
       apiKey.value = ''
       apiKeyId.value = null
       apiKeyFull.value = ''

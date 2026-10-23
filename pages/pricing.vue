@@ -42,15 +42,15 @@
           </ul>
         </div>
 
-        <!-- Free credit card -->
+        <!-- Free tokens card -->
         <div class="bg-surface-container-low border border-white/5 rounded-3xl p-8 flex flex-col">
           <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">New Users</p>
           <div class="flex items-baseline gap-1 mb-3">
-            <span class="text-4xl font-black font-headline tracking-tighter text-text-main">$20</span>
-            <span class="text-text-muted font-body text-sm">one-time</span>
+            <span class="text-4xl font-black font-headline tracking-tighter text-text-main">10M</span>
+            <span class="text-text-muted font-body text-sm">free tokens</span>
           </div>
           <p class="text-text-muted text-sm font-body mb-6 leading-relaxed flex-1">
-            A one-time $20 free credit to get started. No credit card required.
+            10 million free tokens to get started, used before your paid balance. No credit card required.
           </p>
           <div class="bg-surface-container-high rounded-2xl p-4 text-xs font-body text-text-muted leading-relaxed">
             Top up your balance with crypto on the Gonka Network and pay only for what you use.
@@ -176,14 +176,14 @@ const { fromPer1M } = useGonkaPricing()
 useSeoMeta({
   title: () => `Pricing — from ${fromPer1M.value} per 1M tokens`,
   description: () =>
-    `GonkaRouter tracks the Gonka network price — currently from ${fromPer1M.value} per 1M tokens, input and output alike. No monthly fees, no per-model markups. New users get $20 credits.`,
+    `GonkaRouter tracks the Gonka network price — currently from ${fromPer1M.value} per 1M tokens, input and output alike. No monthly fees, no per-model markups. New users get 10M free tokens.`,
   ogTitle: 'Pricing | GonkaRouter',
   ogDescription: () =>
-    `From ${fromPer1M.value} per 1M tokens across all models, tracking the Gonka network. No subscriptions. A one-time $20 free credit for new users.`,
+    `From ${fromPer1M.value} per 1M tokens across all models, tracking the Gonka network. No subscriptions. 10M free tokens for new users.`,
   ogUrl: `${siteUrl}/pricing`,
   twitterTitle: 'Pricing | GonkaRouter',
   twitterDescription: () =>
-    `From ${fromPer1M.value} per 1M tokens, tracking the Gonka network. No monthly fees. A one-time $20 free credit for new users.`
+    `From ${fromPer1M.value} per 1M tokens, tracking the Gonka network. No monthly fees. 10M free tokens for new users.`
 })
 useHead({ link: [{ rel: 'canonical', href: `${siteUrl}/pricing` }] })
 
@@ -193,7 +193,7 @@ useStructuredData([
     '@type': 'WebPage',
     name: 'GonkaRouter Pricing',
     description:
-      'GonkaRouter tracks the Gonka network price across all AI models — input and output billed equally, with no monthly fees and a one-time $20 free credit for new users.',
+      'GonkaRouter tracks the Gonka network price across all AI models — input and output billed equally, with no monthly fees and 10M free tokens for new users.',
     url: `${siteUrl}/pricing`
   },
   breadcrumbList([
@@ -208,14 +208,14 @@ const rateFeatures = [
   'No monthly subscription or base fee',
   'Pay only for tokens consumed',
   'Crypto-native payments on the Gonka Network',
-  'One-time $20 free credit for new users'
+  '10M free tokens for new users'
 ]
 
 const steps = [
   {
     icon: LucideWallet,
-    title: 'Sign in & get credits',
-    desc: 'Sign in with email or Google. New accounts automatically receive a one-time $20 free credit.'
+    title: 'Sign in & get free tokens',
+    desc: 'Sign in with email or Google. New accounts automatically receive 10M free tokens.'
   },
   {
     icon: LucideZap,

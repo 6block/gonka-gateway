@@ -7,7 +7,7 @@ const siteName = 'GonkaRouter'
 // Build-time default (no runtime price available here). Per-page useSeoMeta on
 // the home/pricing/models pages overrides this with the live rate.
 const siteDescription =
-  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, per-token pricing that tracks the Gonka network, with a one-time $20 free credit for new users.'
+  'GonkaRouter — One API for all AI models on the Gonka Network. OpenAI/Anthropic compatible, per-token pricing that tracks the Gonka network, with 10M free tokens for new users.'
 const ogImage = `${siteUrl}/og-cover.png`
 const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION || ''
 
