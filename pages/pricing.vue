@@ -32,7 +32,7 @@
             <span class="text-text-muted font-body text-sm">/ 1M tokens</span>
           </div>
           <p class="text-text-muted text-sm font-body mb-8 leading-relaxed">
-            Same rate for input and output tokens, across all models. Tracks the Gonka network price — no middleman markup.
+            Same rate for input and output tokens, across all models. Floats with the Gonka network price.
           </p>
           <ul class="space-y-3">
             <li v-for="f in rateFeatures" :key="f" class="flex items-center gap-3 text-sm font-body text-text-muted">

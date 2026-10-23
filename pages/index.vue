@@ -385,7 +385,7 @@ const homeFaqs = [
   },
   {
     q: 'Is GonkaRouter an OpenRouter alternative?',
-    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong> with no middleman markup, plus a one-time $20 free credit for new users.'
+    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong>, plus a one-time $20 free credit for new users.'
   },
   {
     q: 'How is GonkaRouter different from OpenRouter?',
