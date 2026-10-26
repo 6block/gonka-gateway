@@ -63,27 +63,41 @@
             <LucideMoon v-else class="w-5 h-5" />
           </button>
 
-          <button
-            v-if="!auth.isLoggedIn"
-            @click="openLogin"
-            class="hidden sm:inline-flex items-center px-5 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
-          >
-            Sign In
-          </button>
-          <NuxtLink
-            v-else
-            to="/dashboard"
-            class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
-          >
-            <img
-              v-if="auth.user?.avatarUrl"
-              :src="auth.user.avatarUrl"
-              referrerpolicy="no-referrer"
-              class="w-5 h-5 rounded-full"
-              alt=""
-            />
-            <span class="max-w-[140px] truncate">{{ auth.displayName }}</span>
-          </NuxtLink>
+          <!-- Landing pages are SWR-cached and rendered without cookies (see
+               routeRules in nuxt.config.ts), so the server always emits the
+               signed-out state. Resolve login state on the client only, with
+               the Sign In button as the SSR/pre-hydration fallback. -->
+          <ClientOnly>
+            <button
+              v-if="!auth.isLoggedIn"
+              @click="openLogin"
+              class="hidden sm:inline-flex items-center px-5 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
+            >
+              Sign In
+            </button>
+            <NuxtLink
+              v-else
+              to="/dashboard"
+              class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
+            >
+              <img
+                v-if="auth.user?.avatarUrl"
+                :src="auth.user.avatarUrl"
+                referrerpolicy="no-referrer"
+                class="w-5 h-5 rounded-full"
+                alt=""
+              />
+              <span class="max-w-[140px] truncate">{{ auth.displayName }}</span>
+            </NuxtLink>
+            <template #fallback>
+              <button
+                @click="openLogin"
+                class="hidden sm:inline-flex items-center px-5 py-2 rounded-full font-headline font-bold text-xs sm:text-sm text-text-main bg-surface-container-high border border-white/10 hover:bg-white/10 transition-all whitespace-nowrap"
+              >
+                Sign In
+              </button>
+            </template>
+          </ClientOnly>
 
           <NuxtLink
             to="/dashboard"

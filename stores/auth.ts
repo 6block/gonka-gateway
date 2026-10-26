@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, skipHydrate } from 'pinia'
 import { computed } from 'vue'
 import { useCookie, useNuxtApp } from '#app'
 
@@ -247,8 +247,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    user,
-    token,
+    // The cookie is the source of truth, not the SSR payload. Cached public
+    // pages are rendered without cookies, so their payload carries an empty
+    // auth state; hydrating from it would overwrite these cookie refs with null
+    // and delete the browser's cookies, logging the user out.
+    user: skipHydrate(user),
+    token: skipHydrate(token),
     isLoggedIn,
     displayName,
     login,

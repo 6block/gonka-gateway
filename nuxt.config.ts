@@ -58,6 +58,23 @@ if (isProd) {
   securityHeaders['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
 }
 
+// Live Gonka price and new blog posts show up on cached pages within this window.
+const PUBLIC_PAGE_CACHE_SECONDS = 300
+// ~150KB of HTML per entry → worst case ~75MB of cache memory.
+const CACHE_MAX_ENTRIES = 500
+const PUBLIC_CACHED_ROUTES = [
+  '/',
+  '/pricing',
+  '/docs',
+  '/blog',
+  '/blog/**',
+  '/privacy-policy',
+  '/terms-of-service',
+  '/elite',
+  '/fff',
+  '/icg'
+]
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   ssr: true,
@@ -69,7 +86,20 @@ export default defineNuxtConfig({
   ],
   nitro: {
     routeRules: {
-      '/**': { headers: securityHeaders }
+      '/**': { headers: securityHeaders },
+      // Public marketing pages: serve from an in-process SWR cache instead of
+      // re-rendering per request. Nitro renders cached routes without the
+      // request's cookies, so the HTML is always the signed-out version and
+      // cannot leak one user's session to another. Anything that depends on
+      // auth must therefore resolve client-side (<ClientOnly>).
+      // Auth-dependent pages (/dashboard, /chat, /deposit, /transactions) and
+      // pages on the default layout (/models, /feedback) are deliberately absent.
+      ...Object.fromEntries(PUBLIC_CACHED_ROUTES.map((route) => [route, { swr: PUBLIC_PAGE_CACHE_SECONDS }]))
+    },
+    storage: {
+      // Bounded LRU so cache keys (which include the query string) cannot be
+      // used to grow memory without limit, e.g. by random ?utm_ values.
+      cache: { driver: 'lru-cache', max: CACHE_MAX_ENTRIES }
     }
   },
   css: [

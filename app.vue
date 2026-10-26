@@ -56,8 +56,12 @@ useHead({
 
     <!-- Global login modal (Google + email OTP), shared by every layout -->
     <AuthLoginModal />
-    <!-- Forced account upgrade for legacy wallet users (bind an email) -->
-    <AuthUpgradeModal />
+    <!-- Forced account upgrade for legacy wallet users (bind an email).
+         Client-only: it is driven by the auth cookie, which cached pages are
+         rendered without, so SSR output would never match the client. -->
+    <ClientOnly>
+      <AuthUpgradeModal />
+    </ClientOnly>
     <!-- One-shot campaign promo for the AI Builders Day offline event -->
     <ClientOnly>
       <PromoEventPromoModal />
