@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-27T00:00:00Z",
+  "title": "Design System: GonkaRouter",
+  "extensions": {
+    "colorMeta": {
+      "primary-container": {
+        "role": "primary",
+        "displayName": "Signal Green",
+        "canonical": "#00ffa3",
+        "tonalRamp": [
+          "#00321d",
+          "#004d2f",
+          "#006b42",
+          "#008a57",
+          "#00ad6e",
+          "#00d488",
+          "#00ffa3",
+          "#b1ffce"
+        ]
+      },
+      "primary-dim": {
+        "role": "primary",
+        "displayName": "Dim Signal",
+        "canonical": "#00ef99",
+        "tonalRamp": [
+          "#002d1b",
+          "#00472b",
+          "#00643d",
+          "#008350",
+          "#00a466",
+          "#00c97e",
+          "#00ef99",
+          "#a6f9d0"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Code Mint",
+        "canonical": "#64fcc9",
+        "tonalRamp": [
+          "#0a3226",
+          "#114d3b",
+          "#1a6b52",
+          "#248a6a",
+          "#30ad85",
+          "#47d4a5",
+          "#64fcc9",
+          "#c9fff0"
+        ]
+      },
+      "tertiary": {
+        "role": "tertiary",
+        "displayName": "Readout Cyan",
+        "canonical": "#72dcff",
+        "tonalRamp": [
+          "#082a36",
+          "#0f4153",
+          "#185b73",
+          "#227795",
+          "#2f96ba",
+          "#4db8de",
+          "#72dcff",
+          "#d2f3ff"
+        ]
+      },
+      "void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "#000000",
+          "#050505",
+          "#0a0a0a",
+          "#0e0e0e",
+          "#1c1c1c",
+          "#262626",
+          "#2a2a2a",
+          "#494847"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well Black",
+        "canonical": "#050505",
+        "tonalRamp": [
+          "#000000",
+          "#050505",
+          "#0a0a0a",
+          "#0e0e0e",
+          "#1c1c1c",
+          "#262626",
+          "#2a2a2a",
+          "#494847"
+        ]
+      },
+      "counter-ground": {
+        "role": "neutral",
+        "displayName": "Counter Ground",
+        "canonical": "#0a0a0a",
+        "tonalRamp": [
+          "#000000",
+          "#050505",
+          "#0a0a0a",
+          "#0e0e0e",
+          "#1c1c1c",
+          "#262626",
+          "#2a2a2a",
+          "#494847"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#0e0e0e",
+        "tonalRamp": [
+          "#000000",
+          "#0e0e0e",
+          "#131313",
+          "#201f1f",
+          "#262626",
+          "#494847",
+          "#8a8a8a",
+          "#f4f6f8"
+        ]
+      },
+      "chip": {
+        "role": "neutral",
+        "displayName": "Chip Slab",
+        "canonical": "#1c1c1c",
+        "tonalRamp": [
+          "#000000",
+          "#0a0a0a",
+          "#1c1c1c",
+          "#2a2a2a",
+          "#7a7a7a",
+          "#cfcfcf",
+          "#e6e6e6",
+          "#ffffff"
+        ]
+      },
+      "chip-hover": {
+        "role": "neutral",
+        "displayName": "Chip Hover",
+        "canonical": "#2a2a2a",
+        "tonalRamp": [
+          "#000000",
+          "#0a0a0a",
+          "#1c1c1c",
+          "#2a2a2a",
+          "#7a7a7a",
+          "#cfcfcf",
+          "#e6e6e6",
+          "#ffffff"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#262626",
+        "tonalRamp": [
+          "#000000",
+          "#0a0a0a",
+          "#1c1c1c",
+          "#262626",
+          "#494847",
+          "#7a7a7a",
+          "#ced4da",
+          "#dcdfe3"
+        ]
+      },
+      "title-dim": {
+        "role": "neutral",
+        "displayName": "Dim Title Grey",
+        "canonical": "#7a7a7a",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#7a7a7a",
+          "#8a8a8a",
+          "#dddddd",
+          "#ffffff"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#8a8a8a",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#7a7a7a",
+          "#8a8a8a",
+          "#dddddd",
+          "#ffffff"
+        ]
+      },
+      "chip-text": {
+        "role": "neutral",
+        "displayName": "Chip Text",
+        "canonical": "#cfcfcf",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#8a8a8a",
+          "#cfcfcf",
+          "#e6e6e6",
+          "#ffffff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#dddddd",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#8a8a8a",
+          "#cfcfcf",
+          "#dddddd",
+          "#ffffff"
+        ]
+      },
+      "chip-on": {
+        "role": "neutral",
+        "displayName": "Chip On",
+        "canonical": "#e6e6e6",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#8a8a8a",
+          "#cfcfcf",
+          "#e6e6e6",
+          "#ffffff"
+        ]
+      },
+      "text-main": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1c",
+          "#262626",
+          "#555555",
+          "#8a8a8a",
+          "#cfcfcf",
+          "#e6e6e6",
+          "#ffffff"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Muted White",
+        "canonical": "rgba(255, 255, 255, 0.6)",
+        "tonalRamp": [
+          "rgba(255,255,255,0.1)",
+          "rgba(255,255,255,0.2)",
+          "rgba(255,255,255,0.3)",
+          "rgba(255,255,255,0.4)",
+          "rgba(255,255,255,0.5)",
+          "rgba(255,255,255,0.6)",
+          "rgba(255,255,255,0.8)",
+          "rgba(255,255,255,1)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero and closing headlines, uppercase, two-tone (white then #7a7a7a)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings, sentence case, balanced wrap."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Active model name in the model panel."
+      },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "Blog post titles, two-line clamp."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default copy at 13px."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Hero description and FAQ questions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase instrument text: chips, nav, meta, code bar, footer microcopy."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Uppercase button labels; 13px on large buttons."
+      },
+      "tag-head": {
+        "displayName": "Tag-head",
+        "purpose": "Bracketed lowercase green block names; 11px in the footer."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "GonkaRouter name only; the sole use of weight 700."
+      }
+    },
+    "shadows": [
+      {
+        "name": "legibility-halo",
+        "value": "text-shadow: 0 0 12px #000, 0 0 2px #000",
+        "purpose": "Keeps the hero lede legible over the live particle field. Not for solid ground."
+      },
+      {
+        "name": "nav-glass",
+        "value": "background: rgb(0 0 0 / 0.72); backdrop-filter: blur(16px); border-bottom: 1px solid #262626",
+        "purpose": "Solid nav state on home once scrolled; other pages mix surface at 78%."
+      }
+    ],
+    "motion": [
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Color, background and border transitions on hover."
+      },
+      {
+        "name": "duration-normal",
+        "value": "300ms",
+        "purpose": "Nav state change, FAQ open, icon rotation."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Movement: button press, FAQ grid-rows, poster-to-canvas crossfade, thumbnail zoom."
+      },
+      {
+        "name": "hero-crossfade",
+        "value": "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Static poster fades out as the WebGL canvas fades in."
+      },
+      {
+        "name": "caret-blink",
+        "value": "1.1s steps(2, jump-none) infinite",
+        "purpose": "Green block caret at the end of code samples; off under reduced motion."
+      },
+      {
+        "name": "button-press",
+        "value": "transform: translateY(1px)",
+        "purpose": "All instrument buttons on :active."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "nav",
+        "value": "900px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "hero-wide",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action, Get API Keys. Green fill, black uppercase mono label.",
+      "html": "<a class=\"ds-btn ds-btn-primary ds-btn-lg\" href=\"#\">Get API Keys <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 0 14px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; text-decoration: none; border-radius: 2px; border: 1px solid transparent; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; } .ds-btn-lg { min-height: 48px; padding: 0 20px; font-size: 13px; } .ds-btn-primary { background: #00ffa3; color: #000; } .ds-btn-primary:hover { background: #fff; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action beside the primary. Hairline border, white label, border brightens on hover.",
+      "html": "<button type=\"button\" class=\"ds-btn-ghost\">Explore models</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; background: transparent; border: 1px solid #262626; border-radius: 2px; cursor: pointer; transition: border-color 150ms ease, transform 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-ghost:hover { border-color: #fff; } .ds-btn-ghost:active { transform: translateY(1px); } .ds-btn-ghost:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Chip Row and Tabs",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Flat 2px slabs with uppercase labels. Selected chip is inverted. As tabs, unselected chips hover to #2a2a2a.",
+      "html": "<div class=\"ds-chips\" role=\"tablist\" aria-label=\"Model\"><button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"ds-chip ds-chip-on\">GLM-5.3-Flash</button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"ds-chip\">DeepSeek-V4-Flash</button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"ds-chip\">MiniMax-M2.7</button></div>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 6px; } .ds-chip { display: inline-flex; align-items: center; padding: 8px 12px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; color: #cfcfcf; background: #1c1c1c; border: 0; border-radius: 2px; cursor: pointer; transition: background-color 150ms ease, color 150ms ease; } .ds-chip:not(.ds-chip-on):hover { background: #2a2a2a; color: #fff; } .ds-chip-on { background: #e6e6e6; color: #000; } .ds-chip:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Solid-state landing nav: wordmark, uppercase muted links, ghost and primary actions, green scroll-progress hairline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><div class=\"ds-nav-progress\" aria-hidden=\"true\"></div><a class=\"ds-nav-brand\" href=\"#\">GonkaRouter</a><div class=\"ds-nav-links\"><a class=\"ds-nav-link\" href=\"#\">Models</a><a class=\"ds-nav-link is-active\" href=\"#\">Pricing</a><a class=\"ds-nav-link\" href=\"#\">Docs</a></div><a class=\"ds-nav-cta\" href=\"#\">Get API Keys</a></nav>",
+      "css": ".ds-nav { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 24px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); background: rgb(0 0 0 / 0.72); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid #262626; } .ds-nav-progress { position: absolute; left: 0; bottom: -1px; width: 100%; height: 1px; background: #00ffa3; transform: scaleX(0.4); transform-origin: left; } .ds-nav-brand { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #fff; text-decoration: none; } .ds-nav-links { display: flex; gap: 4px; } .ds-nav-link { padding: 6px 10px; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 2px; transition: color 150ms ease, background-color 150ms ease; } .ds-nav-link:hover { color: #fff; background: #1c1c1c; } .ds-nav-link.is-active { color: #fff; } .ds-nav-link:focus-visible, .ds-nav-cta:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; } .ds-nav-cta { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #000; background: #00ffa3; border-radius: 2px; text-decoration: none; transition: background-color 150ms ease; } .ds-nav-cta:hover { background: #fff; }"
+    },
+    {
+      "name": "Ledger",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Lists as ruled rows: green icon slot, uppercase white title, soft-ink text. Hairline above every row, closing rule below the last.",
+      "html": "<ul class=\"ds-ledger\"><li class=\"ds-ledger-row\"><svg class=\"ds-ledger-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"/></svg><h3 class=\"ds-ledger-title\">Cost-effective pricing</h3><p class=\"ds-ledger-text\">One per-token rate that follows the live Gonka network price, the same for input and output.</p></li><li class=\"ds-ledger-row\"><svg class=\"ds-ledger-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/></svg><h3 class=\"ds-ledger-title\">Global access</h3><p class=\"ds-ledger-text\">Sign in with email or Google, copy a key, and call one compatible endpoint.</p></li></ul>",
+      "css": ".ds-ledger { list-style: none; margin: 0; padding: 0; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 13px; line-height: 1.5; } .ds-ledger-row { display: grid; grid-template-columns: 20px minmax(0, 2fr) minmax(0, 3fr); gap: 6px 16px; padding: 22px 0; border-top: 1px solid #262626; } .ds-ledger-row:last-child { border-bottom: 1px solid #262626; } .ds-ledger-icon { width: 16px; height: 16px; margin-top: 2px; color: #00ffa3; } .ds-ledger-title { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; } .ds-ledger-text { margin: 0; max-width: 60ch; color: #8a8a8a; }"
+    },
+    {
+      "name": "Bracketed Block",
+      "kind": "custom",
+      "refersTo": "tag-head",
+      "description": "A readout block named by a bracketed lowercase green heading, with a text link carrying an arrow.",
+      "html": "<div class=\"ds-block\"><h2 class=\"ds-tag-head\">[pricing]</h2><p>One rate for input and output that tracks the live Gonka network price. No subscription, no card.</p><a class=\"ds-link\" href=\"#\">Pricing <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a></div>",
+      "css": ".ds-block { max-width: 340px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 13px; line-height: 1.5; color: #ddd; } .ds-block p { margin: 0 0 8px; } .ds-tag-head { margin: 0 0 0.9em; font-size: 13px; font-weight: 500; color: #00ffa3; } .ds-link { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0; color: #ddd; text-decoration: underline; text-decoration-color: #555; text-underline-offset: 4px; transition: opacity 300ms ease, text-decoration-color 300ms ease; } .ds-link:hover { opacity: 0.7; text-decoration-color: currentColor; } .ds-link:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; }"
+    },
+    {
+      "name": "Code Well",
+      "kind": "card",
+      "refersTo": "code-well",
+      "description": "The only bordered container: near-black well, uppercase bar, mint code with green keywords, cyan strings and a blinking green caret.",
+      "html": "<div class=\"ds-code\"><div class=\"ds-code-bar\"><span>inference.py</span><span class=\"ds-code-model\">zai-org/GLM-5.3-Flash</span><span class=\"ds-code-lang\">Python · OpenAI SDK</span></div><pre class=\"ds-code-body\"><code><span class=\"ds-k\">from</span> openai <span class=\"ds-k\">import</span> OpenAI\n\nclient = OpenAI(\n    base_url=<span class=\"ds-s\">\"https://api.gonkarouter.io/v1\"</span>,\n)<span class=\"ds-caret\" aria-hidden=\"true\"></span></code></pre></div>",
+      "css": ".ds-code { background: #050505; border: 1px solid #262626; border-radius: 2px; font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); } .ds-code-bar { display: flex; align-items: center; gap: 16px; padding: 12px 16px; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: #8a8a8a; border-bottom: 1px solid #262626; } .ds-code-model { text-transform: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ds-code-lang { margin-left: auto; white-space: nowrap; } .ds-code-body { margin: 0; padding: 24px 20px; overflow-x: auto; font-size: 13px; line-height: 1.7; color: #64fcc9; } .ds-k { color: #00ef99; } .ds-s { color: #72dcff; } .ds-caret { display: inline-block; width: 0.55em; height: 1.1em; margin-left: 4px; vertical-align: middle; background: #00ffa3; animation: ds-blink 1.1s steps(2, jump-none) infinite; } @keyframes ds-blink { 50% { opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-caret { animation: none; } }"
+    },
+    {
+      "name": "FAQ Disclosure",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Ledger rows that open via grid-template-rows; plus icon rotates 45 degrees and turns green when open.",
+      "html": "<div class=\"ds-faq\"><div class=\"ds-faq-item is-open\"><button type=\"button\" class=\"ds-faq-q\" aria-expanded=\"true\"><span>Is the API compatible with OpenAI SDKs?</span><svg class=\"ds-faq-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><div class=\"ds-faq-a\"><div><p>Yes. Change the base_url and set your GonkaRouter API key.</p></div></div></div><div class=\"ds-faq-item\"><button type=\"button\" class=\"ds-faq-q\" aria-expanded=\"false\"><span>Do I need a crypto wallet?</span><svg class=\"ds-faq-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><div class=\"ds-faq-a\" inert><div><p>Only to top up with USDT.</p></div></div></div></div>",
+      "css": ".ds-faq { font-family: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 13px; line-height: 1.5; } .ds-faq-item { border-top: 1px solid #262626; } .ds-faq-item:last-child { border-bottom: 1px solid #262626; } .ds-faq-q { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; width: 100%; padding: 20px 0; text-align: left; font: inherit; font-size: 14px; color: #fff; background: none; border: 0; cursor: pointer; transition: color 150ms ease; } .ds-faq-q:hover { color: #00ffa3; } .ds-faq-q:focus-visible { outline: 1px solid #00ffa3; outline-offset: 3px; } .ds-faq-icon { flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px; color: #8a8a8a; transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms ease; } .is-open .ds-faq-icon { transform: rotate(45deg); color: #00ffa3; } .ds-faq-a { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease; } .is-open .ds-faq-a { grid-template-rows: 1fr; opacity: 1; } .ds-faq-a > div { min-height: 0; overflow: hidden; } .ds-faq-a p { margin: 0; padding-bottom: 22px; max-width: 68ch; color: #8a8a8a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Logbook",
+    "overview": "The network is the subject. Everything you read sits on a black field like the readout layer of an instrument: small uppercase mono labels, hairline rules, square 2px corners, and one green that marks what is live or actionable. On the home page that field is literally live. A quarter-million points (512² on the high tier) settle onto one twisted, lobed ring right of centre, and the visitor's cursor stirs them through a real fluid simulation. The type layer stays thin so the cloud reads as the hero.\n\nDensity is a logbook's density: tight 11 to 13px instrument text, generous section breathing room (72 to 160px), and information arranged as ruled ledgers instead of cards. One typeface, JetBrains Mono, carries every role. Hierarchy comes from scale and grey value, not from weight jumps or a second family. Color is close to monochrome: grey-white particles and text, with #00FFA3 rationed to labels, markers, focus, the progress hairline, and the primary action.\n\nIt rejects the AI-product category default: centred gradient headline, pill badges, glowing icon-card grids.",
+    "keyCharacteristics": [
+      "Pure black ground (#000) on home; hairlines (#262626) instead of boxes.",
+      "JetBrains Mono for everything; uppercase, 0.04em tracked labels at 11 to 13px.",
+      "Square 2px corners on every rectangle; round only for the counter, the brand mark and avatars.",
+      "Lists are ruled ledgers: top rule per row, closing bottom rule on the last row.",
+      "Bracketed lowercase green headings name a block: `[pricing]`, `[legal]`.",
+      "The WebGL particle and fluid field is the one heavy visual, gated by capability, with a static poster as the floor."
+    ],
+    "rules": [
+      {
+        "name": "The Rationed Green Rule",
+        "body": "#00FFA3 marks state, structure labels and the one primary action. It is never a background wash, a gradient, or body text. In the particle field the green points are about one in a few hundred (`pow(random, 220)`), and that sparseness is the template for the page.",
+        "section": "colors"
+      },
+      {
+        "name": "The Grey Ladder Rule",
+        "body": "Hierarchy on black is carried by four greys (white, ink #ddd, soft ink #8a8a8a, dim title #7a7a7a), not by color. Add a new step only if none of the four fits.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "JetBrains Mono for every role. Don't introduce a sans or serif for display or body inside this world.",
+        "section": "typography"
+      },
+      {
+        "name": "The Uppercase Is Instrument Rule",
+        "body": "Uppercase plus 0.04em tracking means \"this is a control or a readout\": chips, buttons, nav, labels, ledger titles, the display headline. Running prose and section headlines stay sentence case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ledger Rule",
+        "body": "Lists are rows separated by 1px hairlines: a top rule on each row and a bottom rule on the last. Use this for features, specs, models, FAQ, and blog entries (top rule only). Don't wrap list items in bordered or filled cards.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Instrument Rule",
+        "body": "No box-shadows, no glows on surfaces. If something needs separation, use a hairline or a step of black.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Legibility Halo Rule",
+        "body": "Black text-shadow and radial falloffs exist only to keep copy readable over the live field. Don't use them as decoration on solid ground.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Two Pixel Rule",
+        "body": "Every rectangle has a 2px radius. Not 0, not 8, not a pill.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Poster Floor Rule",
+        "body": "Any heavy visual ships a static poster that renders first and stays if the GPU path is unavailable. Content never waits on the canvas.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do set every surface in JetBrains Mono; reserve weight 700 for the wordmark.",
+      "Do use uppercase 11px labels with 0.04em tracking for controls and readouts, and sentence case for prose and section headlines.",
+      "Do build lists as hairline ledgers (#262626 rule on top of each row, one closing rule at the bottom).",
+      "Do give every rectangle a 2px corner and a 1px hairline when it needs an edge.",
+      "Do keep #00FFA3 to labels, markers, focus, progress and the primary button, with black text on it.",
+      "Do name blocks with a bracketed lowercase green tag-head (`[pricing]`) when the block has no other heading.",
+      "Do set display headlines in two tones: white first line, #7a7a7a second line.",
+      "Do ship a static poster under any WebGL visual and gate the GPU path on reduced motion, Save-Data, width and capability.",
+      "Do animate opacity, transform and grid rows; 150ms for color, 300ms with `cubic-bezier(0.16, 1, 0.3, 1)` for movement."
+    ],
+    "donts": [
+      "Don't use rounded cards, pill badges or icon-card grids; chips are flat 2px slabs.",
+      "Don't add box-shadows or surface glows; separate with hairlines and steps of black.",
+      "Don't use gradient text or green background washes (the legacy `gradient-text` and `kinetic-gradient` utilities in tokens.css belong to the older style, not this world).",
+      "Don't introduce a second typeface inside the landing world.",
+      "Don't stack a small label above a section headline as an eyebrow; tag-heads name blocks that have no other heading.",
+      "Don't add hues outside black, the grey ladder and the green family to UI chrome; cyan and mint are for code syntax only.",
+      "Don't let the canvas block content or capture clicks meant for the type layer."
+    ]
+  }
+}
