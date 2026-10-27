@@ -75,6 +75,9 @@ const PUBLIC_CACHED_ROUTES = [
   '/icg'
 ]
 
+// Heavy chunks loaded only on some devices; never prefetch them (see hooks).
+const NO_PREFETCH_MODULES = ['node_modules/three/', 'lib/particle-hero/index', 'lib/particle-hero/fluid', 'lib/particle-hero/particles']
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   ssr: true,
@@ -94,7 +97,11 @@ export default defineNuxtConfig({
       // auth must therefore resolve client-side (<ClientOnly>).
       // Auth-dependent pages (/dashboard, /chat, /deposit, /transactions) and
       // pages on the default layout (/models, /feedback) are deliberately absent.
-      ...Object.fromEntries(PUBLIC_CACHED_ROUTES.map((route) => [route, { swr: PUBLIC_PAGE_CACHE_SECONDS }]))
+      // Production only: in dev the cache persists to .nuxt/cache and keeps
+      // serving pre-edit HTML, which then fails to hydrate against new code.
+      ...(isProd
+        ? Object.fromEntries(PUBLIC_CACHED_ROUTES.map((route) => [route, { swr: PUBLIC_PAGE_CACHE_SECONDS }]))
+        : {})
     },
     storage: {
       // Bounded LRU so cache keys (which include the query string) cannot be
@@ -104,6 +111,7 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/tokens.css',
+    '~/assets/css/landing.css',
     'highlight.js/styles/github-dark.css',
     'katex/dist/katex.min.css'
   ],
@@ -136,9 +144,10 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           // Weights are pruned to those actually used in markup (audited via
           // font-* utility usage): Inter 300/400/500/700, Plus Jakarta 700/800,
-          // JetBrains Mono 400/500. Dropping unused weights (e.g. Inter 600)
-          // shrinks the render-blocking font CSS and the downloaded font files.
-          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap'
+          // JetBrains Mono 400/500/700 (700 is the landing chrome's wordmark).
+          // Dropping unused weights (e.g. Inter 600) shrinks the render-blocking
+          // font CSS and the downloaded font files.
+          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap'
         }
       ],
       meta: [
@@ -184,6 +193,19 @@ export default defineNuxtConfig({
       // no-op and no analytics script is loaded, so dev and preview stay clean.
       // Override at runtime via NUXT_PUBLIC_GA_MEASUREMENT_ID.
       gaMeasurementId: process.env.GA_MEASUREMENT_ID || ''
+    }
+  },
+  hooks: {
+    // Nuxt emits <link rel="prefetch"> for every dynamic chunk, which would make
+    // every visitor (phones included) download three.js on idle even though only
+    // capable desktops ever load the particle hero. Strip the hint for those chunks.
+    'build:manifest'(manifest) {
+      for (const [key, chunk] of Object.entries(manifest)) {
+        if (NO_PREFETCH_MODULES.some((m) => key.includes(m) || chunk.file?.includes(m))) {
+          chunk.prefetch = false
+          chunk.preload = false
+        }
+      }
     }
   },
   devServer: {

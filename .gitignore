@@ -10,3 +10,5 @@ prisma/*.db
 prisma/dev.db
 .claude
 .playwright-mcp
+# Impeccable review captures (regenerated per review round)
+.impeccable/review

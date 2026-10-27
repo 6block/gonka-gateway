@@ -1,0 +1,99 @@
+/* Landing world — mono instrument panel shared by layouts/landing.vue and
+ * pages/index.vue. Colours derive from tokens.css so the non-home landing
+ * pages (docs, pricing, blog) keep working in light mode. */
+:root,
+.dark {
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --line: #262626;
+  --chip: #1c1c1c;
+  --chip-text: #cfcfcf;
+  --ink-soft: #8a8a8a;
+
+  --page-max: 1600px;
+  --gutter: clamp(16px, 3.4vw, 56px);
+  --space-section: clamp(72px, 5rem + 4vw, 160px);
+
+  --text-ui: 11px;
+  --text-body: 13px;
+  --track-ui: 0.04em;
+
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.light {
+  --line: #dcdfe3;
+  --chip: #ebedef;
+  --chip-text: #3a3a3a;
+  --ink-soft: #5c6166;
+}
+
+/* Rectangular instrument buttons */
+.lbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: var(--track-ui);
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  transition:
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-out-expo);
+}
+.lbtn:active {
+  transform: translateY(1px);
+}
+.lbtn--primary {
+  background: var(--primary-container);
+  color: #000;
+}
+/* Lighten toward white on hover; pure white only on the black home page, where
+   it cannot vanish into a light surface. */
+.lbtn--primary:hover {
+  background: color-mix(in srgb, var(--primary-container) 70%, #fff);
+}
+.landing--home .lbtn--primary:hover {
+  background: #fff;
+}
+.lbtn--ghost {
+  color: var(--text-main);
+  border-color: var(--line);
+  background: transparent;
+}
+.lbtn--ghost:hover {
+  border-color: var(--text-main);
+}
+.lbtn--lg {
+  min-height: 48px;
+  padding: 0 20px;
+  font-size: 13px;
+}
+
+.lbtn:focus-visible,
+.landing a:focus-visible,
+.landing button:focus-visible {
+  outline: 1px solid var(--primary-container);
+  outline-offset: 3px;
+}
+
+/* Browser surfaces on the home page */
+html:has(.landing--home) {
+  background: #000;
+  scrollbar-color: #2a2a2a #000;
+  color-scheme: dark;
+}
+.landing--home ::selection {
+  background: var(--primary-container);
+  color: #000;
+}
