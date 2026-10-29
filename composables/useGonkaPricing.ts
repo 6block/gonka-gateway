@@ -21,11 +21,11 @@ export interface GonkaPricing {
 
 // Fallback shown only if the API is unreachable during SSR. Kept close to the
 // real current rate so the page never renders a wildly wrong or empty price.
-const STATIC_FROM_PER_1M = '0.0059'
+const STATIC_FROM_PER_1M = '0.0064'
 
 function formatUsdPerM(raw: string): string {
   const n = Number(raw)
-  if (!isFinite(n) || n <= 0) return '$0.0059'
+  if (!isFinite(n) || n <= 0) return '$0.0064'
   // 4 decimals is enough across the sane $0.0002–$0.02 band
   return '$' + n.toFixed(4)
 }
