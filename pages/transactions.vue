@@ -136,6 +136,9 @@
                 </td>
                 <td class="px-8 py-5 text-xs font-black text-text-main">
                   ${{ formatAmount(item.amount) }}
+                  <span v-if="hasBonus(item)" class="block text-[11px] font-bold text-primary-container">
+                    +${{ formatAmount(item.bonus_amount) }} bonus
+                  </span>
                 </td>
                 <td class="px-8 py-5">
                   <span
@@ -195,8 +198,11 @@
               >
                 {{ formatChain(item.chain) }}
               </div>
-              <span class="text-sm font-black text-text-main">
+              <span class="text-right text-sm font-black text-text-main">
                 ${{ formatAmount(item.amount) }}
+                <span v-if="hasBonus(item)" class="block text-[11px] font-bold text-primary-container">
+                  +${{ formatAmount(item.bonus_amount) }} bonus
+                </span>
               </span>
             </div>
           </li>
@@ -393,8 +399,13 @@ function formatChain(chain) {
     arbitrum: 'Arbitrum',
     optimism: 'Optimism',
     ton: 'TON',
+    stripe: 'Card',
   }
   return map[chain?.toLowerCase()] || (chain ? chain.toUpperCase() : '-')
+}
+
+function hasBonus(item) {
+  return parseFloat(item?.bonus_amount) > 0
 }
 
 function formatAmount(amount) {

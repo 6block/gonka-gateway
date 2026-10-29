@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import {
   LucideCreditCard,
+  LucideCoins,
+  LucideGift,
   LucideWallet,
   LucideLogIn,
   LucideLoader2,
@@ -16,6 +18,8 @@ import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 import { useDepositAddress, DEPOSIT_CHAINS, type ChainId } from '~/composables/useDepositAddress'
+import { useTopup, formatUsd } from '~/composables/useTopup'
+import CardTopup from '~/components/topup/CardTopup.vue'
 
 definePageMeta({ layout: 'default' })
 useSeoMeta({ title: 'Deposit', robots: 'noindex,nofollow' })
@@ -23,6 +27,39 @@ useSeoMeta({ title: 'Deposit', robots: 'noindex,nofollow' })
 const auth = useAuthStore()
 const toast = useToast()
 const { open: openLogin } = useLoginModal()
+const route = useRoute()
+const router = useRouter()
+
+// ── Payment method (card via Stripe / crypto) ─────────────────────────────────
+
+type Method = 'card' | 'crypto'
+
+const METHODS = [
+  { id: 'card', label: 'Card / Alipay', icon: LucideCreditCard },
+  { id: 'crypto', label: 'Crypto (USDT)', icon: LucideCoins },
+] as const satisfies ReadonlyArray<{ id: Method; label: string; icon: unknown }>
+
+const { config: topupConfig, loadConfig } = useTopup()
+const method = ref<Method>('card')
+const cardEnabled = computed(() => topupConfig.value?.stripe_enabled === true)
+const bonusPct = computed(() => Number(topupConfig.value?.bonus_percent) || 0)
+// Until the config arrives (or if card top-up is off) show crypto, which has
+// always worked, rather than a card form that cannot submit.
+const activeMethod = computed<Method>(() => (cardEnabled.value ? method.value : 'crypto'))
+
+watch(
+  () => auth.isLoggedIn,
+  (loggedIn) => loggedIn && loadConfig(),
+  { immediate: true }
+)
+
+onMounted(() => {
+  // Stripe's cancel URL brings the user back here with ?order_no=...
+  if (route.query.order_no) {
+    toast.info('Payment canceled. No charge was made.')
+    router.replace({ query: {} })
+  }
+})
 
 // ── Chain selection ───────────────────────────────────────────────────────────
 
@@ -153,7 +190,7 @@ const showAddressPane = computed(
         </div>
         <div>
           <h1 class="font-headline text-2xl font-black tracking-tight text-text-main">Deposit</h1>
-          <p class="text-sm text-text-muted">Add USDT funds to your GonkaRouter balance.</p>
+          <p class="text-sm text-text-muted">Top up with a card or USDT. Funds are credited in USD.</p>
         </div>
       </div>
 
@@ -179,6 +216,54 @@ const showAddressPane = computed(
 
       <!-- ② Signed in -->
       <div v-else class="space-y-4">
+
+        <!-- Method selector (Card / Crypto), only when card top-up is enabled -->
+        <div
+          v-if="cardEnabled"
+          role="tablist"
+          aria-label="Payment method"
+          class="grid grid-cols-2 gap-2 rounded-2xl border border-white/5 bg-surface-container-high p-1.5"
+        >
+          <button
+            v-for="m in METHODS"
+            :key="m.id"
+            role="tab"
+            :aria-selected="activeMethod === m.id"
+            class="inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-black transition-all"
+            :class="
+              activeMethod === m.id
+                ? 'bg-primary-container text-primary-on shadow-glow-emerald'
+                : 'text-text-muted hover:text-text-main'
+            "
+            @click="method = m.id"
+          >
+            <component :is="m.icon" class="h-3.5 w-3.5" />
+            {{ m.label }}
+          </button>
+        </div>
+
+        <!-- Card top-up -->
+        <CardTopup
+          v-if="activeMethod === 'card' && topupConfig"
+          :config="topupConfig"
+          :account="auth.displayName"
+        />
+
+        <!-- Crypto top-up -->
+        <template v-else>
+
+        <!-- Deposit bonus note (applies to crypto too) -->
+        <div
+          v-if="bonusPct > 0 && topupConfig"
+          class="flex items-start gap-3 rounded-2xl border border-primary-container/20 bg-primary-container/5 px-4 py-3 text-sm"
+        >
+          <LucideGift class="mt-0.5 h-4 w-4 shrink-0 text-primary-container" />
+          <p class="text-text-muted">
+            <span class="font-bold text-text-main">+{{ bonusPct }}% bonus</span>
+            on every deposit of {{ formatUsd(topupConfig.bonus_min_amount) }} or more.
+            Smaller deposits are credited without the bonus.
+          </p>
+        </div>
 
         <!-- Chain selector (BSC / TON) -->
         <div class="flex gap-2 rounded-2xl border border-white/5 bg-surface-container-high p-1.5">
@@ -321,6 +406,7 @@ const showAddressPane = computed(
             </button>
           </div>
         </div>
+        </template>
       </div>
     </div>
   </div>

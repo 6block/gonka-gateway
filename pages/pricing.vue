@@ -53,7 +53,7 @@
             10 million free tokens to get started, used before your paid balance. No credit card required.
           </p>
           <div class="bg-surface-container-high rounded-2xl p-4 text-xs font-body text-text-muted leading-relaxed">
-            Top up your balance with crypto on the Gonka Network and pay only for what you use.
+            Top up your balance by card or crypto and pay only for what you use.
           </div>
         </div>
       </div>
@@ -207,7 +207,7 @@ const rateFeatures = [
   'Input and output tokens billed equally',
   'No monthly subscription or base fee',
   'Pay only for tokens consumed',
-  'Crypto-native payments on the Gonka Network',
+  'Pay by card, Alipay or USDT',
   '10M free tokens for new users'
 ]
 
@@ -225,7 +225,7 @@ const steps = [
   {
     icon: LucideBarChart2,
     title: 'Monitor & top up',
-    desc: 'Track usage and billing in real time on the Dashboard. Top up with crypto whenever you need more credits.'
+    desc: 'Track usage and billing in real time on the Dashboard. Top up by card or crypto whenever you need more credits.'
   }
 ]
 
