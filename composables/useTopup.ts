@@ -111,28 +111,27 @@ export function useTopup() {
   }
 
   /**
-   * Opens a Checkout Session and navigates to it. Resolves only on failure,
-   * with a message for the user; on success the page is already leaving.
+   * Opens a Checkout Session and returns its URL, or an error message for the
+   * user. Navigating is left to the caller, so it can recover if the browser
+   * never leaves (slow network) or brings the page back from its cache.
    */
-  async function startCheckout(amount: string): Promise<string> {
+  async function createCheckout(amount: string): Promise<{ url: string } | { error: string }> {
     try {
       const res = await $fetch<CheckoutResponse>(`${apiBase}/api/billing/stripe/checkout`, {
         method: 'POST',
         headers: headers(),
         body: { amount },
       })
-      if (!isStripeCheckoutUrl(res.checkout_url)) return 'Unexpected payment link. Please contact support.'
-      // A top-level navigation: CSP form-action would block a form POST redirect.
-      window.location.assign(res.checkout_url)
-      return ''
+      if (!isStripeCheckoutUrl(res.checkout_url)) return { error: 'Unexpected payment link. Please contact support.' }
+      return { url: res.checkout_url }
     } catch (e: unknown) {
       const status = errorStatus(e)
       if (status === 401) {
         auth.logout()
-        return 'Session expired. Please sign in again.'
+        return { error: 'Session expired. Please sign in again.' }
       }
-      if (status === 429) return 'Too many attempts. Please wait a minute and try again.'
-      return errorMessage(e) || 'Could not start the payment. Please try again.'
+      if (status === 429) return { error: errorMessage(e) || 'Too many attempts. Please wait a minute and try again.' }
+      return { error: errorMessage(e) || 'Could not start the payment. Please try again.' }
     }
   }
 
@@ -142,5 +141,5 @@ export function useTopup() {
     })
   }
 
-  return { config, configError, loadConfig, startCheckout, fetchOrder, errorStatus }
+  return { config, configError, loadConfig, createCheckout, fetchOrder, errorStatus }
 }

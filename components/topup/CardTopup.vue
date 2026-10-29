@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { LucideLock, LucideLoader2, LucideShieldCheck, LucideGift } from 'lucide-vue-next'
 import { useToast } from '~/composables/useToast'
 import { bonusPreview, formatUsd, parseUsdCents, useTopup, type TopupConfig } from '~/composables/useTopup'
@@ -11,7 +11,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const toast = useToast()
-const { startCheckout } = useTopup()
+const { createCheckout } = useTopup()
 
 const PRESETS = [10, 20, 50, 100]
 
@@ -42,16 +42,46 @@ function presetBonus(usd: number): number {
   return bonusPreview(usd * 100, props.config)
 }
 
+// If the browser has not left for Stripe after this long (slow link to
+// checkout.stripe.com), offer the link instead of an endless spinner.
+const NAVIGATION_FALLBACK_MS = 8000
+
+const pendingUrl = ref('')
+let fallbackTimer: ReturnType<typeof setTimeout> | undefined
+
+function resetCheckout() {
+  clearTimeout(fallbackTimer)
+  submitting.value = false
+  pendingUrl.value = ''
+}
+
 async function pay() {
   if (amountError.value || submitting.value) return
   submitting.value = true
-  const err = await startCheckout(amount.value.trim())
-  if (err) {
-    toast.error(err)
-    submitting.value = false
+  const res = await createCheckout(amount.value.trim())
+  if ('error' in res) {
+    toast.error(res.error)
+    resetCheckout()
+    return
   }
-  // On success the browser is navigating to Stripe; keep the button busy.
+  // A top-level navigation: CSP form-action would block a form POST redirect.
+  window.location.assign(res.url)
+  fallbackTimer = setTimeout(() => {
+    submitting.value = false
+    pendingUrl.value = res.url
+  }, NAVIGATION_FALLBACK_MS)
 }
+
+// Going Back from Stripe can restore this page from the browser's cache with
+// the button still busy; start fresh instead. Unpaid checkouts just expire.
+function onPageShow(e: PageTransitionEvent) {
+  if (e.persisted) resetCheckout()
+}
+onMounted(() => window.addEventListener('pageshow', onPageShow))
+onBeforeUnmount(() => {
+  window.removeEventListener('pageshow', onPageShow)
+  clearTimeout(fallbackTimer)
+})
 </script>
 
 <template>
@@ -155,6 +185,11 @@ async function pay() {
         <LucideLock v-else class="h-4 w-4" />
         {{ submitting ? 'Opening secure checkout…' : 'Pay securely with Stripe' }}
       </button>
+
+      <p v-if="pendingUrl" class="mt-3 text-center text-sm text-text-muted" role="status">
+        Checkout is taking a while to open.
+        <a :href="pendingUrl" class="font-bold text-primary-container hover:underline">Open Stripe checkout</a>
+      </p>
 
       <p class="mt-4 flex items-start justify-center gap-1.5 text-center text-[11px] leading-relaxed text-text-muted">
         <LucideShieldCheck class="mt-0.5 h-3.5 w-3.5 shrink-0" />
