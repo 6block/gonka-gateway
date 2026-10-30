@@ -50,6 +50,13 @@
             </span>
             <span class="text-[10px] font-bold text-text-muted">{{ stat.unit }}</span>
           </div>
+          <p
+            v-for="line in loading ? [] : stat.sub || []"
+            :key="line"
+            class="mt-1 text-[11px] text-text-muted"
+          >
+            {{ line }}
+          </p>
         </div>
         <div
           class="p-2 bg-surface-container-highest rounded-xl group-hover:scale-105 transition-transform"
@@ -403,32 +410,47 @@ const copied = ref(false)
 const showKey = ref(false)
 
 const EMPTY_METRICS = Object.freeze({
-  remaining_tokens: 0,
+  balance_usd: null,
+  bonus_tokens: 0,
+  paid_tokens_estimate: 0,
+  monthly_cost: null,
   monthly_requests: 0,
   monthly_token_used: 0
 })
 
 const metrics = ref({ ...EMPTY_METRICS })
 
+// The paid balance is held in USD and only converted to tokens for display:
+// the token price floats with the Gonka network, so a token-denominated
+// balance would move on its own. Lead with the stable USD figure and show the
+// conversion as an estimate; free signup tokens are fixed and listed apart.
 const metricsDisplay = computed(() => {
   const loggedIn = auth.isLoggedIn
+  const m = metrics.value
+  const balanceSub = []
+  if (loggedIn && m.paid_tokens_estimate > 0) {
+    balanceSub.push(`≈ ${formatCompact(m.paid_tokens_estimate)} tokens at current price`)
+  }
+  if (loggedIn && m.bonus_tokens > 0) {
+    balanceSub.push(`+ ${formatInt(m.bonus_tokens)} free tokens`)
+  }
   return [
     {
-      // Free signup tokens plus the paid balance converted at the current
-      // price, as computed by the backend (/api/me remaining_tokens).
-      key: 'remaining_tokens',
-      label: 'Remaining Tokens',
-      value: loggedIn ? formatInt(metrics.value.remaining_tokens) : '-',
-      unit: 'Tokens',
+      key: 'balance',
+      label: 'Balance',
+      value: loggedIn ? formatUsdBalance(m.balance_usd) : '-',
+      unit: 'USD',
+      sub: balanceSub,
       icon: LucideWallet,
       iconClass: 'text-primary-container',
       cardClass: 'col-span-2 lg:col-span-1'
     },
     {
-      key: 'monthly_tokens',
+      key: 'monthly_usage',
       label: 'This Month',
-      value: loggedIn ? formatInt(metrics.value.monthly_token_used) : '-',
+      value: loggedIn ? formatInt(m.monthly_token_used) : '-',
       unit: 'Tokens',
+      sub: loggedIn && m.monthly_cost !== null ? [`${formatUsdBalance(m.monthly_cost)} spent`] : [],
       icon: LucideZap,
       iconClass: 'text-secondary'
     },
@@ -442,6 +464,27 @@ const metricsDisplay = computed(() => {
     }
   ]
 })
+
+// "$25.99". Truncated, never rounded up, so the card never shows more money
+// than the account holds; sub-cent balances keep enough digits to be nonzero.
+function formatUsdBalance(val) {
+  if (val === null || val === undefined || val === '') return '-'
+  const n = Number(val)
+  if (!Number.isFinite(n)) return '-'
+  const abs = Math.abs(n)
+  const digits = abs === 0 || abs >= 0.01 ? 2 : 6
+  const factor = 10 ** digits
+  const t = Math.trunc(n * factor) / factor
+  return `$${t.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: digits })}`
+}
+
+// 3974486976 → "3.97B", 9986331 → "9.99M". For estimates, where exact digits
+// would suggest a precision the floating price does not have.
+function formatCompact(val) {
+  const n = Number(val)
+  if (!Number.isFinite(n)) return '-'
+  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(n)
+}
 
 // Return '-' (not '0') when the value cannot be parsed so users can tell apart
 // "real zero" from "data missing / load failed".
@@ -590,7 +633,8 @@ async function fetchBalance() {
       headers: { Authorization: `Bearer ${auth.token}` }
     })
 
-    // Response shape: { remaining_tokens: 10000000, usage: { chat: { ... } } }
+    // Response shape: { balance: { USDT: "25.99" }, bonus_tokens: 9986331,
+    //   remaining_tokens: 3974486976, usage: { chat: { monthly_cost, ... } } }
     // If the shape is unexpected, surface a clear error rather than silently
     // showing 0 and risking the user thinking their balance is gone.
     if (!data || typeof data !== 'object') {
@@ -603,9 +647,15 @@ async function fetchBalance() {
     }
 
     const chat = data.usage?.chat || {}
+    const bonusTokens = typeof data.bonus_tokens === 'number' ? data.bonus_tokens : 0
 
     metrics.value = {
-      remaining_tokens: data.remaining_tokens,
+      // gonka balances are USDT, credited 1:1 with USD.
+      balance_usd: data.balance?.USDT ?? '0',
+      bonus_tokens: bonusTokens,
+      // remaining_tokens = free tokens + paid balance at the current price.
+      paid_tokens_estimate: Math.max(0, data.remaining_tokens - bonusTokens),
+      monthly_cost: chat.monthly_cost ?? null,
       monthly_requests: chat.monthly_requests ?? 0,
       monthly_token_used: chat.monthly_token_used ?? 0
     }
