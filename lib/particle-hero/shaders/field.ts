@@ -5,8 +5,9 @@
 // Not an exact SDF after the deformations, but the simulation only needs its
 // zero set and a usable gradient, both of which it provides.
 export const SDF_GLSL = /* glsl */ `
-// The ring is modelled at unit size and shrunk so it sits well inside the frame.
-const float SHAPE_SCALE = 2.6;
+// The ring is modelled at unit size (outer radius ~0.66) and scaled so the
+// whole silhouette stays inside the first viewport.
+const float SHAPE_SCALE = 2.3;
 
 float ringShape(vec3 p) {
   float a = atan(p.z, p.x);
@@ -28,6 +29,11 @@ float ringShape(vec3 p) {
 float sdfShape(vec3 p) {
   float r = length(p);
   if (r > 0.8) return r - 0.7;
+  // Soft mirror across the depth axis, so the form is symmetric front/back
+  // with a rounded seam, then the reference's quaternion (0.5, 0.5, 0.5, 0.5):
+  // a 120° turn about (1, 1, 1), which maps (x, y, z) to (z, x, y).
+  p.z = sqrt(p.z * p.z + 0.0215) - sqrt(0.012);
+  p = p.zxy;
   return ringShape(p * SHAPE_SCALE) / SHAPE_SCALE;
 }
 

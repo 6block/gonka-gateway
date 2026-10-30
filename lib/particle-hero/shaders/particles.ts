@@ -19,9 +19,6 @@ uniform sampler2D uDensity;
 uniform float uTime;
 uniform float uHz;
 uniform float uMouseStrength;
-uniform float uSpring;
-uniform float uSettled;
-uniform sampler2D uHome;
 uniform mat4 uViewProj;
 uniform mat4 uModel;
 uniform mat3 uFlowToLocal;
@@ -32,25 +29,18 @@ ${CURL_GLSL}
 
 void main() {
   vec3 pos = texture2D(uPositions, vUv).xyz;
+  vec3 origin = texture2D(uOrigin, vUv).xyz;
 
-  if (uSettled < 0.5) {
-    // Formation: curl drift, swirl and surface pull bring the random cloud
-    // onto the shape. Only runs during the off-screen prewarm.
-    vec3 origin = texture2D(uOrigin, vUv).xyz;
-    if (length(pos) > 0.7) pos /= 2.0;
-    pos += curlNoise(pos * 2.0 + uTime * 0.05) * 0.0002 * uHz;
-    vec3 gradient = normalize(sdfNormal(pos) + 1e-6);
-    float sdf = sdfShape(pos);
-    pos += cross(normalize(pos + 1e-6), gradient) * 0.0005 * uHz;
-    pos += -gradient * sdf * 0.5;
-    pos += (origin - pos) * 0.012 * uHz;
-  } else {
-    // Settled: every particle springs to the home it formed at. Nothing else
-    // acts on it, so at rest the cloud is still; the idle float is applied in
-    // the vertex shader, where it cannot accumulate into jitter.
-    vec3 home = texture2D(uHome, vUv).xyz;
-    pos += (home - pos) * uSpring * uHz;
-  }
+  // Every frame, as in the reference: a slow, coherent curl drift, a swirl
+  // along the surface, a pull onto the surface and a faint spring to the
+  // particle's origin. Together they keep the cloud sliding over the form.
+  if (length(pos) > 0.7) pos /= 2.0;
+  pos += curlNoise(pos * 0.1 + uTime * 0.05) * 0.0002 * uHz;
+  vec3 gradient = sdfNormal(pos);
+  float sdf = sdfShape(pos);
+  pos += cross(normalize(pos + 1e-6), normalize(gradient + 1e-6)) * 0.0005;
+  pos += -gradient * sdf * 0.5;
+  pos += (origin - pos) * 0.0002 * uHz;
 
   // Cursor fluid: project into screen space, sample the flow there, and carry
   // the particle along it where the cursor has recently been.
@@ -77,20 +67,8 @@ attribute vec4 aRandom;
 varying vec4 vRandom;
 varying float vScale;
 
-// Idle float: each point traces its own slow loop (periods of roughly 8–20 s),
-// offset from its simulated position. Pure function of time, so it never
-// accumulates and reads as drifting rather than shaking.
-const float FLOAT_AMP = 0.006;
-
 void main() {
   vec3 pos = texture2D(uPositions, aRef).xyz;
-  vec3 phase = aRandom.xyz * 6.2831;
-  vec3 speed = 0.3 + aRandom.wzy * 0.45;
-  pos += FLOAT_AMP * vec3(
-    sin(uTime * speed.x + phase.x),
-    sin(uTime * speed.y + phase.y),
-    sin(uTime * speed.z + phase.z)
-  );
   pos *= mix(1.0, 1.5, pow(aRandom.y, 150.0));
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
@@ -137,13 +115,12 @@ void main() {
   // Grey body brightened by uGain: a bigger form spreads the same points over
   // more screen, so without it the shape thins out and loses its read.
   vec3 color = vec3(mix(0.0, 0.2, vRandom.x) * uGain);
-  color = mix(color, uAccent, pow(vRandom.z, 220.0));
+  color = mix(color, uAccent, pow(vRandom.z, 100.0));
 
-  // Twinkle slowed from the brief's 4 rad/s, which read as flicker at rest.
-  float sparkle = 0.5 + (0.4 + sin(uTime * 1.2 + vRandom.y * 20.0)) * pow(vRandom.z, 10.0) * 2.5;
+  float sparkle = 0.5 + (0.4 + sin(uTime * 4.0 + vRandom.y * 20.0)) * pow(vRandom.z, 10.0) * 2.5;
   color *= sparkle;
 
-  float ang = sin(uTime * 0.35 + vRandom.z * 20.0) * 0.5 + 1.0;
+  float ang = sin(uTime + vRandom.z * 20.0) * 0.5 + 1.0;
   float ca = cos(ang), sa = sin(ang);
   vec2 muv = mat2(ca, -sa, sa, ca) * c + 0.5;
   vec3 mc = texture2D(uMatcap, muv).rgb;

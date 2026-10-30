@@ -1,6 +1,5 @@
 import {
   Color,
-  Euler,
   Group,
   MathUtils,
   Matrix3,
@@ -64,8 +63,6 @@ const PREWARM_STEPS = 180
 const PREWARM_PER_FRAME = 20
 const SPLAT_IDLE_MS = 50
 const REFERENCE_HEIGHT = 900
-const SWAY_SPEED = new Vector3(0.13, 0.09, 0.07)
-const SWAY_AMP = new Vector3(0.05, 0.08, 0.03)
 
 const clampMap = (v: number, inMax: number, outMax: number) =>
   MathUtils.clamp(v / inMax, 0, 1) * outMax
@@ -89,8 +86,7 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
   const scene = new Scene()
   const group = new Group()
   group.position.set(0.343, 0.16, -1)
-  const BASE_ROTATION = new Euler(MathUtils.degToRad(-28.4), MathUtils.degToRad(390), MathUtils.degToRad(4.92))
-  group.rotation.copy(BASE_ROTATION)
+  group.rotation.set(MathUtils.degToRad(-28.4), MathUtils.degToRad(390), MathUtils.degToRad(4.92))
   const BASE_SCALE = new Vector3(5, 5, 6)
   group.scale.copy(BASE_SCALE)
   scene.add(group)
@@ -171,16 +167,6 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
     mouse.py = mouse.y
   }
 
-  // The whole form rocks a few degrees on long, unrelated periods, so the
-  // cloud keeps breathing while the cursor is still.
-  function sway(): void {
-    group.rotation.set(
-      BASE_ROTATION.x + Math.sin(elapsed * SWAY_SPEED.x) * SWAY_AMP.x,
-      BASE_ROTATION.y + Math.sin(elapsed * SWAY_SPEED.y + 1.3) * SWAY_AMP.y,
-      BASE_ROTATION.z + Math.sin(elapsed * SWAY_SPEED.z + 2.1) * SWAY_AMP.z
-    )
-  }
-
   function simulate(hz: number): void {
     viewProj.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
     group.updateMatrixWorld()
@@ -211,10 +197,7 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
         elapsed += 1 / 60
         simulate(1)
       }
-      if (prewarmed >= PREWARM_STEPS) {
-        field.settle()
-        opts.onReady?.()
-      }
+      if (prewarmed >= PREWARM_STEPS) opts.onReady?.()
       renderer.setRenderTarget(null)
       renderer.render(scene, camera)
       return
@@ -226,7 +209,6 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
 
     feedPointer(now)
     fluid.step()
-    sway()
     updateCamera()
     simulate(hz)
 
@@ -245,7 +227,7 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
   resize()
   raf = requestAnimationFrame(frame)
 
-  // Dev-only probe: sample settled positions so motion at rest can be measured.
+  // Dev-only probe: sample simulated positions so motion can be measured.
   if (import.meta.dev) {
     ;(window as unknown as { __heroProbe?: () => Float32Array }).__heroProbe = () =>
       field.samplePositions(64)

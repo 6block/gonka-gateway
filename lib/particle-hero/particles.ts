@@ -16,14 +16,11 @@ import {
   RGBAFormat,
   Scene,
   ShaderMaterial,
-  SRGBColorSpace,
   Texture,
   WebGLRenderTarget,
   WebGLRenderer
 } from 'three'
 import { FULLSCREEN_VERT, POINTS_FRAG, POINTS_VERT, SIM_FRAG } from './shaders/particles'
-
-const SETTLED_SPRING = 0.025
 
 export interface FieldInputs {
   time: number
@@ -73,9 +70,10 @@ function makeMatcap(): Texture {
     ctx.fillStyle = g
     ctx.fillRect(0, 0, size, size)
   }
-  const tex = new CanvasTexture(canvas)
-  tex.colorSpace = SRGBColorSpace
-  return tex
+  // Left in the default (no) colour space so the shader samples the raw grey
+  // values, as the reference (three r150, no colour management) does. Tagging
+  // it sRGB decodes it to linear and darkens the whole cloud.
+  return new CanvasTexture(canvas)
 }
 
 /** GPU particle positions (ping-pong float texture) plus the Points that draw them. */
@@ -91,13 +89,10 @@ export class ParticleField {
   private readonly matcap: Texture
   private read: WebGLRenderTarget
   private write: WebGLRenderTarget
-  private home: WebGLRenderTarget | null = null
-  private readonly side: number
   private seeded = false
 
   constructor(renderer: WebGLRenderer, side: number, accent: Color) {
     this.renderer = renderer
-    this.side = side
     const count = side * side
 
     this.origin = new DataTexture(randomCube(count), side, side, RGBAFormat, FloatType)
@@ -115,14 +110,7 @@ export class ParticleField {
         uDensity: { value: null },
         uTime: { value: 0 },
         uHz: { value: 1 },
-        // Spec value is 0.4 for a 0.7-unit form; ours is about half that size
-        // and the flow is not scaled into local space, so it runs much lower.
-        uMouseStrength: { value: 0.14 },
-        // Settled-phase spring to home: ~0.7 s time constant at 60 fps, so a
-        // stirred region heals within a second or two of the fluid dying down.
-        uSpring: { value: SETTLED_SPRING },
-        uSettled: { value: 0 },
-        uHome: { value: null },
+        uMouseStrength: { value: 0.25 },
         uViewProj: { value: new Matrix4() },
         uModel: { value: new Matrix4() },
         uFlowToLocal: { value: new Matrix3() }
@@ -197,27 +185,6 @@ export class ParticleField {
     this.drawMat.uniforms.uTime.value = inputs.time
   }
 
-  /**
-   * Freeze the formed cloud as each particle's home and switch the simulation
-   * to the settled phase. The current read target becomes the home texture and
-   * is never written again; a fresh target joins the ping-pong pair.
-   */
-  settle(): void {
-    if (this.home) return
-    this.home = this.read
-    this.read = floatTarget(this.side)
-    const u = this.simMat.uniforms
-    u.uHome.value = this.home.texture
-    u.uSettled.value = 1
-    // Seed the new read target with the home positions in one settled pass.
-    u.uPositions.value = this.home.texture
-    u.uSpring.value = 1
-    this.renderer.setRenderTarget(this.read)
-    this.renderer.render(this.simScene, this.simCamera)
-    u.uSpring.value = SETTLED_SPRING
-    this.drawMat.uniforms.uPositions.value = this.read.texture
-  }
-
   /** Dev diagnostics: read back the first `n`×`n` simulated positions. */
   samplePositions(n: number): Float32Array {
     const out = new Float32Array(n * n * 4)
@@ -228,7 +195,6 @@ export class ParticleField {
   dispose(): void {
     this.read.dispose()
     this.write.dispose()
-    this.home?.dispose()
     this.origin.dispose()
     this.matcap.dispose()
     this.simMat.dispose()

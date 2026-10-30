@@ -276,10 +276,11 @@ import {
 // The home page is always dark: the hero is a black WebGL field.
 definePageMeta({ layout: 'landing', colorMode: 'dark' })
 
-// The particle form fills the first viewport and the type sits on top of it.
-// fill × aspect sets its size (1.6× at 16:10, capped at 2.2× on very wide,
-// short screens); shiftX/shiftY nudge its centre as fractions of the canvas.
-const HERO_FORM = { shiftX: 0, shiftY: 0.03, fill: 1.0, maxScale: 2.2, fillFrom: 768 }
+// The particle form keeps the reference's fixed size (whole silhouette in
+// view, dense) instead of growing with the aspect ratio, which spread the same
+// points over 2.5× the area and turned the form into haze. shiftX/shiftY nudge
+// its centre as fractions of the canvas.
+const HERO_FORM = { shiftX: 0, shiftY: 0.03, fill: 0, maxScale: 1, fillFrom: 768 }
 
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 const homeFaqs = [
