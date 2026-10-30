@@ -3,14 +3,11 @@ import { ref, computed, watch, onMounted } from 'vue'
 import {
   LucideCreditCard,
   LucideCoins,
-  LucideGift,
   LucideWallet,
   LucideLogIn,
   LucideLoader2,
-  LucideGlobe,
   LucideCopy,
   LucideCheck,
-  LucideShieldCheck,
   LucideAlertCircle,
 } from 'lucide-vue-next'
 import QrcodeVue from 'qrcode.vue'
@@ -20,6 +17,7 @@ import { useLoginModal } from '~/composables/useLoginModal'
 import { useDepositAddress, DEPOSIT_CHAINS, type ChainId } from '~/composables/useDepositAddress'
 import { useTopup, formatUsd } from '~/composables/useTopup'
 import CardTopup from '~/components/topup/CardTopup.vue'
+import ConcurrencyBoost from '~/components/topup/ConcurrencyBoost.vue'
 
 definePageMeta({ layout: 'default' })
 useSeoMeta({ title: 'Deposit', robots: 'noindex,nofollow' })
@@ -172,242 +170,259 @@ function errText(e: unknown): string {
 const needsWalletConnect = computed(
   () => selectedChain.value.requiresWallet && !walletAddress.value
 )
-
-/** True when the deposit address pane should be shown */
-const showAddressPane = computed(
-  () => !selectedChain.value.requiresWallet || !!walletAddress.value
-)
 </script>
 
 <template>
-  <div class="min-h-full px-4 py-8 sm:px-8 sm:py-12">
-    <div class="mx-auto max-w-xl">
-
-      <!-- Page header -->
-      <div class="mb-8 flex items-center gap-3">
-        <div class="rounded-xl bg-primary-container p-2.5 text-primary-on shadow-glow-emerald">
-          <LucideCreditCard class="h-5 w-5" />
-        </div>
-        <div>
-          <h1 class="font-headline text-2xl font-black tracking-tight text-text-main">Deposit</h1>
-          <p class="text-sm text-text-muted">Top up with a card or USDT. Funds are credited in USD.</p>
-        </div>
-      </div>
-
-      <!-- ① Not signed in -->
-      <div
-        v-if="!auth.isLoggedIn"
-        class="rounded-3xl border border-white/5 bg-surface-container-low p-8 text-center"
-      >
-        <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-container-high text-text-muted">
-          <LucideLogIn class="h-6 w-6" />
-        </div>
-        <h2 class="font-headline text-xl font-black text-text-main">Sign in to add funds</h2>
-        <p class="mx-auto mt-2 max-w-sm text-sm text-text-muted">
-          Create an account or sign in to generate your personal deposit address.
+  <div class="pay">
+    <div class="pay-page">
+      <header class="deposit__head">
+        <h1 class="pay-display">Add funds<span>Unlock more throughput</span></h1>
+        <p class="pay-lede deposit__lede">
+          Top up with a card or USDT. Funds are credited in USD and drawn per token as you call the API.
         </p>
-        <button
-          class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 font-black text-primary-on kinetic-gradient hover:shadow-glow-emerald"
-          @click="openLogin()"
-        >
-          <LucideLogIn class="h-4 w-4" /> Sign In
-        </button>
-      </div>
+      </header>
 
-      <!-- ② Signed in -->
-      <div v-else class="space-y-4">
+      <div class="pay-split">
+        <aside class="pay-sticky">
+          <ConcurrencyBoost
+            :bonus-pct="bonusPct"
+            :bonus-min="topupConfig?.bonus_min_amount"
+          />
+        </aside>
 
-        <!-- Method selector (Card / Crypto), only when card top-up is enabled -->
-        <div
-          v-if="cardEnabled"
-          role="tablist"
-          aria-label="Payment method"
-          class="grid grid-cols-2 gap-2 rounded-2xl border border-white/5 bg-surface-container-high p-1.5"
-        >
-          <button
-            v-for="m in METHODS"
-            :key="m.id"
-            role="tab"
-            :aria-selected="activeMethod === m.id"
-            class="inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-black transition-all"
-            :class="
-              activeMethod === m.id
-                ? 'bg-primary-container text-primary-on shadow-glow-emerald'
-                : 'text-text-muted hover:text-text-main'
-            "
-            @click="method = m.id"
-          >
-            <component :is="m.icon" class="h-3.5 w-3.5" />
-            {{ m.label }}
-          </button>
-        </div>
+        <div>
+          <!-- ① Not signed in -->
+          <section v-if="!auth.isLoggedIn" class="pay-block" aria-labelledby="signin-title">
+            <p class="pay-tag">[sign in]</p>
+            <h2 id="signin-title" class="pay-headline deposit__gap">Sign in to add funds</h2>
+            <p class="pay-lede deposit__gap">
+              Create an account or sign in to top up and generate your personal deposit address.
+            </p>
+            <button class="pay-btn pay-btn--primary pay-btn--lg deposit__cta" @click="openLogin()">
+              <LucideLogIn class="h-4 w-4" /> Sign In
+            </button>
+          </section>
 
-        <!-- Card top-up -->
-        <CardTopup
-          v-if="activeMethod === 'card' && topupConfig"
-          :config="topupConfig"
-          :account="auth.displayName"
-        />
-
-        <!-- Crypto top-up -->
-        <template v-else>
-
-        <!-- Deposit bonus note (applies to crypto too) -->
-        <div
-          v-if="bonusPct > 0 && topupConfig"
-          class="flex items-start gap-3 rounded-2xl border border-primary-container/20 bg-primary-container/5 px-4 py-3 text-sm"
-        >
-          <LucideGift class="mt-0.5 h-4 w-4 shrink-0 text-primary-container" />
-          <p class="text-text-muted">
-            <span class="font-bold text-text-main">+{{ bonusPct }}% bonus</span>
-            on every deposit of {{ formatUsd(topupConfig.bonus_min_amount) }} or more.
-            Smaller deposits are credited without the bonus.
-          </p>
-        </div>
-
-        <!-- Chain selector (BSC / TON) -->
-        <div class="flex gap-2 rounded-2xl border border-white/5 bg-surface-container-high p-1.5">
-          <button
-            v-for="chain in DEPOSIT_CHAINS"
-            :key="chain.id"
-            class="flex-1 rounded-xl py-2.5 text-xs font-black transition-all"
-            :class="
-              selectedChainId === chain.id
-                ? 'bg-primary-container text-primary-on shadow-glow-emerald'
-                : 'text-text-muted hover:text-text-main'
-            "
-            @click="selectChain(chain.id)"
-          >
-            {{ chain.label }}
-          </button>
-        </div>
-
-        <!-- BSC: wallet connect gate -->
-        <div
-          v-if="needsWalletConnect"
-          class="rounded-3xl border border-white/5 bg-surface-container-low p-8 text-center"
-        >
-          <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-container/10 text-primary-container">
-            <LucideWallet class="h-7 w-7" />
-          </div>
-          <h2 class="font-headline text-2xl font-black text-text-main">Connect wallet</h2>
-          <p class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-text-muted">
-            Link a {{ selectedChain.label }} wallet to unlock the deposit address for
-            <span class="font-bold text-text-main">{{ auth.displayName }}</span>.
-          </p>
-
-          <div class="mx-auto mt-6 max-w-sm space-y-3 rounded-2xl border border-white/5 bg-surface-container-high p-4 text-left">
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-text-muted">Account</span>
-              <span class="font-bold text-text-main">{{ auth.displayName }}</span>
-            </div>
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-text-muted">Network</span>
-              <span class="font-bold text-text-main">{{ selectedChain.label }}</span>
-            </div>
-          </div>
-
-          <button
-            :disabled="connecting"
-            class="mt-6 inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-black text-primary-on kinetic-gradient hover:shadow-glow-emerald disabled:opacity-70"
-            @click="connectWallet()"
-          >
-            <LucideLoader2 v-if="connecting" class="h-5 w-5 animate-spin" />
-            <LucideWallet v-else class="h-5 w-5" />
-            Connect Wallet
-          </button>
-        </div>
-
-        <!-- Address pane (BSC after wallet connect, or TON direct) -->
-        <div v-else class="space-y-4">
-
-          <!-- BSC: connected wallet chip -->
-          <div
-            v-if="walletAddress"
-            class="flex items-center justify-between rounded-2xl border border-white/5 bg-surface-container-high px-4 py-3"
-          >
-            <div class="flex items-center gap-2.5">
-              <span class="h-2 w-2 rounded-full bg-primary-container"></span>
-              <span class="text-sm font-bold text-text-main">Wallet connected</span>
-            </div>
-            <code class="font-mono text-xs text-text-muted">{{ shortWallet }}</code>
-          </div>
-
-          <!-- Loading -->
-          <div v-if="loadingAddress" class="flex flex-col items-center justify-center py-20">
-            <LucideLoader2 class="mb-4 h-8 w-8 animate-spin text-primary-container" />
-            <p class="text-sm text-text-muted">Generating secure address…</p>
-          </div>
-
-          <!-- Address + QR -->
-          <template v-else-if="depositAddress">
-            <div class="flex flex-col items-center space-y-4 rounded-[1.5rem] border border-white/5 bg-surface-container-high p-6 text-center">
-              <div class="rounded-2xl bg-white p-3 shadow-lg">
-                <qrcode-vue :value="depositAddress" :size="168" level="H" />
+          <!-- ② Signed in -->
+          <template v-else>
+            <!-- Method selector, only when card top-up is enabled -->
+            <section v-if="cardEnabled" class="pay-block" aria-labelledby="method-title">
+              <div class="pay-block__head">
+                <h2 id="method-title" class="pay-tag">[method]</h2>
               </div>
-              <div class="flex items-center justify-center gap-1.5 font-bold text-text-main">
-                <LucideGlobe class="h-3.5 w-3.5 text-text-muted" />
-                <span class="text-xs">Scan to Pay</span>
-              </div>
-              <div class="inline-flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-red-400">
-                <span class="h-1 w-1 animate-pulse rounded-full bg-red-400"></span>
-                Only Send USDT
-              </div>
-            </div>
-
-            <!-- Address + copy button -->
-            <div class="space-y-2">
-              <p class="px-1 text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">
-                Deposit Address
-              </p>
-              <div class="flex flex-col items-stretch gap-2 rounded-xl border border-white/5 bg-surface-container-high p-3 sm:flex-row sm:items-center">
-                <code class="flex-1 truncate font-mono text-[11px] text-text-main/80">{{ depositAddress }}</code>
+              <div role="tablist" aria-label="Payment method" class="pay-chips">
                 <button
-                  class="flex items-center justify-center gap-1.5 rounded-lg bg-primary-container px-4 py-2 text-[10px] font-black text-primary-on transition-all hover:shadow-glow-emerald active:scale-95"
-                  @click="copyAddress()"
+                  v-for="m in METHODS"
+                  :key="m.id"
+                  role="tab"
+                  class="pay-chip"
+                  :aria-selected="activeMethod === m.id"
+                  @click="method = m.id"
                 >
-                  <LucideCheck v-if="copied" class="h-3 w-3" />
-                  <LucideCopy v-else class="h-3 w-3" />
-                  {{ copied ? 'Copied' : 'Copy' }}
+                  <component :is="m.icon" class="h-3.5 w-3.5" />
+                  {{ m.label }}
                 </button>
               </div>
-            </div>
+            </section>
 
-            <!-- Info grid (Network + Arrival) -->
-            <div class="grid grid-cols-2 gap-3">
-              <div class="space-y-2 rounded-xl border border-white/5 bg-surface-container-high p-4">
-                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">Network</p>
-                <div class="flex items-center gap-1.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-primary-container"></span>
-                  <span class="font-headline text-xs font-black text-text-main">{{ selectedChain.label }}</span>
+            <!-- Card top-up -->
+            <CardTopup
+              v-if="activeMethod === 'card' && topupConfig"
+              :config="topupConfig"
+              :account="auth.displayName"
+            />
+
+            <!-- Crypto top-up -->
+            <template v-else>
+              <section class="pay-block" aria-labelledby="network-title">
+                <div class="pay-block__head">
+                  <h2 id="network-title" class="pay-tag">[network]</h2>
+                  <span v-if="bonusPct > 0 && topupConfig" class="pay-label pay-green">
+                    +{{ bonusPct }}% bonus from {{ formatUsd(topupConfig.bonus_min_amount) }}
+                  </span>
                 </div>
-              </div>
-              <div class="space-y-0.5 rounded-xl border border-white/5 bg-surface-container-high p-4">
-                <p class="mb-1 text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">Arrival</p>
-                <p class="font-headline text-xs font-black text-text-main">{{ selectedChain.arrival }}</p>
-                <p class="text-[9px] text-text-muted">after confirmation</p>
-              </div>
-            </div>
+                <div role="tablist" aria-label="Network" class="pay-chips">
+                  <button
+                    v-for="chain in DEPOSIT_CHAINS"
+                    :key="chain.id"
+                    role="tab"
+                    class="pay-chip"
+                    :aria-selected="selectedChainId === chain.id"
+                    @click="selectChain(chain.id)"
+                  >
+                    {{ chain.label }}
+                  </button>
+                </div>
+              </section>
+              <!-- BSC: wallet connect gate -->
+              <section v-if="needsWalletConnect" class="pay-block" aria-labelledby="wallet-title">
+                <div class="pay-block__head">
+                  <h2 id="wallet-title" class="pay-tag">[wallet]</h2>
+                </div>
+                <p class="pay-lede">
+                  Link a {{ selectedChain.label }} wallet to unlock the deposit address for this account.
+                </p>
+                <dl class="pay-ledger deposit__gap-lg">
+                  <div class="pay-ledger__row">
+                    <dt>Account</dt>
+                    <dd class="deposit__plain">{{ auth.displayName }}</dd>
+                  </div>
+                  <div class="pay-ledger__row">
+                    <dt>Network</dt>
+                    <dd>{{ selectedChain.label }}</dd>
+                  </div>
+                </dl>
+                <button
+                  :disabled="connecting"
+                  class="pay-btn pay-btn--primary pay-btn--lg pay-btn--block deposit__cta"
+                  @click="connectWallet()"
+                >
+                  <LucideLoader2 v-if="connecting" class="h-4 w-4 animate-spin" />
+                  <LucideWallet v-else class="h-4 w-4" />
+                  {{ connecting ? 'Connecting…' : 'Connect Wallet' }}
+                </button>
+              </section>
 
-            <div class="flex items-center justify-center gap-1.5 pt-1 text-[9px] font-bold uppercase tracking-widest text-text-muted">
-              <LucideShieldCheck class="h-3 w-3" /> Secured by GonkaRouter
-            </div>
+              <!-- Address pane (BSC after wallet connect, or TON direct) -->
+              <section v-else class="pay-block" aria-labelledby="address-title" aria-live="polite">
+                <div class="pay-block__head">
+                  <h2 id="address-title" class="pay-tag">[deposit address]</h2>
+                  <span v-if="walletAddress" class="pay-label deposit__wallet">
+                    <span class="deposit__dot" /> {{ shortWallet }}
+                  </span>
+                </div>
+
+                <!-- Loading -->
+                <p v-if="loadingAddress" class="pay-fine deposit__status">
+                  <LucideLoader2 class="h-4 w-4 animate-spin" /> Generating secure address…
+                </p>
+
+                <!-- Address + QR -->
+                <div v-else-if="depositAddress" class="deposit__address">
+                  <div class="deposit__qr">
+                    <qrcode-vue :value="depositAddress" :size="152" level="H" />
+                  </div>
+
+                  <div class="deposit__address-main">
+                    <div class="pay-well">
+                      <div class="pay-well__bar">
+                        <span class="pay-warn">Only send USDT on {{ selectedChain.label }}</span>
+                        <button class="pay-btn pay-btn--ghost deposit__copy" @click="copyAddress()">
+                          <LucideCheck v-if="copied" class="h-3.5 w-3.5" />
+                          <LucideCopy v-else class="h-3.5 w-3.5" />
+                          {{ copied ? 'Copied' : 'Copy' }}
+                        </button>
+                      </div>
+                      <code class="pay-well__body deposit__code">{{ depositAddress }}</code>
+                    </div>
+
+                    <dl class="pay-ledger deposit__gap-lg">
+                      <div class="pay-ledger__row">
+                        <dt>Token</dt>
+                        <dd>USDT</dd>
+                      </div>
+                      <div class="pay-ledger__row">
+                        <dt>Network</dt>
+                        <dd>{{ selectedChain.label }}</dd>
+                      </div>
+                      <div class="pay-ledger__row">
+                        <dt>Arrival</dt>
+                        <dd>{{ selectedChain.arrival }} after confirmation</dd>
+                      </div>
+                      <div class="pay-ledger__row">
+                        <dt>Concurrency</dt>
+                        <dd class="pay-green">Higher limit once credited</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+
+                <!-- Address fetch failed -->
+                <div v-else class="deposit__failed">
+                  <p class="pay-error deposit__status">
+                    <LucideAlertCircle class="h-4 w-4" /> Could not load your deposit address.
+                  </p>
+                  <button class="pay-btn pay-btn--ghost deposit__gap" @click="fetchDepositAddress()">
+                    Try Again
+                  </button>
+                </div>
+              </section>
+            </template>
           </template>
-
-          <!-- Address fetch failed -->
-          <div v-else class="space-y-3 py-12 text-center">
-            <LucideAlertCircle class="mx-auto h-10 w-10 text-red-400" />
-            <p class="text-sm font-medium text-red-400">Failed to fetch deposit address.</p>
-            <button
-              class="rounded-xl bg-primary-container/10 px-4 py-2 text-sm font-bold text-primary-container hover:bg-primary-container/20"
-              @click="fetchDepositAddress()"
-            >
-              Try Again
-            </button>
-          </div>
         </div>
-        </template>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.deposit__head {
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+.deposit__lede {
+  margin-top: 16px;
+}
+.deposit__gap {
+  margin-top: 12px;
+}
+.deposit__gap-lg {
+  margin-top: 20px;
+}
+.deposit__cta {
+  margin-top: 24px;
+}
+.deposit__plain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deposit__wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: none;
+}
+.deposit__dot {
+  width: 6px;
+  height: 6px;
+  background: var(--pay-green);
+}
+.deposit__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+}
+.deposit__address {
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 640px) {
+  .deposit__address {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+}
+.deposit__qr {
+  justify-self: start;
+  padding: 10px;
+  border-radius: 2px;
+  background: #fff;
+  line-height: 0;
+}
+.deposit__address-main {
+  min-width: 0;
+}
+.deposit__copy {
+  min-height: 28px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+.deposit__code {
+  display: block;
+  font-family: inherit;
+}
+.deposit__failed {
+  padding-bottom: 8px;
+}
+</style>

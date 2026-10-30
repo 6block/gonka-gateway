@@ -104,6 +104,7 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/tokens.css',
+    '~/assets/css/pay.css',
     'highlight.js/styles/github-dark.css',
     'katex/dist/katex.min.css'
   ],

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { LucideLock, LucideLoader2, LucideShieldCheck, LucideGift } from 'lucide-vue-next'
+import { LucideLock, LucideLoader2, LucideShieldCheck } from 'lucide-vue-next'
 import { useToast } from '~/composables/useToast'
 import { bonusPreview, formatUsd, parseUsdCents, useTopup, type TopupConfig } from '~/composables/useTopup'
 
@@ -85,114 +85,95 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="card-topup">
     <!-- Amount -->
-    <section class="rounded-3xl border border-white/5 bg-surface-container-low p-6 sm:p-8">
-      <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
-        <h2 class="font-headline text-lg font-black text-text-main">Choose an amount</h2>
-        <span
-          v-if="bonusPct > 0"
-          class="inline-flex items-center gap-1.5 rounded-full border border-primary-container/30 bg-primary-container/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-container"
-        >
-          <LucideGift class="h-3 w-3" /> +{{ bonusPct }}% bonus
-        </span>
+    <section class="pay-block" aria-labelledby="amount-title">
+      <div class="pay-block__head">
+        <h2 id="amount-title" class="pay-tag">[amount]</h2>
+        <span v-if="bonusPct > 0" class="pay-label pay-green">+{{ bonusPct }}% bonus from {{ formatUsd(config.bonus_min_amount) }}</span>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="pay-presets">
         <button
           v-for="usd in presets"
           :key="usd"
           type="button"
-          class="rounded-2xl border px-3 py-4 text-center transition-all"
-          :class="
-            cents === usd * 100
-              ? 'border-primary-container bg-primary-container/10 shadow-glow-emerald'
-              : 'border-white/5 bg-surface-container-high hover:border-white/15'
-          "
+          class="pay-preset"
           :aria-pressed="cents === usd * 100"
           @click="amount = String(usd)"
         >
-          <span
-            class="block font-headline text-2xl font-black"
-            :class="cents === usd * 100 ? 'text-primary-container' : 'text-text-main'"
-          >
-            ${{ usd }}
-          </span>
-          <span v-if="presetBonus(usd) > 0" class="mt-1 block text-[11px] font-bold text-primary-container">
-            +{{ formatUsd(presetBonus(usd)) }} bonus
-          </span>
+          <span class="pay-preset__usd">${{ usd }}</span>
+          <span v-if="presetBonus(usd) > 0" class="pay-preset__bonus">+{{ formatUsd(presetBonus(usd)) }} bonus</span>
         </button>
       </div>
 
-      <label for="topup-amount" class="mt-5 block px-1 text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">
-        Custom amount
-      </label>
-      <div
-        class="mt-2 flex items-center rounded-xl border bg-surface-container-high px-4 transition-colors focus-within:border-primary-container/60"
-        :class="amountError ? 'border-red-500/40' : 'border-white/5'"
-      >
-        <span class="font-headline font-black text-text-muted">$</span>
+      <label for="topup-amount" class="pay-label card-topup__custom">Custom amount</label>
+      <div class="pay-input" :class="{ 'is-invalid': amountError }">
+        <span class="pay-input__affix">$</span>
         <input
           id="topup-amount"
           v-model="amount"
           type="text"
           inputmode="decimal"
           autocomplete="off"
-          class="w-full bg-transparent px-2 py-3 font-headline text-lg font-black text-text-main outline-none"
           :aria-invalid="!!amountError"
           aria-describedby="topup-amount-hint"
           @keydown.enter="pay()"
         />
-        <span class="text-xs font-bold text-text-muted">USD</span>
+        <span class="pay-input__affix">USD</span>
       </div>
-      <p id="topup-amount-hint" class="mt-2 px-1 text-xs" :class="amountError ? 'text-red-400' : 'text-text-muted'">
+      <p id="topup-amount-hint" class="card-topup__hint" :class="amountError ? 'pay-error' : 'pay-fine'">
         {{ amountError || `${formatUsd(config.min_amount)}–${formatUsd(config.max_amount)} per payment, up to two decimals.` }}
       </p>
     </section>
 
     <!-- Summary + pay -->
-    <section class="rounded-3xl border border-white/5 bg-surface-container-low p-6 sm:p-8">
-      <h2 class="mb-4 font-headline text-lg font-black text-text-main">Confirm payment</h2>
+    <section class="pay-block" aria-labelledby="confirm-title">
+      <div class="pay-block__head">
+        <h2 id="confirm-title" class="pay-tag">[confirm]</h2>
+      </div>
 
-      <dl class="divide-y divide-white/5 text-sm">
-        <div class="flex items-center justify-between gap-4 pb-3">
-          <dt class="text-text-muted">Account</dt>
-          <dd class="truncate font-bold text-text-main">{{ account }}</dd>
+      <dl class="pay-ledger">
+        <div class="pay-ledger__row">
+          <dt>Account</dt>
+          <dd class="card-topup__account">{{ account }}</dd>
         </div>
-        <div class="flex items-center justify-between py-3">
-          <dt class="text-text-muted">You pay</dt>
-          <dd class="font-headline text-xl font-black text-text-main">{{ cents === null ? '-' : formatUsd(cents / 100) }}</dd>
+        <div class="pay-ledger__row">
+          <dt>You pay</dt>
+          <dd>{{ cents === null ? '-' : formatUsd(cents / 100) }}</dd>
         </div>
-        <div v-if="bonusPct > 0" class="flex items-center justify-between py-3">
-          <dt class="text-text-muted">
-            Bonus <span class="text-[11px]">({{ bonusPct }}%, from {{ formatUsd(config.bonus_min_amount) }})</span>
-          </dt>
-          <dd class="font-bold text-primary-container">+{{ formatUsd(bonus) }}</dd>
+        <div v-if="bonusPct > 0" class="pay-ledger__row">
+          <dt>Bonus ({{ bonusPct }}%)</dt>
+          <dd class="pay-green">+{{ formatUsd(bonus) }}</dd>
         </div>
-        <div class="flex items-center justify-between pt-3">
-          <dt class="font-bold text-text-main">Credited to balance</dt>
-          <dd class="font-headline text-xl font-black text-primary-container">{{ cents === null ? '-' : formatUsd(total) }}</dd>
+        <div class="pay-ledger__row">
+          <dt>Concurrency</dt>
+          <dd class="pay-green">Higher limit</dd>
+        </div>
+        <div class="pay-ledger__row pay-ledger__row--total">
+          <dt>Credited to balance</dt>
+          <dd>{{ cents === null ? '-' : formatUsd(total) }}</dd>
         </div>
       </dl>
 
       <button
         type="button"
         :disabled="!!amountError || submitting"
-        class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-black text-primary-on kinetic-gradient transition-shadow hover:shadow-glow-emerald disabled:cursor-not-allowed disabled:opacity-60"
+        class="pay-btn pay-btn--primary pay-btn--lg pay-btn--block card-topup__pay"
         @click="pay()"
       >
-        <LucideLoader2 v-if="submitting" class="h-5 w-5 animate-spin" />
+        <LucideLoader2 v-if="submitting" class="h-4 w-4 animate-spin" />
         <LucideLock v-else class="h-4 w-4" />
         {{ submitting ? 'Opening secure checkout…' : 'Pay securely with Stripe' }}
       </button>
 
-      <p v-if="pendingUrl" class="mt-3 text-center text-sm text-text-muted" role="status">
+      <p v-if="pendingUrl" class="pay-fine card-topup__note" role="status">
         Checkout is taking a while to open.
-        <a :href="pendingUrl" class="font-bold text-primary-container hover:underline">Open Stripe checkout</a>
+        <a :href="pendingUrl" class="pay-link">Open Stripe checkout ↗</a>
       </p>
 
-      <p class="mt-4 flex items-start justify-center gap-1.5 text-center text-[11px] leading-relaxed text-text-muted">
-        <LucideShieldCheck class="mt-0.5 h-3.5 w-3.5 shrink-0" />
+      <p class="pay-fine card-topup__note card-topup__secure">
+        <LucideShieldCheck class="h-3.5 w-3.5 shrink-0" />
         <span>
           Card, Alipay and wallet options depend on your region. Payment details are handled by Stripe;
           GonkaRouter never sees your card.
@@ -201,3 +182,30 @@ onBeforeUnmount(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+.card-topup__custom {
+  display: block;
+  margin-top: 20px;
+}
+.card-topup__hint {
+  margin-top: 8px;
+}
+.card-topup__account {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: none;
+}
+.card-topup__pay {
+  margin-top: 20px;
+}
+.card-topup__note {
+  margin-top: 12px;
+}
+.card-topup__secure {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+</style>

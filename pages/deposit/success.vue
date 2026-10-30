@@ -95,108 +95,127 @@ const state = computed<'missing' | 'loading' | 'pending' | 'credited' | 'closed'
 </script>
 
 <template>
-  <div class="min-h-full px-4 py-8 sm:px-8 sm:py-12">
-    <div class="mx-auto max-w-xl">
+  <div class="pay">
+    <div class="pay-page success">
       <!-- Not signed in (e.g. returned in another browser) -->
-      <div
-        v-if="!auth.isLoggedIn"
-        class="rounded-3xl border border-white/5 bg-surface-container-low p-8 text-center"
-      >
-        <LucideLogIn class="mx-auto mb-4 h-8 w-8 text-text-muted" />
-        <h1 class="font-headline text-xl font-black text-text-main">Sign in to see your payment</h1>
-        <p class="mx-auto mt-2 max-w-sm text-sm text-text-muted">
+      <section v-if="!auth.isLoggedIn" class="pay-block">
+        <p class="pay-tag">[payment]</p>
+        <h1 class="pay-headline success__gap">Sign in to see your payment</h1>
+        <p class="pay-lede success__gap">
           Your payment is safe either way: it is credited to the account that started it.
         </p>
-        <button
-          class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 font-black text-primary-on kinetic-gradient hover:shadow-glow-emerald"
-          @click="openLogin()"
-        >
+        <button class="pay-btn pay-btn--primary pay-btn--lg success__actions" @click="openLogin()">
           <LucideLogIn class="h-4 w-4" /> Sign In
         </button>
-      </div>
+      </section>
 
-      <div
-        v-else
-        class="rounded-3xl border border-white/5 bg-surface-container-low p-8 text-center"
-        aria-live="polite"
-      >
+      <section v-else class="pay-block" aria-live="polite">
         <!-- Credited -->
         <template v-if="state === 'credited' && order">
-          <LucideCheckCircle2 class="mx-auto mb-4 h-12 w-12 text-primary-container" />
-          <h1 class="font-headline text-2xl font-black text-text-main">Payment received</h1>
-          <p class="mt-2 text-sm text-text-muted">Your balance has been topped up.</p>
+          <p class="pay-tag success__status"><LucideCheckCircle2 class="h-4 w-4" /> [credited]</p>
+          <h1 class="pay-display success__title">Payment received<span>Higher limit unlocked</span></h1>
+          <p class="pay-lede success__gap">
+            Your balance has been topped up. Your API keys now run with a higher concurrency limit,
+            applied automatically within a few minutes.
+          </p>
 
-          <dl class="mx-auto mt-6 max-w-sm divide-y divide-white/5 rounded-2xl border border-white/5 bg-surface-container-high px-4 text-left text-sm">
-            <div class="flex justify-between py-3">
-              <dt class="text-text-muted">Paid</dt>
-              <dd class="font-bold text-text-main">{{ formatUsd(order.amount) }}</dd>
+          <dl class="pay-ledger success__ledger">
+            <div class="pay-ledger__row">
+              <dt>Paid</dt>
+              <dd>{{ formatUsd(order.amount) }}</dd>
             </div>
-            <div v-if="Number(order.bonus) > 0" class="flex justify-between py-3">
-              <dt class="text-text-muted">Bonus</dt>
-              <dd class="font-bold text-primary-container">+{{ formatUsd(order.bonus ?? 0) }}</dd>
+            <div v-if="Number(order.bonus) > 0" class="pay-ledger__row">
+              <dt>Bonus</dt>
+              <dd class="pay-green">+{{ formatUsd(order.bonus ?? 0) }}</dd>
             </div>
-            <div class="flex justify-between py-3">
-              <dt class="font-bold text-text-main">Credited</dt>
-              <dd class="font-headline font-black text-primary-container">{{ formatUsd(order.total ?? order.amount) }}</dd>
+            <div class="pay-ledger__row">
+              <dt>Concurrency</dt>
+              <dd class="pay-green">Higher limit</dd>
+            </div>
+            <div class="pay-ledger__row pay-ledger__row--total">
+              <dt>Credited</dt>
+              <dd>{{ formatUsd(order.total ?? order.amount) }}</dd>
             </div>
           </dl>
         </template>
 
         <!-- Waiting for confirmation -->
         <template v-else-if="state === 'loading' || (state === 'pending' && !gaveUp)">
-          <LucideLoader2 class="mx-auto mb-4 h-10 w-10 animate-spin text-primary-container" />
-          <h1 class="font-headline text-xl font-black text-text-main">Confirming your payment…</h1>
-          <p class="mt-2 text-sm text-text-muted">This usually takes a few seconds. You can keep this page open.</p>
+          <p class="pay-tag success__status"><LucideLoader2 class="h-4 w-4 animate-spin" /> [confirming]</p>
+          <h1 class="pay-headline success__gap">Confirming your payment…</h1>
+          <p class="pay-lede success__gap">This usually takes a few seconds. You can keep this page open.</p>
         </template>
 
         <!-- Still pending after polling -->
         <template v-else-if="state === 'pending' && gaveUp">
-          <LucideClock class="mx-auto mb-4 h-10 w-10 text-text-muted" />
-          <h1 class="font-headline text-xl font-black text-text-main">Still confirming</h1>
-          <p class="mx-auto mt-2 max-w-sm text-sm text-text-muted">
+          <p class="pay-tag success__status"><LucideClock class="h-4 w-4" /> [pending]</p>
+          <h1 class="pay-headline success__gap">Still confirming</h1>
+          <p class="pay-lede success__gap">
             Some payment methods take longer to settle. Your balance updates automatically once
             Stripe confirms it; check Transactions in a few minutes.
           </p>
-          <a
-            v-if="resumeUrl"
-            :href="resumeUrl"
-            class="mt-4 inline-block text-sm font-bold text-primary-container hover:underline"
-          >
-            Didn't finish paying? Return to checkout
-          </a>
+          <p v-if="resumeUrl" class="success__gap">
+            <a :href="resumeUrl" class="pay-link">Didn't finish paying? Return to checkout ↗</a>
+          </p>
         </template>
 
         <!-- Expired / failed -->
         <template v-else-if="state === 'closed'">
-          <LucideAlertCircle class="mx-auto mb-4 h-10 w-10 text-red-400" />
-          <h1 class="font-headline text-xl font-black text-text-main">Payment not completed</h1>
-          <p class="mt-2 text-sm text-text-muted">
+          <p class="pay-tag success__status success__status--bad"><LucideAlertCircle class="h-4 w-4" /> [not completed]</p>
+          <h1 class="pay-headline success__gap">Payment not completed</h1>
+          <p class="pay-lede success__gap">
             This checkout {{ order?.status === 'expired' ? 'expired' : 'did not go through' }}. No charge was made.
           </p>
         </template>
 
         <!-- Missing / unknown order -->
         <template v-else>
-          <LucideAlertCircle class="mx-auto mb-4 h-10 w-10 text-red-400" />
-          <h1 class="font-headline text-xl font-black text-text-main">Order not found</h1>
-          <p class="mt-2 text-sm text-text-muted">{{ loadError || 'This link is missing its order number.' }}</p>
+          <p class="pay-tag success__status success__status--bad"><LucideAlertCircle class="h-4 w-4" /> [not found]</p>
+          <h1 class="pay-headline success__gap">Order not found</h1>
+          <p class="pay-lede success__gap">{{ loadError || 'This link is missing its order number.' }}</p>
         </template>
 
-        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <NuxtLink
-            to="/dashboard"
-            class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-black text-primary-on kinetic-gradient hover:shadow-glow-emerald"
-          >
+        <div class="success__actions">
+          <NuxtLink to="/dashboard" class="pay-btn pay-btn--primary pay-btn--lg">
             Go to Dashboard <LucideArrowRight class="h-4 w-4" />
           </NuxtLink>
           <NuxtLink
             :to="state === 'closed' || state === 'error' || state === 'missing' ? '/deposit' : '/transactions'"
-            class="inline-flex items-center justify-center rounded-xl border border-white/10 px-6 py-3 font-bold text-text-main hover:bg-white/5"
+            class="pay-btn pay-btn--ghost pay-btn--lg"
           >
             {{ state === 'closed' || state === 'error' || state === 'missing' ? 'Try again' : 'View transactions' }}
           </NuxtLink>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
+
+<style scoped>
+.success {
+  max-width: 720px;
+}
+.success__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.success__status--bad {
+  color: var(--pay-danger);
+}
+.success__title {
+  margin-top: 18px;
+}
+.success__gap {
+  margin-top: 12px;
+}
+.success__ledger {
+  margin-top: 28px;
+}
+.success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+</style>
