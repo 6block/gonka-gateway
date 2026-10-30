@@ -329,6 +329,10 @@ const needsWalletConnect = computed(
                         <dt>Arrival</dt>
                         <dd>{{ selectedChain.arrival }} after confirmation</dd>
                       </div>
+                      <div v-if="selectedChain.feeNote" class="pay-ledger__row">
+                        <dt>Network fee</dt>
+                        <dd>{{ selectedChain.feeNote }}</dd>
+                      </div>
                       <div class="pay-ledger__row">
                         <dt>Concurrency</dt>
                         <dd class="pay-green">Higher limit once credited</dd>

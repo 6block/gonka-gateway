@@ -23,6 +23,8 @@ export interface DepositChain {
   arrival: string
   /** Whether this chain requires a connected EVM wallet before showing address */
   requiresWallet: boolean
+  /** Optional note on which coin pays the network fee, shown in the deposit ledger */
+  feeNote?: string
 }
 
 /** All supported deposit chains. Add new entries here to extend. */
@@ -50,6 +52,8 @@ export const DEPOSIT_CHAINS: Record<ChainId, DepositChain> = {
     normalise: (raw) => raw, // no JS-side checksum needed; backend returns canonical form
     arrival: '~10 secs',
     requiresWallet: false,
+    // Toncoin was renamed Gram (GRAM); the network itself is still TON.
+    feeNote: 'Paid in GRAM (formerly Toncoin)',
   },
 }
 
