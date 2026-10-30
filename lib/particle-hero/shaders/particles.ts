@@ -109,6 +109,7 @@ precision highp float;
 uniform sampler2D uMatcap;
 uniform float uTime;
 uniform vec3 uAccent;
+uniform float uGain;
 varying vec4 vRandom;
 varying float vScale;
 
@@ -133,7 +134,9 @@ void main() {
   if (dot(c, c) > 0.25) discard;
   if (vScale < 0.1) discard;
 
-  vec3 color = vec3(mix(0.0, 0.2, vRandom.x));
+  // Grey body brightened by uGain: a bigger form spreads the same points over
+  // more screen, so without it the shape thins out and loses its read.
+  vec3 color = vec3(mix(0.0, 0.2, vRandom.x) * uGain);
   color = mix(color, uAccent, pow(vRandom.z, 220.0));
 
   // Twinkle slowed from the brief's 4 rad/s, which read as flicker at rest.

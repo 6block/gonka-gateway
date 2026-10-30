@@ -1,4 +1,4 @@
 {
-  "prompt": "Origin: frame capture of the site's own WebGL particle hero (lib/particle-hero), UI hidden, rendered in Chromium on 2026-10-27. Desktop 1600x1000 viewport; mobile 400x860 via ?hero-force. Encoded to WebP q0.8 in-browser. Regenerate after changing the shape or palette.\n",
-  "createdAt": "2026-10-27T08:28:05.678Z"
+  "prompt": "Origin: frame capture of the site's own WebGL particle hero (lib/particle-hero), canvas only (UI, scrim and dev badge hidden), rendered in Chromium on 2026-10-30. Desktop 1600x1000 viewport; mobile 400x860 via ?hero-force. Encoded to WebP q0.8 in-browser. Regenerate after changing the shape, size or palette.\n",
+  "createdAt": "2026-10-30T03:18:31.260Z"
 }

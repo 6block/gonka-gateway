@@ -5,8 +5,9 @@
       <HeroParticles
         :shift-x="HERO_FORM.shiftX"
         :shift-y="HERO_FORM.shiftY"
-        :wide-scale="HERO_FORM.wideScale"
-        :wide-from="HERO_FORM.wideFrom"
+        :fill="HERO_FORM.fill"
+        :max-scale="HERO_FORM.maxScale"
+        :fill-from="HERO_FORM.fillFrom"
       />
 
       <div class="hero__ui">
@@ -275,10 +276,10 @@ import {
 // The home page is always dark: the hero is a black WebGL field.
 definePageMeta({ layout: 'landing', colorMode: 'dark' })
 
-// The particle form is centred and large; the headline and the offer sit on
-// either side of it along the bottom edge. shiftX/shiftY nudge the form's
-// centre (fractions of the canvas), wideScale grows it on wide screens.
-const HERO_FORM = { shiftX: 0.02, shiftY: -0.02, wideScale: 1.22, wideFrom: 1100 }
+// The particle form fills the first viewport and the type sits on top of it.
+// fill × aspect sets its size (1.6× at 16:10, capped at 2.2× on very wide,
+// short screens); shiftX/shiftY nudge its centre as fractions of the canvas.
+const HERO_FORM = { shiftX: 0, shiftY: 0.03, fill: 1.0, maxScale: 2.2, fillFrom: 768 }
 
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 const homeFaqs = [
@@ -587,6 +588,14 @@ onMounted(async () => {
   overflow: hidden;
   isolation: isolate;
 }
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 52% 0 0;
+  z-index: 0;
+  background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.72) 70%);
+  pointer-events: none;
+}
 .hero__ui {
   position: relative;
   z-index: 1;
@@ -604,7 +613,9 @@ onMounted(async () => {
 .hero__ui button {
   pointer-events: auto;
 }
-/* The headline glows into the cloud; the offer column stays solid. */
+/* All type sits on top of the cloud. The cloud is bright enough that additive
+   blending washed the grey line out, so every line carries a black halo and
+   the bottom band gets a soft scrim (.hero::after) instead. */
 .hero__title {
   display: flex;
   flex-direction: column;
@@ -614,10 +625,10 @@ onMounted(async () => {
   letter-spacing: -0.04em;
   color: #fff;
   text-transform: uppercase;
-  mix-blend-mode: plus-lighter;
+  text-shadow: 0 0 24px #000, 0 0 6px rgb(0 0 0 / 0.9);
 }
 .hero__title-dim {
-  color: #7a7a7a;
+  color: #8f8f8f;
 }
 .hero__side {
   display: flex;
@@ -688,12 +699,8 @@ onMounted(async () => {
   /* On a phone the type stack covers the lower half of the poster, so fade
      that half toward black to keep the dim headline line readable. */
   .hero::after {
-    content: '';
-    position: absolute;
     inset: 40% 0 0;
-    z-index: 0;
     background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.85) 55%);
-    pointer-events: none;
   }
   .hero__ui {
     gap: 24px;

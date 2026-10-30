@@ -33,9 +33,14 @@ export interface HeroOptions {
   shiftX?: number
   /** Vertical shift of the form's centre, as a fraction of canvas height (+ = up). */
   shiftY?: number
-  /** Size multiplier for the form at or above `wideFrom` px of canvas width. */
-  wideScale?: number
-  wideFrom?: number
+  /**
+   * Grow the form with the canvas aspect so it fills the viewport width:
+   * scale = fill × (width / height), clamped to [1, maxScale]. At or above
+   * `fillFrom` px of canvas width only; 0 keeps the form at its base size.
+   */
+  fill?: number
+  maxScale?: number
+  fillFrom?: number
   onReady?: () => void
   onLost?: () => void
 }
@@ -70,8 +75,9 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
   const spec = TIERS[tier]
   const shiftX = opts.shiftX ?? 0
   const shiftY = opts.shiftY ?? 0
-  const wideScale = opts.wideScale ?? 1
-  const wideFrom = opts.wideFrom ?? Infinity
+  const fill = opts.fill ?? 0
+  const maxScale = opts.maxScale ?? 1
+  const fillFrom = opts.fillFrom ?? Infinity
 
   const renderer = new WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance' })
   renderer.setClearColor(0x000000, 1)
@@ -123,9 +129,12 @@ export function createParticleHero(opts: HeroOptions): ParticleHero {
     camera.setViewOffset(width, height, -shiftX * width, shiftY * height, width, height)
     camera.updateProjectionMatrix()
     fluid.aspect = width / height
-    const formScale = width >= wideFrom ? wideScale : 1
+    const formScale =
+      width >= fillFrom ? MathUtils.clamp(fill * (width / height), 1, maxScale) : 1
     group.scale.copy(BASE_SCALE).multiplyScalar(formScale)
-    field.setPointScale(dpr, (height / REFERENCE_HEIGHT) * spec.pointBoost * formScale)
+    // Points keep their on-screen size however big the form gets (growing them
+    // turns it into snow); the grey body brightens instead to hold its density.
+    field.setPointScale(dpr, (height / REFERENCE_HEIGHT) * spec.pointBoost, Math.sqrt(formScale))
   }
 
   function updateCamera(): void {

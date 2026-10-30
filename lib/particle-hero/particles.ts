@@ -157,6 +157,7 @@ export class ParticleField {
         uTime: { value: 0 },
         uDpr: { value: 1 },
         uSizeScale: { value: 1 },
+        uGain: { value: 1 },
         uAccent: { value: accent }
       },
       transparent: true,
@@ -168,9 +169,10 @@ export class ParticleField {
     this.points.frustumCulled = false
   }
 
-  setPointScale(dpr: number, sizeScale: number): void {
+  setPointScale(dpr: number, sizeScale: number, gain = 1): void {
     this.drawMat.uniforms.uDpr.value = dpr
     this.drawMat.uniforms.uSizeScale.value = sizeScale
+    this.drawMat.uniforms.uGain.value = gain
   }
 
   step(inputs: FieldInputs): void {

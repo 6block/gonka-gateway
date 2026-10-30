@@ -21,8 +21,15 @@ import { detectHeroTier, type HeroTier } from '~/lib/particle-hero/capability'
 import type { ParticleHero } from '~/lib/particle-hero'
 
 const props = withDefaults(
-  defineProps<{ accent?: string; shiftX?: number; shiftY?: number; wideScale?: number; wideFrom?: number }>(),
-  { accent: '#00ffa3', shiftX: 0, shiftY: 0, wideScale: 1, wideFrom: Infinity }
+  defineProps<{
+    accent?: string
+    shiftX?: number
+    shiftY?: number
+    fill?: number
+    maxScale?: number
+    fillFrom?: number
+  }>(),
+  { accent: '#00ffa3', shiftX: 0, shiftY: 0, fill: 0, maxScale: 1, fillFrom: Infinity }
 )
 
 // Served from /public; bound (not literal) so Vite leaves the paths alone.
@@ -74,8 +81,9 @@ async function boot(): Promise<void> {
       accent: props.accent,
       shiftX: props.shiftX,
       shiftY: props.shiftY,
-      wideScale: props.wideScale,
-      wideFrom: props.wideFrom,
+      fill: props.fill,
+      maxScale: props.maxScale,
+      fillFrom: props.fillFrom,
       onReady: () => (ready.value = true),
       onLost: fallback
     })

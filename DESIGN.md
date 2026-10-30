@@ -237,7 +237,7 @@ Sections stack as full-bleed bands separated by a single top hairline. Vertical 
 
 The recurring section composition is a 5 / 7 split at ≥1024px with a 64px gap (40px stacked below). The left column holds the headline, lede and one text link, and sticks at `top: 96px` while the right column scrolls. On mobile it collapses to one column with the head first.
 
-The hero fills `100svh`. The particle form is centred and large (×1.22 at ≥1100px), and the type sits on either side of it along the bottom edge: the two-tone headline bottom-left; bottom-right a 380px offer column with the highlights list, a one-line lede and the two CTAs. Below 1100px the two stack. There is no counter, scroll cue or chip row in the hero. Pointer events are off on the type layer so the canvas under it receives the cursor; only links and buttons re-enable them.
+The hero fills `100svh` and the particle form fills it too: its scale is `fill × (width / height)` clamped to [1, 2.2] at ≥768px (1.6× at 16:10, 2.2× on short wide screens), with point size held constant and the grey body brightened by √scale so the larger form keeps its density. All type sits on top of the form along the bottom edge: the two-tone headline bottom-left; bottom-right a 380px offer column with the highlights list, a one-line lede and the two CTAs. Below 1100px the two stack. There is no counter, scroll cue or chip row in the hero. Pointer events are off on the type layer so the canvas under it receives the cursor; only links and buttons re-enable them.
 
 **Highlights list.** Non-interactive facts are set as a spec list, never as chips or buttons: 12px uppercase ink, a 6px square marker per line, no fill or border. The single key offer (free tokens) is Signal Green, marker included. Chips stay reserved for things you can press, such as the model tabs.
 
@@ -254,7 +254,7 @@ Inner spacing: 6px between chips, 10px between CTAs, 28px between hero groups, r
 
 The world is flat. There are no box-shadows. Depth comes from three things: the live particle field behind the type, tonal steps of black (void #000, well #050505, counter #0a0a0a), and the translucent nav (`rgb(0 0 0 / 0.72)` on home, `color-mix(surface 78%)` elsewhere, with 16px backdrop blur and a hairline once scrolled).
 
-Over the cloud, legibility is protected rather than decorated. The hero headline and chip row use `mix-blend-mode: plus-lighter` so they glow into the particles. The lede carries a black halo (`text-shadow: 0 0 12px #000, 0 0 2px #000`); no body copy sits over the cloud.
+Over the cloud, legibility is protected rather than decorated. Every hero line sits over the cloud, so the headline carries a black halo (`0 0 24px #000, 0 0 6px rgb(0 0 0 / 0.9)`), the facts and lede a lighter one (`0 0 12px #000, 0 0 2px #000`), and the lower half of the hero has a scrim (`transparent` → `rgb(0 0 0 / 0.72)`, deeper on phones). Additive blending was dropped for hero type: over a viewport-filling cloud it washed the grey line out.
 
 ### Named Rules
 **The Flat Instrument Rule.** No box-shadows, no glows on surfaces. If something needs separation, use a hairline or a step of black.

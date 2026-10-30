@@ -19,7 +19,7 @@ OWN-WORLD: Pure black ground, #262626 hairlines, grey-white particles with spars
 
 STORY: Visitor sees the price and compatibility in the first viewport, plays with the cloud, scrolls into why, a live code sample per model, FAQ, blog, then a closing instruction: change one line.
 
-FIRST VIEWPORT: Full-bleed canvas with the ring centred and large (×1.22 at ≥1100px). Type on either side along the bottom: two-line mono headline bottom-left (clamp 34–88px); bottom-right offer column (380px) with a non-interactive highlights list (free tokens in green), one-line lede, green "Get API Keys" + ghost "Explore models". No counter, scroll cue or chips (user request 2026-10-27). At rest the simulation is still; the idle float is a vertex-shader drift plus a slow whole-form sway. Facts live in the four-cell "At a glance" strip under the hero.
+FIRST VIEWPORT: The ring fills the first viewport (scale = aspect-fitted, 1.6× at 16:10, up to 2.2×) and all type is layered on top of it with halos and a bottom scrim (user request 2026-10-30). Type on either side along the bottom: two-line mono headline bottom-left (clamp 34–88px); bottom-right offer column (380px) with a non-interactive highlights list (free tokens in green), one-line lede, green "Get API Keys" + ghost "Explore models". No counter, scroll cue or chips (user request 2026-10-27). At rest the simulation is still; the idle float is a vertex-shader drift plus a slow whole-form sway. Facts live in the four-cell "At a glance" strip under the hero.
 
 FORM: Instrument-panel logbook (AXON lineage), user-pinned; open dimensions follow candidate 5 (ruled ledger topology). Seed key d69d5ee8 (degraded roll, no challengers).
 
