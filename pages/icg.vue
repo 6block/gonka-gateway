@@ -36,7 +36,7 @@
           <div class="icg-hero-corner icg-hero-left hero-anim hero-fade" style="animation-delay: 0.75s">
             <p class="icg-lead">
               Gonka users get everything in our standard token program, plus an
-              <span class="icg-hl">extra 10M free tokens</span> reserved for this page.
+              <span class="icg-hl">extra 1M free tokens</span> reserved for this page.
             </p>
           </div>
 
@@ -165,7 +165,7 @@ const siteUrl = config.public.siteUrl || 'https://gonkarouter.io'
 useSeoMeta({
   title: 'Build Your AI Product With Gonka Router — Extra Free Tokens',
   description:
-    'Build your AI product on Gonka Router and get an extra 10M free inference tokens on top of the standard program.',
+    'Build your AI product on Gonka Router and get an extra 1M free inference tokens on top of the standard program.',
   ogTitle: 'Build Your AI Product With Gonka Router',
   ogDescription: 'Extra free inference tokens for Gonka users.',
   ogUrl: `${siteUrl}/icg`
@@ -192,15 +192,15 @@ const goRegister = async () => {
 const creditRules = [
   {
     title: 'Welcome bonus',
-    text: 'Register through this page and claim below to receive an extra 10M free tokens.'
+    text: 'Register through this page and claim below to receive an extra 1M free tokens.'
   },
   {
     title: 'First call bonus',
-    text: 'Register, create an API key, and complete your first real API call to get 10M free tokens.'
+    text: 'Register, create an API key, and complete your first real API call to get 1M free tokens.'
   },
   {
     title: 'Stay active',
-    text: 'Actively use Gonka Router within 30 days to unlock another 10M tokens.'
+    text: 'Actively use Gonka Router within 30 days to unlock another 1M tokens.'
   },
   {
     title: 'Hit milestones',

@@ -190,11 +190,11 @@ const goRegister = async () => {
 const creditRules = [
   {
     title: 'First call bonus',
-    text: 'Register, create an API key, and complete your first real API call to get 10M free tokens.'
+    text: 'Register, create an API key, and complete your first real API call to get 1M free tokens.'
   },
   {
     title: 'Stay active',
-    text: 'Actively use Gonka Router within 30 days to unlock another 10M tokens.'
+    text: 'Actively use Gonka Router within 30 days to unlock another 1M tokens.'
   },
   {
     title: 'Hit milestones',
