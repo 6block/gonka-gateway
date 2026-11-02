@@ -213,7 +213,7 @@ const creditRules = [
   {
     stage: 'Week 0',
     title: 'Join the program',
-    text: 'Register with your program email and create an API key. Your 10M free tokens are ready on your first call.'
+    text: 'Register with your program email and create an API key. Your 1M free tokens are ready on your first call.'
   },
   {
     stage: 'Week 1–8',
