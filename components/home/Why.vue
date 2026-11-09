@@ -1,8 +1,7 @@
 <template>
   <section id="features" class="relative z-[1] px-4 sm:px-6 md:px-8 py-16 sm:py-24" aria-labelledby="why-title">
     <div class="max-w-6xl mx-auto">
-      <p v-reveal class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ 03 / Why GonkaRouter ]</p>
-      <h2 id="why-title" v-reveal="80" class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-10 sm:mb-14 max-w-2xl">
+      <h2 id="why-title" v-reveal class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-10 sm:mb-14 max-w-2xl">
         Built for developers who watch the bill
       </h2>
 

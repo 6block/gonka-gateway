@@ -101,9 +101,6 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
 }
-html.light ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-}
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 255, 163, 0.35);
 }

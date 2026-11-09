@@ -3,7 +3,6 @@
     <div v-reveal class="max-w-6xl mx-auto rounded-[2rem] border border-primary-container/20 bg-black/60 backdrop-blur-md overflow-hidden">
       <div class="grid lg:grid-cols-2 gap-10 p-6 sm:p-10 lg:p-14 items-center">
         <div>
-          <p class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ 02 / Top-up offer ]</p>
           <h2 id="topup-title" class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-5">
             Top up, get <span class="text-primary-dim">+{{ TOPUP_BONUS_PERCENT }}%</span> credit
           </h2>

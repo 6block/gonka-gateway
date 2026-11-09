@@ -17,7 +17,7 @@
             :key="variant.os"
             type="button"
             @click="selectedOs = variant.os"
-            class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors"
+            class="px-3 min-h-9 sm:min-h-0 sm:py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-colors"
             :class="
               activeVariant.os === variant.os
                 ? 'bg-primary-container text-primary-on'
@@ -30,7 +30,7 @@
         <button
           type="button"
           @click="copy"
-          class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary-container transition-colors"
+          class="inline-flex items-center gap-1.5 min-h-9 sm:min-h-0 px-2 -mr-2 rounded-full text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary-container hover:bg-white/5 transition-colors"
         >
           <LucideCheck v-if="copied" class="w-3 h-3 text-primary-container" />
           <LucideCopy v-else class="w-3 h-3" />

@@ -1,22 +1,20 @@
 <template>
   <div class="animate-fade-in">
     <!-- Hero -->
-    <section class="max-w-4xl mx-auto px-6 sm:px-8 pt-24 sm:pt-32 pb-16 text-center">
-      <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">
-        Pricing
-      </p>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black font-headline tracking-tighter text-text-main leading-[1.05] mb-6">
-        One rate.<br class="hidden sm:block" /> No surprises.
-      </h1>
-      <p class="text-text-muted text-base sm:text-lg font-body leading-relaxed max-w-xl mx-auto mb-10">
-        GonkaRouter charges a single transparent rate for all models. No monthly fees, no per-model markups — pay only for the tokens you use.
-      </p>
-      <NuxtLink
-        to="/dashboard"
-        class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-8 py-4 rounded-full font-headline font-black text-base transition-all hover:shadow-glow-emerald hover:-translate-y-0.5 active:scale-95"
+    <section class="max-w-4xl mx-auto px-6 sm:px-8 pt-24 sm:pt-32">
+      <PageHeader
+        title="One rate. No surprises."
+        lead="GonkaRouter charges a single transparent rate for all models. No monthly fees, no per-model markups — pay only for the tokens you use."
       >
-        Get API Keys — It's Free
-      </NuxtLink>
+        <template #actions>
+          <NuxtLink
+            to="/dashboard"
+            class="inline-flex items-center gap-2 kinetic-gradient text-primary-on px-8 py-4 rounded-full font-headline font-black text-base transition-all hover:shadow-glow-emerald hover:-translate-y-0.5 active:scale-95"
+          >
+            Get API Keys — It's Free
+          </NuxtLink>
+        </template>
+      </PageHeader>
     </section>
 
     <!-- Core rate card -->

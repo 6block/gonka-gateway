@@ -106,7 +106,7 @@
           </span>
           <button
             @click="openLogin"
-            class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+            class="inline-flex items-center min-h-9 -my-2 px-2 -mr-2 rounded-full text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim hover:bg-white/5 transition-colors"
           >
             Connect →
           </button>
@@ -260,7 +260,7 @@
               v-for="model in availableModels"
               :key="model.id"
               @click="selectedModel = model.id"
-              class="px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black transition-all border"
+              class="px-3 sm:px-4 min-h-9 sm:min-h-0 sm:py-1.5 rounded-full text-[10px] font-black transition-all border"
               :class="
                 selectedModel === model.id
                   ? 'bg-primary-container/20 border-primary-container text-primary-container shadow-lg shadow-primary-container/10'

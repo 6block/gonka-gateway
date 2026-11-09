@@ -1,33 +1,13 @@
 <template>
   <div class="bg-surface text-text-main pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8">
     <div class="max-w-5xl mx-auto space-y-10 sm:space-y-16">
-      <NuxtLink
-        to="/"
-        class="inline-flex items-center gap-3 text-primary-container hover:text-primary-dim transition-all font-black font-headline uppercase tracking-widest text-[10px] group"
-      >
-        <LucideArrowLeft class="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        Back to Home
-      </NuxtLink>
-
-      <!-- Header -->
-      <header class="space-y-4 border-b border-white/5 pb-8 sm:pb-12">
-        <div
-          class="inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/20 px-4 py-1.5 rounded-full"
-        >
-          <span class="flex h-2 w-2 rounded-full bg-primary-container animate-pulse"></span>
-          <span class="font-label text-[10px] tracking-widest uppercase text-primary-container font-bold">
-            Developer Quickstart
-          </span>
-        </div>
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-black font-headline tracking-tighter">
-          Integration Guide
-        </h1>
-        <p class="text-text-muted text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl">
+      <PageHeader title="Integration Guide" class="!mb-0">
+        <template #lead>
           Drop your GonkaRouter key into Claude SDKs, Cursor IDE, OpenClaw, or WorkBuddy
           in under five minutes. Every snippet in this guide is tested end-to-end against
           <code class="font-mono text-primary-container">{{ apiBase }}</code>.
-        </p>
-      </header>
+        </template>
+      </PageHeader>
 
       <!-- Step 1: Get key -->
       <section class="space-y-5 sm:space-y-6">
@@ -102,7 +82,7 @@
           </p>
           <DocsCodeBlock :variants="smokeCurl" />
           <div
-            class="bg-surface-container-highest/40 border border-white/5 border-l-2 border-l-primary-container/50 rounded-2xl p-4 sm:p-5 space-y-2"
+            class="bg-primary-container/[0.04] border border-primary-container/15 rounded-2xl p-4 sm:p-5 space-y-2"
           >
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               Expected output (abridged)
@@ -607,7 +587,7 @@
 
           <!-- Expected output -->
           <div
-            class="bg-surface-container-highest/40 border border-white/5 border-l-2 border-l-primary-container/50 rounded-2xl p-4 sm:p-5 space-y-2"
+            class="bg-primary-container/[0.04] border border-primary-container/15 rounded-2xl p-4 sm:p-5 space-y-2"
           >
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted">
               Expected output of step 5's one-shot call
@@ -967,7 +947,6 @@
 <script setup>
 import { computed, provide, ref } from 'vue'
 import {
-  LucideArrowLeft,
   LucideKey,
   LucideBookOpen,
   LucideTriangleAlert

@@ -1,7 +1,6 @@
 <template>
   <section class="relative z-[1] px-4 sm:px-6 md:px-8 py-24 sm:py-32 text-center" aria-labelledby="final-cta-title">
     <div v-reveal class="max-w-3xl mx-auto">
-      <p class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ Get started ]</p>
       <h2 id="final-cta-title" class="font-headline text-4xl sm:text-5xl md:text-6xl font-black text-text-main tracking-tighter mb-6">
         Start with <span class="text-primary-dim">1M free tokens</span>
       </h2>

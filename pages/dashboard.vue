@@ -7,7 +7,7 @@
           Dashboard
         </h1>
         <p class="text-text-muted mt-2 font-body text-sm">
-          Overview of your neural gateway performance.
+          Your balance, API key and a ready-to-run request.
         </p>
       </div>
       <div
@@ -23,7 +23,7 @@
         </span>
         <button
           @click="openLogin"
-          class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+          class="inline-flex items-center min-h-9 -my-2 px-2 -mr-2 rounded-full text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim hover:bg-white/5 transition-colors"
         >
           Connect →
         </button>
@@ -83,14 +83,9 @@
         <div
           class="bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-4 sm:space-y-5 border border-white/5"
         >
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-surface-container-highest rounded-xl">
-              <LucideTerminal class="w-[18px] h-[18px] text-primary-container" />
-            </div>
-            <h3 class="font-headline font-bold text-base tracking-tight">API Key</h3>
-          </div>
+          <h3 class="font-headline font-bold text-base tracking-tight">API Key</h3>
           <p class="text-xs text-text-muted font-body leading-relaxed">
-            Authenticate your high-frequency intelligence requests.
+            Send this key in the Authorization header of every request.
           </p>
           <div
             class="flex items-center gap-2 bg-surface-container-lowest p-3.5 rounded-xl border border-white/5"
@@ -110,8 +105,9 @@
                 v-if="auth.isLoggedIn && apiKey"
                 @click="onToggleShowKey"
                 :disabled="isRevealing"
-                class="p-1.5 rounded-lg transition-all hover:text-primary-container hover:bg-white/5 disabled:opacity-50 disabled:cursor-wait"
+                class="w-9 h-9 inline-flex items-center justify-center rounded-lg transition-all hover:text-primary-container hover:bg-white/5 disabled:opacity-50 disabled:cursor-wait"
                 :title="showKey ? 'Hide' : 'Show full key'"
+                :aria-label="showKey ? 'Hide API key' : 'Show full API key'"
               >
                 <LucideEyeOff v-if="showKey" class="w-4 h-4" />
                 <LucideEye v-else class="w-4 h-4" />
@@ -119,8 +115,9 @@
               <button
                 v-if="auth.isLoggedIn && apiKey"
                 @click="copyApiKey"
-                class="p-1.5 rounded-lg transition-all hover:text-primary-container hover:bg-white/5"
+                class="w-9 h-9 inline-flex items-center justify-center rounded-lg transition-all hover:text-primary-container hover:bg-white/5"
                 title="Copy"
+                aria-label="Copy API key"
               >
                 <LucideCheck v-if="copied" class="w-4 h-4 text-primary-container" />
                 <LucideCopy v-else class="w-4 h-4" />
@@ -128,7 +125,7 @@
               <button
                 v-else-if="!auth.isLoggedIn"
                 @click="openLogin"
-                class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-primary-container hover:bg-primary-container/10 transition-all"
+                class="flex items-center gap-1.5 px-3 min-h-9 -my-2 rounded-lg text-[10px] font-black uppercase tracking-widest text-primary-container hover:bg-primary-container/10 transition-all"
                 title="Sign in to view"
               >
                 <LucideLogIn class="w-3 h-3" />
@@ -150,14 +147,9 @@
         <div
           class="bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-4 sm:space-y-5 border border-white/5"
         >
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-surface-container-highest rounded-xl">
-              <LucideGlobe class="w-[18px] h-[18px] text-secondary" />
-            </div>
-            <h3 class="font-headline font-bold text-base tracking-tight">Base URL</h3>
-          </div>
+          <h3 class="font-headline font-bold text-base tracking-tight">Base URL</h3>
           <p class="text-xs text-text-muted font-body leading-relaxed">
-            The global endpoint for sub-millisecond routing.
+            Point your OpenAI or Anthropic SDK at this URL.
           </p>
           <div
             class="flex items-center gap-2 bg-surface-container-lowest p-3.5 rounded-xl border border-white/5"
@@ -167,8 +159,9 @@
             </code>
             <button
               @click="copyBaseUrl"
-              class="p-1.5 hover:text-primary-container hover:bg-white/5 rounded-lg transition-all"
+              class="w-9 h-9 inline-flex items-center justify-center hover:text-primary-container hover:bg-white/5 rounded-lg transition-all"
               title="Copy"
+              aria-label="Copy base URL"
             >
               <LucideCopy class="w-4 h-4" />
             </button>
@@ -180,25 +173,20 @@
       <div
         class="lg:col-span-2 bg-surface-container-high p-5 sm:p-6 rounded-2xl space-y-5 sm:space-y-6 border border-white/5"
       >
-        <div class="flex items-center gap-3">
-          <div class="p-2 bg-surface-container-highest rounded-xl">
-            <LucideTerminal class="w-[18px] h-[18px] text-tertiary" />
-          </div>
-          <h3 class="font-headline font-bold text-base tracking-tight">API Reference</h3>
-        </div>
+        <h3 class="font-headline font-bold text-base tracking-tight">API Reference</h3>
 
         <!-- POST /chat/completions -->
         <div class="space-y-5">
           <div class="flex items-center gap-3">
             <span
-              class="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-[9px] font-black rounded-md font-label tracking-widest border border-blue-500/20"
+              class="px-2 py-0.5 bg-white/5 text-text-main text-[9px] font-black rounded-md font-label tracking-widest border border-white/15"
             >
               POST
             </span>
             <span class="font-mono text-sm font-bold tracking-tight">/chat/completions</span>
           </div>
           <p class="text-sm text-text-muted font-body font-light">
-            Create a chat completion using the optimized pipeline.
+            Create a chat completion. Request and response follow the OpenAI format.
           </p>
 
           <!-- Request -->
@@ -217,8 +205,9 @@
                 </span>
                 <button
                   @click="copyCurl"
-                  class="p-1 hover:text-primary-container transition-colors"
+                  class="w-9 h-9 -mr-2 inline-flex items-center justify-center rounded-lg hover:text-primary-container hover:bg-white/5 transition-colors"
                   title="Copy"
+                  aria-label="Copy chat completion request"
                 >
                   <LucideCopy class="w-3.5 h-3.5" />
                 </button>
@@ -309,8 +298,9 @@
                 </span>
                 <button
                   @click="copyCurlModels"
-                  class="p-1 hover:text-primary-container transition-colors"
+                  class="w-9 h-9 -mr-2 inline-flex items-center justify-center rounded-lg hover:text-primary-container hover:bg-white/5 transition-colors"
                   title="Copy"
+                  aria-label="Copy list models request"
                 >
                   <LucideCopy class="w-3.5 h-3.5" />
                 </button>
@@ -369,7 +359,6 @@ import {
   LucideLogIn,
   LucideZap,
   LucideTerminal,
-  LucideGlobe,
   LucideEye,
   LucideEyeOff,
   LucideCopy,

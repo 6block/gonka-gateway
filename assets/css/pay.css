@@ -24,21 +24,6 @@
   font-variant-numeric: tabular-nums;
   color: var(--pay-ink);
 }
-html.light .pay {
-  --pay-line: #dcdfe3;
-  --pay-chip: #ebedef;
-  --pay-chip-hover: #e1e4e8;
-  --pay-chip-text: #3a3a3a;
-  --pay-chip-on: #1a1a1a;
-  --pay-well: #ffffff;
-  --pay-ink: #2a2a2a;
-  --pay-ink-soft: #5c6166;
-  --pay-title-dim: #8a9096;
-  --pay-green: #00e092;
-  /* Neon green fails contrast on white; text uses a deep green instead. */
-  --pay-green-text: #007a4d;
-  --pay-danger: #c62828;
-}
 .pay ::selection {
   background: var(--pay-green);
   color: var(--pay-on-green);

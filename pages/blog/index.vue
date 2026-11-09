@@ -1,17 +1,9 @@
 <template>
   <div class="max-w-4xl mx-auto px-6 sm:px-8 py-24 sm:py-32 animate-fade-in">
-    <!-- Header -->
-    <div class="mb-14 sm:mb-16">
-      <p class="text-[11px] font-black uppercase tracking-widest text-primary-container mb-4">
-        Blog
-      </p>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black font-headline tracking-tighter text-text-main leading-[1.05] mb-6">
-        News &amp; Updates
-      </h1>
-      <p class="text-text-muted text-base sm:text-lg font-body leading-relaxed max-w-xl">
-        Product updates, engineering deep-dives, and guides from the GonkaRouter team.
-      </p>
-    </div>
+    <PageHeader
+      title="News & Updates"
+      lead="Product updates, engineering deep-dives, and guides from the GonkaRouter team."
+    />
 
     <!-- Post list -->
     <div class="space-y-6">

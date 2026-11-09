@@ -3,23 +3,12 @@
     <!-- 首页固定暗色：背景是暗色视频，浅色模式下文字会看不清 -->
     <!-- Hero：眼睛滚动推进，背景固定在整页后面 -->
     <HeroEyeScrollHero id="hero" eye-end-anchor="features">
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
-        <span class="inline-flex items-center gap-2 bg-black/50 border border-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full">
-          <span class="flex h-1.5 w-1.5 rounded-full bg-primary-container animate-pulse"></span>
-          <span class="font-label text-[11px] tracking-widest uppercase text-text-muted font-bold">Now supporting GLM-5.3-Flash</span>
-        </span>
-        <span class="inline-flex items-center gap-1.5 bg-primary-container/10 border border-primary-container/30 backdrop-blur-md px-3.5 py-1.5 rounded-full">
-          <LucideZap class="w-3.5 h-3.5 text-primary-container" />
-          <span class="font-label text-[11px] tracking-widest uppercase text-primary-container font-bold">1M free tokens for new users</span>
-        </span>
-      </div>
-
       <h1
         id="eye-hero-heading"
         class="font-headline text-[2.5rem] leading-[1.02] sm:text-6xl lg:text-7xl font-black tracking-tighter mb-5"
       >
         <span class="text-text-main">AI Model Router</span><br />
-        <span class="bg-gradient-to-r from-primary-dim to-primary bg-clip-text text-transparent">on the Gonka Network</span>
+        <span class="text-primary-container">on the Gonka Network</span>
       </h1>
 
       <p class="font-body text-text-muted text-base sm:text-lg leading-relaxed font-light mb-8">
@@ -43,6 +32,7 @@
 
       <!-- 每项不拆行，窄屏时整项换行，避免 "No subscription" 被拆成两行 -->
       <ul class="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-1.5 font-label text-[11px] tracking-widest uppercase text-text-muted">
+        <li class="whitespace-nowrap text-primary-container">1M free tokens to start</li>
         <li class="whitespace-nowrap">OpenAI compatible</li>
         <li class="whitespace-nowrap">Anthropic compatible</li>
         <li class="whitespace-nowrap">No subscription</li>
@@ -57,7 +47,6 @@
     >
       <div class="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-14 items-center">
         <div v-reveal>
-          <p class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ 01 / Models ]</p>
           <div
             class="inline-flex flex-wrap bg-black/50 p-1 rounded-2xl sm:rounded-full border border-white/10 mb-6"
             role="tablist"
@@ -174,9 +163,6 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
         <!-- Header -->
         <div v-reveal class="flex items-end justify-between mb-10 sm:mb-14">
           <div>
-            <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-text-muted mb-2 sm:mb-3">
-              [ 05 / Blog ]
-            </p>
             <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight">
               News Blog
             </h2>

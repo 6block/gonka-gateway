@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount, useId } from 'vue'
 import { LucideChevronDown, LucideCheck } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -79,7 +79,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const uid = Math.random().toString(36).slice(2, 9)
+// useId 在服务端和浏览器生成同一个值；Math.random 会让两边 id 不一致，触发 hydration 报错
+const uid = useId()
 const triggerId = `ui-select-trigger-${uid}`
 const listId = `ui-select-list-${uid}`
 

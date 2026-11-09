@@ -1,37 +1,15 @@
 <template>
-  <div class="relative overflow-hidden pt-24 sm:pt-28 pb-20">
-    <!-- Background glow -->
-    <div class="absolute top-10 -left-40 w-[500px] h-[500px] rounded-full bg-violet-600/15 blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-primary-container/5 blur-3xl pointer-events-none"></div>
-
-    <!-- Back link -->
-    <div class="relative z-10 px-4 sm:px-6 lg:px-8 pb-5 max-w-6xl mx-auto w-full">
-      <NuxtLink
-        to="/"
-        class="inline-flex items-center gap-2 text-primary-container text-[11px] font-black uppercase tracking-widest hover:opacity-75 transition-opacity"
-      >
-        <LucideArrowLeft class="w-3.5 h-3.5" />
-        Back to Home
-      </NuxtLink>
-    </div>
-
+  <div class="pt-24 sm:pt-32 pb-20">
     <!-- Two-column layout -->
-    <div class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+    <div class="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+      <PageHeader
+        title="Send feedback"
+        lead="Share what happened in GonkaRouter so the team can review the API, model, docs, or billing experience."
+      />
       <div class="grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-5 lg:gap-6 items-start">
 
         <!-- ===================== LEFT: form card ===================== -->
         <div class="bg-surface-container-low border border-white/5 rounded-2xl sm:rounded-3xl p-6 sm:p-9">
-
-          <!-- Header -->
-          <div class="mb-7">
-            <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-3">Feedback</p>
-            <h1 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-3">
-              Send feedback
-            </h1>
-            <p class="text-text-muted text-sm font-body leading-relaxed max-w-md">
-              Share what happened in GonkaRouter so the team can review the API, model, docs, or billing experience.
-            </p>
-          </div>
 
           <!-- Success state -->
           <div v-if="status === 'success'" class="text-center py-12">
@@ -242,7 +220,6 @@
 import { ref, reactive, h } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import {
-  LucideArrowLeft,
   LucideCheck,
   LucideLoader2,
   LucideX,

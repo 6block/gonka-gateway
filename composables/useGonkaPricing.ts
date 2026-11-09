@@ -30,22 +30,33 @@ function formatUsdPerM(raw: string): string {
   return '$' + n.toFixed(4)
 }
 
+// Returned instead of null when the fetch fails. A null result makes Nuxt refetch
+// during hydration, so the client rendered a different price than the server and
+// Vue reported a hydration mismatch.
+const UNAVAILABLE = false
+
 export function useGonkaPricing() {
   const config = useRuntimeConfig()
   const apiBase = (config.public.apiBase as string | undefined)?.replace(/\/$/, '') ?? ''
 
-  const { data } = useAsyncData<GonkaPricing | null>('gonka-pricing', async () => {
-    if (!apiBase) return null
+  const { data, refresh } = useAsyncData<GonkaPricing | typeof UNAVAILABLE>('gonka-pricing', async () => {
+    if (!apiBase) return UNAVAILABLE
     try {
       return await $fetch<GonkaPricing>(`${apiBase}/api/pricing`, { timeout: 5000 })
     } catch {
-      return null
+      return UNAVAILABLE
     }
   })
 
+  // SSR fell back to the static price: fetch the live one only after hydration
+  onMounted(() => {
+    if (data.value === UNAVAILABLE) refresh()
+  })
+
+  const pricing = computed(() => (data.value === UNAVAILABLE ? null : data.value ?? null))
   // Raw "from" price per 1M tokens (string), and a formatted "$0.0013" display.
-  const fromPer1MRaw = computed(() => data.value?.from_usd_per_million ?? STATIC_FROM_PER_1M)
+  const fromPer1MRaw = computed(() => pricing.value?.from_usd_per_million ?? STATIC_FROM_PER_1M)
   const fromPer1M = computed(() => formatUsdPerM(fromPer1MRaw.value))
 
-  return { pricing: data, fromPer1M, fromPer1MRaw }
+  return { pricing, fromPer1M, fromPer1MRaw }
 }

@@ -6,7 +6,7 @@
           Transactions
         </h1>
         <p class="text-text-muted mt-2 font-body text-sm">
-          Immutable ledger of your gateway credits.
+          Every top-up and charge on your account.
         </p>
       </div>
       <div
@@ -19,7 +19,7 @@
         </span>
         <button
           @click="openLogin"
-          class="text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim transition-colors"
+          class="inline-flex items-center min-h-9 -my-2 px-2 -mr-2 rounded-full text-[10px] font-black text-primary-container tracking-widest uppercase hover:text-primary-dim hover:bg-white/5 transition-colors"
         >
           Connect →
         </button>

@@ -2,9 +2,6 @@
   <div
     class="flex flex-col lg:flex-row h-screen bg-surface text-text-main font-body selection:bg-primary-container selection:text-primary-on relative overflow-hidden"
   >
-    <!-- Left edge accent line (hidden on mobile to free up edge) -->
-    <div class="hidden lg:block absolute left-0 top-0 bottom-0 w-[3px] bg-[#5b56f1] z-30"></div>
-
     <!-- Mobile top bar -->
     <header
       class="lg:hidden flex items-center justify-between gap-3 px-4 h-14 shrink-0 bg-surface-container-low border-b border-white/5 z-30"
@@ -86,7 +83,7 @@
           :key="link.to"
           :to="link.to"
           @click="closeDrawer"
-          class="nav-item w-full flex items-center gap-4 px-5 py-3.5 rounded-full font-bold text-[13px] tracking-tight transition-all relative group text-text-muted hover:text-text-main hover:bg-white/5 hover:translate-x-1"
+          class="nav-item w-full flex items-center gap-4 px-5 py-3.5 rounded-full font-bold text-[13px] tracking-tight transition-all relative group text-text-muted hover:text-text-main hover:bg-white/5"
           active-class="!bg-primary-container/10 !text-primary-container"
         >
           <component :is="link.icon" class="w-5 h-5 transition-colors" />

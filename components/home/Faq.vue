@@ -2,7 +2,6 @@
   <section id="faq" class="relative z-[1] px-4 sm:px-6 md:px-8 py-16 sm:py-24" aria-labelledby="faq-title">
     <div class="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-10 lg:gap-16">
       <div v-reveal class="lg:sticky lg:top-28 self-start">
-        <p class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ 04 / FAQ ]</p>
         <h2 id="faq-title" class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-5">
           Frequently asked questions
         </h2>
@@ -112,19 +111,18 @@ const toggleAll = () => {
 </script>
 
 <style scoped>
-.faq-slide-enter-active,
-.faq-slide-leave-active {
-  transition: opacity 0.2s ease, max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+/* 只动透明度和位移，不动 max-height，避免每帧重排 */
+.faq-slide-enter-active {
+  transition: opacity 0.25s ease, translate 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.faq-slide-enter-from,
+.faq-slide-leave-active {
+  transition: opacity 0.12s ease;
+}
+.faq-slide-enter-from {
+  opacity: 0;
+  translate: 0 -6px;
+}
 .faq-slide-leave-to {
   opacity: 0;
-  max-height: 0;
-}
-.faq-slide-enter-to,
-.faq-slide-leave-from {
-  opacity: 1;
-  max-height: 400px;
 }
 </style>

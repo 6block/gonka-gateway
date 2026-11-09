@@ -22,31 +22,31 @@
         <div class="hidden md:flex items-center gap-8">
           <button
             @click="scrollTo('features')"
-            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm"
           >
             Features
           </button>
-          <button
-            @click="scrollTo('models')"
-            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+          <NuxtLink
+            to="/models"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm"
           >
             Models
-          </button>
+          </NuxtLink>
           <NuxtLink
             to="/docs"
-            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm"
           >
             Docs
           </NuxtLink>
           <NuxtLink
             to="/blog"
-            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm"
           >
             Blog
           </NuxtLink>
           <NuxtLink
             to="/feedback"
-            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm hover:-translate-y-0.5"
+            class="text-text-muted hover:text-text-main transition-colors font-headline font-bold text-sm"
           >
             Feedback
           </NuxtLink>
@@ -124,12 +124,13 @@
             >
               Features
             </button>
-            <button
-              @click="onMobileNav('models')"
-              class="w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
+            <NuxtLink
+              to="/models"
+              @click="closeMobileMenu"
+              class="block w-full text-left px-4 py-3 rounded-xl text-text-muted hover:text-text-main hover:bg-white/5 font-headline font-bold text-sm transition-all"
             >
               Models
-            </button>
+            </NuxtLink>
             <NuxtLink
               to="/docs"
               @click="closeMobileMenu"
@@ -188,7 +189,7 @@
             </p>
             <a
               href="mailto:contact@gonka-router.com"
-              class="inline-flex items-center gap-2 text-text-muted hover:text-primary-container text-xs transition-colors bg-white/5 px-3 py-1.5 rounded-full border border-white/5"
+              class="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-text-muted hover:text-primary-container text-xs transition-colors bg-white/5 px-4 py-1.5 rounded-full border border-white/5"
             >
               <LucideMail class="w-3.5 h-3.5 shrink-0" />
               contact@gonka-router.com
@@ -198,33 +199,33 @@
           <!-- MENU -->
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Menu</p>
-            <nav class="flex flex-col gap-3">
-              <NuxtLink to="/" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Home</NuxtLink>
-              <NuxtLink to="/#features" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Features</NuxtLink>
-              <NuxtLink to="/docs" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Docs</NuxtLink>
-              <NuxtLink to="/blog" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Blog</NuxtLink>
-              <NuxtLink to="/feedback" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Feedback</NuxtLink>
-              <NuxtLink to="/pricing" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Pricing</NuxtLink>
+            <nav class="footer-links">
+              <NuxtLink to="/">Home</NuxtLink>
+              <NuxtLink to="/#features">Features</NuxtLink>
+              <NuxtLink to="/docs">Docs</NuxtLink>
+              <NuxtLink to="/blog">Blog</NuxtLink>
+              <NuxtLink to="/feedback">Feedback</NuxtLink>
+              <NuxtLink to="/pricing">Pricing</NuxtLink>
             </nav>
           </div>
 
           <!-- SERVICE -->
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Service</p>
-            <nav class="flex flex-col gap-3">
-              <NuxtLink to="/dashboard" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Dashboard</NuxtLink>
-              <NuxtLink to="/chat" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Chat</NuxtLink>
-              <NuxtLink to="/models" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Models</NuxtLink>
-              <NuxtLink to="/transactions" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Transactions</NuxtLink>
+            <nav class="footer-links">
+              <NuxtLink to="/dashboard">Dashboard</NuxtLink>
+              <NuxtLink to="/chat">Chat</NuxtLink>
+              <NuxtLink to="/models">Models</NuxtLink>
+              <NuxtLink to="/transactions">Transactions</NuxtLink>
             </nav>
           </div>
 
           <!-- LEGAL -->
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-text-muted mb-5">Legal</p>
-            <nav class="flex flex-col gap-3">
-              <NuxtLink to="/privacy-policy" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Privacy Policy</NuxtLink>
-              <NuxtLink to="/terms-of-service" class="text-xs font-bold text-text-main hover:text-primary-container transition-colors">Terms of Service</NuxtLink>
+            <nav class="footer-links">
+              <NuxtLink to="/privacy-policy">Privacy Policy</NuxtLink>
+              <NuxtLink to="/terms-of-service">Terms of Service</NuxtLink>
             </nav>
           </div>
         </div>
@@ -232,9 +233,9 @@
         <!-- Bottom bar -->
         <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-[11px] text-text-muted font-body order-2 sm:order-1">
-            Copyright 2026 GonkaRouter. Built for the Gonka Network.
+            Copyright {{ currentYear }} GonkaRouter. Built for the Gonka Network.
           </p>
-          <div class="flex items-center gap-5 order-1 sm:order-2">
+          <div class="footer-social flex items-center gap-1 order-1 sm:order-2">
             <a
               href="https://x.com/gonka_cn?s=21"
               target="_blank"
@@ -306,6 +307,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const { open: openLoginModal } = useLoginModal()
 
+const currentYear = new Date().getFullYear()
 const scrollProgress = ref(0)
 const isMobileMenuOpen = ref(false)
 
@@ -388,5 +390,54 @@ onBeforeUnmount(() => {
 .menu-slide-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+/* 手机端每个链接至少 44px 高，方便手指点；桌面端恢复紧凑间距 */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-links a {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-main);
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: rgb(var(--primary-container-rgb));
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+}
+
+.footer-social a:hover {
+  background: rgb(255 255 255 / 0.05);
+}
+
+@media (min-width: 640px) {
+  .footer-links {
+    gap: 0.75rem;
+  }
+
+  .footer-links a {
+    min-height: 0;
+    font-size: 0.75rem;
+  }
+
+  .footer-social a {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
 }
 </style>

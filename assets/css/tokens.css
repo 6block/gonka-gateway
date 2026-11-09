@@ -39,43 +39,11 @@
   --tertiary-rgb: 114 220 255;
 }
 
-html.light {
-  --surface: #f4f6f8;
-  --surface-rgb: 244 246 248;
-  --surface-container-low: #ffffff;
-  --surface-container-low-rgb: 255 255 255;
-  --surface-container-high: #ebedef;
-  --surface-container-high-rgb: 235 237 239;
-  --surface-container-highest: #e1e4e8;
-  --surface-container-highest-rgb: 225 228 232;
-  --surface-container-lowest: #ffffff;
-  --surface-container-lowest-rgb: 255 255 255;
-  --outline-variant: #ced4da;
-  --outline-variant-rgb: 206 212 218;
-  --text-main: #1a1a1a;
-  --text-main-rgb: 26 26 26;
-  --text-muted: rgba(0, 0, 0, 0.6);
-  --text-muted-rgb: 0 0 0;
-
-  --primary: #006d43;
-  --primary-rgb: 0 109 67;
-  --primary-dim: #09c596;
-  --primary-dim-rgb: 9 197 150;
-  --primary-container: #09c596;
-  --primary-container-rgb: 9 197 150;
-  --on-primary-container: #ffffff;
-  --on-primary-container-rgb: 255 255 255;
-  --secondary: #006c51;
-  --secondary-rgb: 0 108 81;
-}
-
+/* 全站只保留暗色模式，浅色变量已移除 */
 html,
 body {
   background-color: var(--surface);
   color: var(--text-main);
-  transition:
-    background-color 500ms ease,
-    color 500ms ease;
 }
 
 ::selection {
@@ -100,11 +68,6 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-html.light .glass-nav {
-  background: color-mix(in srgb, #ffffff 75%, transparent);
-  border-bottom-color: rgba(0, 0, 0, 0.05);
 }
 
 .ghost-border {
@@ -137,9 +100,6 @@ html.light .glass-nav {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
-}
-html.light .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
 }
 
 /* Noise grain overlay (subtle) */

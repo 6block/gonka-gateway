@@ -3,10 +3,10 @@
     <!-- Header -->
     <div>
       <h1 class="text-xl sm:text-2xl font-black font-headline tracking-tight leading-none">
-        Models List
+        Models
       </h1>
       <p class="text-text-muted mt-2 font-body text-sm">
-        Explore and evaluate high-performance neural models.
+        Every model shares one per-token rate. Pick one to see its API ID and a runnable example.
       </p>
     </div>
 
@@ -38,8 +38,9 @@
               </h3>
               <button
                 type="button"
-                class="group/copy shrink-0 rounded-md p-1.5 text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
+                class="group/copy shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-md text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
                 :title="`Copy ${activeModel.apiId}`"
+                :aria-label="`Copy ${activeModel.apiId}`"
                 @click="copyModelId(activeModel.apiId)"
               >
                 <LucideCopy
@@ -124,8 +125,9 @@
                     <!-- Clicking copies instead of opening the detail view. -->
                     <button
                       type="button"
-                      class="group/copy shrink-0 rounded-md p-1 text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
+                      class="group/copy shrink-0 w-9 h-9 -my-2 inline-flex items-center justify-center rounded-md text-text-muted transition-colors hover:bg-white/5 hover:text-primary-container"
                       :title="`Copy ${model.apiId}`"
+                      :aria-label="`Copy ${model.apiId}`"
                       @click.stop="copyModelId(model.apiId)"
                     >
                       <!-- Always visible, not hover-only: touch devices have no
@@ -173,7 +175,7 @@
                   >
                     <button
                       type="button"
-                      class="peer text-text-muted hover:text-primary-container focus-visible:text-primary-container transition-colors focus:outline-none"
+                      class="peer w-8 h-8 -m-2 inline-flex items-center justify-center rounded-full text-text-muted hover:text-primary-container focus-visible:text-primary-container transition-colors focus:outline-none"
                       aria-label="Pricing details"
                     >
                       <LucideHelpCircle class="w-3.5 h-3.5" />
