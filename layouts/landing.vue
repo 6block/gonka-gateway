@@ -53,15 +53,6 @@
         </div>
 
         <div class="flex items-center gap-2 sm:gap-3">
-          <button
-            @click="toggleColorMode"
-            class="p-2 rounded-full text-text-muted hover:text-primary-container hover:bg-white/5 transition-all"
-            title="Toggle theme"
-            aria-label="Toggle theme"
-          >
-            <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
-            <LucideMoon v-else class="w-5 h-5" />
-          </button>
 
           <!-- Landing pages are SWR-cached and rendered without cookies (see
                routeRules in nuxt.config.ts), so the server always emits the
@@ -306,11 +297,10 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { LucideSun, LucideMoon, LucideSend, LucideMail, LucideMenu, LucideX } from 'lucide-vue-next'
+import { LucideSend, LucideMail, LucideMenu, LucideX } from 'lucide-vue-next'
 import { useAuthStore } from '~/stores/auth'
 import { useLoginModal } from '~/composables/useLoginModal'
 
-const colorMode = useColorMode()
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -322,10 +312,6 @@ const isMobileMenuOpen = ref(false)
 const openLogin = () => {
   closeMobileMenu()
   openLoginModal()
-}
-
-const toggleColorMode = () => {
-  colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
 }
 
 const toggleMobileMenu = () => {

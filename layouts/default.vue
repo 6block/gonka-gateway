@@ -19,15 +19,6 @@
 
       <div class="flex items-center gap-1.5">
         <button
-          @click="toggleColorMode"
-          class="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-primary-container hover:bg-white/5 transition-all"
-          title="Toggle theme"
-          aria-label="Toggle theme"
-        >
-          <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
-          <LucideMoon v-else class="w-5 h-5" />
-        </button>
-        <button
           v-if="!auth.isLoggedIn"
           @click="openLogin"
           class="h-9 kinetic-gradient text-primary-on px-3 rounded-lg font-black text-[11px] tracking-tight flex items-center gap-1.5 shadow-lg shadow-primary-container/20"
@@ -108,14 +99,6 @@
         <template v-if="!auth.isLoggedIn">
           <div class="flex items-center gap-2">
             <button
-              @click="toggleColorMode"
-              class="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-surface-container-high text-text-muted hover:text-primary-container hover:bg-white/10 transition-all border border-white/5 shrink-0"
-              title="Toggle theme"
-            >
-              <LucideSun v-if="colorMode.value === 'light'" class="w-5 h-5" />
-              <LucideMoon v-else class="w-5 h-5" />
-            </button>
-            <button
               @click="openLogin"
               class="flex-1 h-11 kinetic-gradient text-primary-on px-4 rounded-xl font-black text-[13px] tracking-tight flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-container/20 whitespace-nowrap hover:shadow-glow-emerald"
             >
@@ -187,8 +170,6 @@ import {
   LucideMessageCircle,
   LucideHistory,
   LucideCpu,
-  LucideSun,
-  LucideMoon,
   LucideLogOut,
   LucideLogIn,
   LucideCreditCard,
@@ -201,7 +182,6 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useToast } from '~/composables/useToast'
 import { useLoginModal } from '~/composables/useLoginModal'
 
-const colorMode = useColorMode()
 const auth = useAuthStore()
 const toast = useToast()
 const route = useRoute()
@@ -241,10 +221,6 @@ const navLinks = [
   { to: '/deposit', label: 'Deposit', icon: LucideCreditCard },
   { to: '/transactions', label: 'Transactions', icon: LucideHistory }
 ]
-
-const toggleColorMode = () => {
-  colorMode.preference = colorMode.value === 'light' ? 'dark' : 'light'
-}
 
 // Refresh email/avatar/balance from the backend on load when a cookie token
 // survived a reload but the in-memory profile is stale.

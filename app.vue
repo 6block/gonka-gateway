@@ -62,10 +62,6 @@ useHead({
     <ClientOnly>
       <AuthUpgradeModal />
     </ClientOnly>
-    <!-- One-shot campaign promo for the AI Builders Day offline event -->
-    <ClientOnly>
-      <PromoEventPromoModal />
-    </ClientOnly>
     <!-- Global toasts so notifications surface on landing pages too -->
     <Toast />
   </div>

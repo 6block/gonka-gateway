@@ -1,117 +1,65 @@
 <template>
-  <div>
-    <!-- Hero -->
-    <section
-      id="hero"
-      class="relative asymmetric-padding px-4 sm:px-6 md:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex flex-col items-center justify-center text-center"
-    >
-      <!-- Floating particles -->
-      <div class="absolute inset-0 z-0 pointer-events-none">
-        <span
-          v-for="p in particles"
-          :key="p.id"
-          class="absolute w-1 h-1 rounded-full bg-primary-container opacity-20 particle"
-          :style="p.style"
-        ></span>
+  <div class="dark home-page">
+    <!-- 首页固定暗色：背景是暗色视频，浅色模式下文字会看不清 -->
+    <!-- Hero：眼睛滚动推进，背景固定在整页后面 -->
+    <HeroEyeScrollHero id="hero" eye-end-anchor="features">
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
+        <span class="inline-flex items-center gap-2 bg-black/50 border border-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full">
+          <span class="flex h-1.5 w-1.5 rounded-full bg-primary-container animate-pulse"></span>
+          <span class="font-label text-[11px] tracking-widest uppercase text-text-muted font-bold">Now supporting GLM-5.3-Flash</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 bg-primary-container/10 border border-primary-container/30 backdrop-blur-md px-3.5 py-1.5 rounded-full">
+          <LucideZap class="w-3.5 h-3.5 text-primary-container" />
+          <span class="font-label text-[11px] tracking-widest uppercase text-primary-container font-bold">1M free tokens for new users</span>
+        </span>
       </div>
 
-      <div class="relative z-10 max-w-6xl animate-fade-in">
-        <div class="flex flex-col items-center gap-4 mb-10">
-          <div
-            class="inline-flex items-center gap-2 bg-surface-container-high ghost-border px-5 py-2 rounded-full"
-          >
-            <span class="flex h-2 w-2 rounded-full bg-primary-container animate-pulse"></span>
-            <span
-              class="font-label text-xs tracking-widest uppercase text-secondary font-bold"
-            >
-              Now Supporting GLM-5.3-Flash
-            </span>
-          </div>
-        </div>
+      <h1
+        id="eye-hero-heading"
+        class="font-headline text-[2.5rem] leading-[1.02] sm:text-6xl lg:text-7xl font-black tracking-tighter mb-5"
+      >
+        <span class="text-text-main">AI Model Router</span><br />
+        <span class="bg-gradient-to-r from-primary-dim to-primary bg-clip-text text-transparent">on the Gonka Network</span>
+      </h1>
 
-        <h1
-          class="font-headline text-[2.25rem] leading-[1.08] sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-5 sm:mb-6 sm:leading-[1.05] animate-float"
+      <p class="font-body text-text-muted text-base sm:text-lg leading-relaxed font-light mb-8">
+        {{ heroDescription }}
+      </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <NuxtLink
+          to="/dashboard"
+          class="w-full sm:w-auto text-center kinetic-gradient text-primary-on px-8 py-3.5 rounded-full font-headline font-black text-base transition-all hover:-translate-y-0.5 active:scale-95 hover:shadow-glow-emerald-lg"
         >
-          <span class="text-primary-dim">AI Model Router</span><br />
-          <span class="text-text-main">on the Gonka Network</span>
-        </h1>
-
-        <div
-          class="inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/20 px-5 py-2 rounded-full mb-12 animate-scale-in"
+          Get API Keys
+        </NuxtLink>
+        <button
+          @click="scrollToModels"
+          class="w-full sm:w-auto bg-black/50 backdrop-blur-md text-text-main border border-white/15 px-8 py-3.5 rounded-full font-headline font-bold text-base hover:bg-white/10 transition-all hover:-translate-y-0.5"
         >
-          <LucideZap class="w-4 h-4 text-primary-container" />
-          <span class="text-xs sm:text-sm font-bold tracking-wide text-primary-container uppercase">
-            New users get 1M free tokens
-          </span>
-        </div>
-
-        <p
-          class="font-body text-text-muted text-base sm:text-xl md:text-2xl max-w-3xl mx-auto mb-12 sm:mb-16 leading-relaxed font-light whitespace-pre-line"
-        >
-          {{ heroDescription }}
-        </p>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-          <NuxtLink
-            to="/dashboard"
-            class="w-full sm:w-auto kinetic-gradient text-primary-on px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-headline font-black text-base sm:text-lg transition-all hover:-translate-y-0.5 hover:scale-[1.03] active:scale-95 hover:shadow-glow-emerald-lg"
-          >
-            Get API Keys
-          </NuxtLink>
-          <button
-            @click="scrollToModels"
-            class="w-full sm:w-auto bg-surface-container-highest text-text-main ghost-border px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-headline font-bold text-base sm:text-lg hover:bg-surface-container-high transition-all hover:-translate-y-0.5"
-          >
-            Explore Models
-          </button>
-        </div>
-
+          Explore Models
+        </button>
       </div>
-    </section>
 
-    <!-- Why Choose -->
-    <section
-      id="features"
-      class="pt-12 sm:pt-16 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
-    >
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-8 sm:mb-12">
-          <h2
-            class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight"
-          >
-            Why Choose GonkaRouter
-          </h2>
-        </div>
+      <!-- 每项不拆行，窄屏时整项换行，避免 "No subscription" 被拆成两行 -->
+      <ul class="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-1.5 font-label text-[11px] tracking-widest uppercase text-text-muted">
+        <li class="whitespace-nowrap">OpenAI compatible</li>
+        <li class="whitespace-nowrap">Anthropic compatible</li>
+        <li class="whitespace-nowrap">No subscription</li>
+      </ul>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
-          <div
-            v-for="item in whyItems"
-            :key="item.title"
-            class="bg-surface-container-high p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] border border-white/5 hover:border-primary-container/30 transition-all group hover:-translate-y-1.5 duration-300"
-          >
-            <div
-              class="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-primary-container/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-primary-container mb-3 sm:mb-4 lg:mb-6 group-hover:scale-110 transition-transform"
-            >
-              <component :is="item.icon" class="w-5 h-5 lg:w-6 lg:h-6" />
-            </div>
-            <h3 class="font-headline font-black text-base sm:text-lg lg:text-lg text-text-main leading-tight">
-              {{ item.title }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </section>
+    </HeroEyeScrollHero>
 
     <!-- Featured Model -->
     <section
       id="models"
       class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden"
     >
-      <div class="max-w-5xl mx-auto text-center relative z-10">
-        <!-- Model toggle -->
-        <div class="flex justify-center mb-10">
+      <div class="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-10 lg:gap-14 items-center">
+        <div v-reveal>
+          <p class="font-label text-xs tracking-widest uppercase text-primary-container font-bold mb-4">[ 01 / Models ]</p>
           <div
-            class="inline-flex bg-surface-container-high p-1 rounded-full border border-white/5"
+            class="inline-flex flex-wrap bg-black/50 p-1 rounded-2xl sm:rounded-full border border-white/10 mb-6"
             role="tablist"
             aria-label="Featured model selector"
           >
@@ -122,7 +70,7 @@
               role="tab"
               :aria-selected="featuredModel === model.id"
               @click="featuredModel = model.id"
-              class="px-5 py-2 rounded-full text-xs font-black tracking-tight transition-all"
+              class="px-4 py-2 rounded-full text-xs font-black tracking-tight transition-all"
               :class="
                 featuredModel === model.id
                   ? 'bg-primary-container text-primary-on shadow-lg shadow-primary-container/20'
@@ -132,33 +80,44 @@
               {{ model.label }}
             </button>
           </div>
-        </div>
 
-        <h2
-          class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main mb-6 sm:mb-8 tracking-tight"
-        >
-          Featured Model: {{ activeFeatured.label }}
-        </h2>
-        <p class="font-body text-text-muted text-base sm:text-xl mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed">
-          {{ activeFeatured.tagline }}
-        </p>
+          <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main mb-5 tracking-tight">
+            {{ activeFeatured.label }}
+          </h2>
+          <p class="font-body text-text-muted text-base sm:text-lg mb-8 font-light leading-relaxed">
+            {{ activeFeatured.tagline }}
+          </p>
 
-        <div class="flex flex-col gap-8 sm:gap-12 items-center">
-          <div class="flex flex-wrap justify-center gap-3 sm:gap-6">
-            <div
+          <ul class="flex flex-wrap gap-2 mb-8">
+            <li
               v-for="feature in features"
               :key="feature.label"
-              class="flex items-center gap-2 sm:gap-3 bg-surface-container-high px-5 sm:px-8 py-3 sm:py-4 rounded-full ghost-border hover:border-primary-container/30 hover:bg-surface-container-highest transition-all cursor-default hover:scale-105 duration-300"
+              class="flex items-center gap-2 bg-black/50 px-4 py-2 rounded-full border border-white/10"
             >
-              <component :is="feature.icon" class="w-4 h-4 sm:w-5 sm:h-5 text-primary-container" />
-              <span class="font-label text-xs sm:text-sm font-bold text-text-main tracking-wide">
-                {{ feature.label }}
-              </span>
-            </div>
+              <component :is="feature.icon" class="w-4 h-4 text-primary-container" />
+              <span class="font-label text-xs font-bold text-text-main tracking-wide">{{ feature.label }}</span>
+            </li>
+          </ul>
+
+          <div class="flex flex-wrap gap-3">
+            <NuxtLink
+              to="/dashboard"
+              class="kinetic-gradient text-primary-on px-7 py-3.5 rounded-full font-headline font-black text-base transition-all active:scale-95 hover:shadow-glow-emerald-lg hover:-translate-y-0.5"
+            >
+              Get API Keys
+            </NuxtLink>
+            <NuxtLink
+              to="/models"
+              class="bg-black/50 text-text-main ghost-border px-7 py-3.5 rounded-full font-headline font-bold text-base transition-all hover:bg-white/10 hover:-translate-y-0.5"
+            >
+              All models
+            </NuxtLink>
           </div>
+        </div>
 
           <!-- Code preview -->
           <div
+            v-reveal="150"
             class="w-full bg-surface-container-lowest rounded-2xl border border-outline-variant/10 overflow-hidden text-left relative z-10 shadow-xl shadow-black/30 hover:-translate-y-1 transition-transform duration-500"
           >
             <div
@@ -202,81 +161,21 @@ response = client.chat.completions.create(
 print(response.choices[<span class="text-tertiary">0</span>].message.content)<span class="inline-block w-2 h-5 bg-primary-container ml-1 align-middle animate-pulse"></span></code></pre>
             </div>
           </div>
-
-          <NuxtLink
-            to="/dashboard"
-            class="kinetic-gradient text-primary-on px-8 py-4 rounded-full font-headline font-black text-lg transition-all active:scale-95 hover:shadow-glow-emerald-lg hover:-translate-y-0.5"
-          >
-            Get API Keys
-          </NuxtLink>
-        </div>
       </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface">
-      <div class="max-w-3xl mx-auto">
-        <div class="text-center mb-10 sm:mb-14">
-          <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed max-w-2xl mx-auto">
-            The most common integration notes from the GonkaRouter documentation, condensed for quick scanning before you open the full guide.
-          </p>
-        </div>
-
-        <div class="space-y-3 sm:space-y-4">
-          <div
-            v-for="(item, index) in displayedFaqs"
-            :key="index"
-            class="rounded-2xl border transition-all duration-200"
-            :class="homeFaqOpen === index
-              ? 'border-primary-container/70 bg-surface-container-high'
-              : 'border-white/5 bg-surface-container-high/60 hover:bg-surface-container-high'"
-          >
-            <button
-              @click="toggleFaq(index)"
-              class="w-full flex items-center justify-between gap-6 px-5 sm:px-6 py-5 text-left"
-              :aria-expanded="homeFaqOpen === index"
-            >
-              <span class="font-body font-semibold text-base sm:text-lg leading-snug text-text-main">
-                {{ item.q }}
-              </span>
-              <span
-                class="shrink-0 flex items-center justify-center w-8 h-8 rounded-full border font-bold text-sm transition-all duration-200"
-                :class="homeFaqOpen === index
-                  ? 'rotate-90 border-primary-container/70 text-primary-container'
-                  : 'border-white/10 text-text-muted'"
-              >&gt;</span>
-            </button>
-            <Transition name="faq-slide">
-              <div v-if="homeFaqOpen === index" class="px-5 sm:px-6 pb-5 overflow-hidden">
-                <p class="text-text-muted text-sm sm:text-base font-body leading-relaxed" v-html="item.a"></p>
-              </div>
-            </Transition>
-          </div>
-        </div>
-
-        <div class="flex flex-col items-center gap-4 mt-10">
-          <button
-            @click="showAllFaqs = !showAllFaqs; if (!showAllFaqs) homeFaqOpen = null"
-            class="inline-flex items-center gap-2 bg-surface-container-high ghost-border text-text-main px-6 py-3 rounded-full font-headline font-bold text-sm transition-all hover:bg-white/5 hover:-translate-y-0.5"
-          >
-            <span v-if="!showAllFaqs">Show more FAQs +</span>
-            <span v-else>Show fewer FAQs ^</span>
-          </button>
-        </div>
-      </div>
-    </section>
+    <HomeTopupPromo />
+    <HomeWhy />
+    <HomeFaq />
 
     <!-- Blog Section — only shown when API returns posts -->
     <section v-if="allBlogPosts.length > 0" class="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-surface relative overflow-hidden">
       <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <div class="flex items-end justify-between mb-10 sm:mb-14">
+        <div v-reveal class="flex items-end justify-between mb-10 sm:mb-14">
           <div>
             <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-text-muted mb-2 sm:mb-3">
-              Latest Updates
+              [ 05 / Blog ]
             </p>
             <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black text-text-main tracking-tight">
               News Blog
@@ -293,8 +192,9 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
         <!-- Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           <NuxtLink
-            v-for="post in displayedBlogPosts"
+            v-for="(post, i) in displayedBlogPosts"
             :key="post.slug"
+            v-reveal="i * 100"
             :to="`/blog/${post.slug}`"
             class="group block"
           >
@@ -364,64 +264,14 @@ print(response.choices[<span class="text-tertiary">0</span>].message.content)<sp
         </div>
       </div>
     </section>
+
+    <HomeFinalCta />
   </div>
 </template>
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import {
-  LucideZap,
-  LucideShield,
-  LucideGlobe,
-  LucideDatabase,
-  LucideTerminal
-} from 'lucide-vue-next'
-
-// ─── FAQ ──────────────────────────────────────────────────────────────────────
-const homeFaqs = [
-  {
-    q: 'What is GonkaRouter?',
-    a: 'GonkaRouter is an AI model router built on the Gonka Network. It gives you a single, OpenAI-compatible API endpoint that routes your requests to the best available AI model — including GLM-5.3-Flash, DeepSeek-V4-Flash and MiniMax-M2.7 — with transparent per-token pricing and no monthly subscriptions.'
-  },
-  {
-    q: 'Is GonkaRouter an OpenRouter alternative?',
-    a: 'Yes. Like OpenRouter, GonkaRouter provides a unified API to access multiple large language models. The key difference is that GonkaRouter is built on the Gonka Network with crypto-native payments and <strong class="text-text-main">per-token rates that track the Gonka network price</strong>, plus 1M free tokens for new users.'
-  },
-  {
-    q: 'How is GonkaRouter different from OpenRouter?',
-    a: `A single per-token rate that tracks the Gonka network — the same for input and output, with no model-by-model price table to worry about. Crypto-native billing on the Gonka Network: no credit card, no subscriptions. New users get 1M free tokens.`
-  },
-  {
-    q: 'How does GonkaRouter pricing work?',
-    a: 'GonkaRouter charges a <strong class="text-text-main">single per-token rate that tracks the Gonka network price</strong>, applied equally to both input and output tokens. There are no monthly fees or per-model surcharges — see the Pricing page for the current live rate. New users get 1M free tokens. After that, you top up your balance and are billed only for what you consume.'
-  },
-  {
-    q: 'Which AI models does GonkaRouter support?',
-    a: 'GonkaRouter currently supports <strong class="text-text-main">GLM-5.3-Flash</strong>, <strong class="text-text-main">DeepSeek-V4-Flash</strong> and <strong class="text-text-main">MiniMax-M2.7</strong>, with more models being added regularly. All models share the same per-token rate — which tracks the Gonka network — and are accessible through one unified API endpoint.'
-  },
-  {
-    q: 'Is the API compatible with OpenAI SDKs?',
-    a: 'Yes. GonkaRouter uses an OpenAI-compatible API format. You can use the official OpenAI Python or TypeScript SDK by simply changing the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> to <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">https://api.gonkarouter.io/v1</code> and setting your GonkaRouter API key.'
-  },
-  {
-    q: 'Do I need a crypto wallet to use GonkaRouter?',
-    a: 'No. Sign in with your email or Google account — no wallet required. A crypto wallet is only needed if you want to top up your balance with USDT (BEP-20) on the Gonka Network. You can also browse the Chat and Models pages as a guest.'
-  },
-  {
-    q: 'How do I get started?',
-    a: 'Getting started takes less than a minute: sign in with email or Google on the Dashboard, copy your API key, and replace the <code class="bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-dim text-[13px]">base_url</code> in your existing OpenAI SDK calls. New accounts automatically receive 1M free tokens — no payment setup required to start.'
-  }
-]
-
-const INITIAL_FAQ_COUNT = 5
-const homeFaqOpen = ref(null)
-const showAllFaqs = ref(false)
-const displayedFaqs = computed(() =>
-  showAllFaqs.value ? homeFaqs : homeFaqs.slice(0, INITIAL_FAQ_COUNT)
-)
-const toggleFaq = (index) => {
-  homeFaqOpen.value = homeFaqOpen.value === index ? null : index
-}
+import { LucideZap, LucideShield, LucideTerminal } from 'lucide-vue-next'
 
 // ─── Blog ─────────────────────────────────────────────────────────────────────
 const TAG_VISUAL = {
@@ -478,18 +328,15 @@ useSeoMeta({
   twitterDescription: () =>
     `One API for all AI models. OpenAI/Anthropic compatible, from ${fromPer1M.value} per 1M tokens.`
 })
-useHead({ link: [{ rel: 'canonical', href: siteUrl }] })
+useHead({
+  link: [{ rel: 'canonical', href: siteUrl }],
+  bodyAttrs: { class: 'home-eye-active' }
+})
 
 const heroDescription = computed(
-  () => `One API for All AI Models\nDevelopers first\nFrom ${fromPer1M.value} per 1M tokens`
+  () => `One API for all AI models, built for developers. From ${fromPer1M.value} per 1M tokens.`
 )
 
-const whyItems = [
-  { title: 'Cost-Effective Pricing', icon: LucideZap },
-  { title: 'Crypto-Native Payments', icon: LucideShield },
-  { title: 'Global Access', icon: LucideGlobe },
-  { title: 'Integration with Web3 Ecosystems', icon: LucideDatabase }
-]
 
 const features = [
   { label: '262k Context Window', icon: LucideZap },
@@ -541,17 +388,7 @@ function scrollToModels() {
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
-// Particles must be generated client-only — Math.random() during SSR vs.
-// hydration would produce a Vue hydration mismatch warning.
-const particles = ref([])
 onMounted(async () => {
-  particles.value = Array.from({ length: 6 }, (_, i) => ({
-    id: i,
-    style: `left:${Math.random() * 100}%; top:${Math.random() * 100}%; animation-delay:${
-      Math.random() * 10
-    }s; animation-duration:${10 + Math.random() * 20}s;`
-  }))
-
   // Load blog posts from API and enrich with visual metadata
   const { fetchPosts } = useBlogPosts()
   const posts = await fetchPosts()
@@ -564,38 +401,26 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.faq-slide-enter-active,
-.faq-slide-leave-active {
-  transition: opacity 0.2s ease, max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+/* 区块盖在固定背景层（z-index 0）之上；底色改透明让背景透出，卡片改半透明保证可读 */
+.home-page > section {
+  position: relative;
+  z-index: 1;
 }
-.faq-slide-enter-from,
-.faq-slide-leave-to {
-  opacity: 0;
-  max-height: 0;
+.home-page section.bg-surface {
+  background-color: transparent;
 }
-.faq-slide-enter-to,
-.faq-slide-leave-from {
-  opacity: 1;
-  max-height: 400px;
+.home-page .bg-surface-container-high {
+  background-color: rgb(var(--surface-container-high-rgb) / 0.55);
 }
+.home-page .bg-surface-container-lowest {
+  background-color: rgb(var(--surface-container-lowest-rgb) / 0.7);
+}
+</style>
 
-.particle {
-  animation-name: particleFloat;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-@keyframes particleFloat {
-  0% {
-    transform: translateY(20%);
-    opacity: 0;
-  }
-  30% {
-    opacity: 0.4;
-  }
-  100% {
-    transform: translateY(-120vh);
-    opacity: 0;
-  }
+<style>
+/* layout 的 footer 不在本页组件内，需要全局样式把它抬到背景层之上 */
+body.home-eye-active footer {
+  position: relative;
+  z-index: 1;
 }
 </style>

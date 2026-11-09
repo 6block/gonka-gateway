@@ -105,13 +105,16 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/tokens.css',
     '~/assets/css/pay.css',
+    '~/assets/css/reveal.css',
     'highlight.js/styles/github-dark.css',
     'katex/dist/katex.min.css'
   ],
+  // 只保留暗色模式，切换按钮已移除。换一个存储 key，忽略老用户之前存下的 'light' 偏好
   colorMode: {
     preference: 'dark',
     fallback: 'dark',
-    classSuffix: ''
+    classSuffix: '',
+    storageKey: 'gr-color-mode-dark-only'
   },
   app: {
     head: {

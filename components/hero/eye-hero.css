@@ -1,0 +1,88 @@
+/* 固定背景层：z-index 0，页面内容需放在 z-index ≥ 1 的定位层里才能盖在它上面 */
+.eye-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: #000;
+}
+
+.eye-backdrop__canvas,
+.eye-backdrop__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 海报是首帧，画布出第一帧后隐藏，避免两者叠加 */
+.eye-backdrop__poster {
+  object-fit: cover;
+}
+
+.eye-backdrop__poster.is-hidden {
+  visibility: hidden;
+}
+
+.eye-backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, rgb(0 0 0 / 0.55) 100%),
+    linear-gradient(to top, rgb(0 0 0 / 0.6), transparent 40%);
+}
+
+.eye-backdrop__dim {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.eye-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  /* 手机端不撑满一屏，否则文案压在底部、上方留下大片空白 */
+  padding: 7rem 1rem 3rem;
+  /* 文案身后的暗底会伸出两侧，窄屏上裁掉，避免出现横向滚动 */
+  overflow-x: clip;
+}
+
+.eye-hero__container {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+/* 首屏文案居中，放在瞳孔下方；身后一层椭圆暗底，压住亮的虹膜，保证文字可读 */
+.eye-hero__intro {
+  position: relative;
+  max-width: 52rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eye-hero__intro::before {
+  content: '';
+  position: absolute;
+  inset: -3rem -6rem;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0.3) 45%, transparent 72%);
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .eye-hero {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .eye-hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 6rem 2rem clamp(3rem, 10vh, 7rem);
+  }
+}
