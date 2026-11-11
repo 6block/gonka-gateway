@@ -864,10 +864,17 @@
             </h3>
             <ul class="space-y-1.5 text-sm sm:text-base text-text-muted leading-relaxed list-disc pl-5">
               <li>
-                When a requested model's upstream is temporarily saturated (a
+                When the requested model can't serve right now — saturated (a
                 <code class="font-mono text-primary-container">429</code> that persists after retries),
-                the request is <span class="text-text-main font-bold">served by a fallback model</span>
-                instead of failing — so your call still returns a result.
+                erroring (<code class="font-mono">5xx</code>), hanging with no output, or paused for a
+                Gonka network PoC window — the request is
+                <span class="text-text-main font-bold">served by another available model</span>
+                instead of failing, so your call still returns a result.
+              </li>
+              <li>
+                The fallback is picked from the other models in the catalog, skipping any that are
+                failing or in a PoC window themselves. A request tries at most three models, and only
+                before the first byte is sent: a stream that has started is never switched.
               </li>
               <li>
                 A substitution is <span class="text-text-main font-bold">never silent</span>: the response
@@ -879,8 +886,15 @@
                 To <span class="text-text-main font-bold">enforce the exact requested model</span> (no substitution),
                 send the request header
                 <code class="font-mono text-primary-container">X-Gonka-No-Fallback: true</code>.
-                Saturated requests then return the real upstream
-                <code class="font-mono">429</code> instead of being re-routed — ideal for benchmarking and evals.
+                Failed requests then return the real upstream error
+                (e.g. <code class="font-mono">429</code> or <code class="font-mono">503</code>) instead of being re-routed — ideal for benchmarking and evals.
+              </li>
+              <li>
+                If no model can serve during a PoC window, you get a
+                <code class="font-mono text-primary-container">503</code> with a
+                <code class="font-mono text-primary-container">Retry-After</code> header (seconds).
+                Wait that long before retrying — immediate retries fail the same way.
+                Like <code class="font-mono">429</code>, a <code class="font-mono">503</code> does not consume your balance.
               </li>
             </ul>
           </div>
